@@ -1,6 +1,6 @@
 import os
-#import netflix
-#import hulu
+from netflix import netflixExtractor
+from hulu import huluExtractor
 #import amazon
 #import bbc
 #import youtube
