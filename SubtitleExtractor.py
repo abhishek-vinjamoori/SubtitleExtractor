@@ -1,9 +1,9 @@
 import os
 from netflix import netflixExtractor
 from hulu import huluExtractor
+from youtube import youtubeExtractor
 #import amazon
 #import bbc
-#import youtube
 #import hbo
 #import crackle
 #import vudu
@@ -22,7 +22,8 @@ class Subtitle(object):
 	def __init__(self):
 		self.urlName = ""
 		self.serviceType = ""
-		self.supportedServices = ["netflix","hulu","amazon","bbc","youtube","hbo","crackle","vudu","epix","syfy","sky","shomi","fox"]
+		self.supportedServices = {"netflix":netflixExtractor,"hulu":huluExtractor,"youtube":youtubeExtractor}
+		#,"amazon","bbc","hbo","crackle","vudu","epix","syfy","sky","shomi","fox"]
 
 
 	def getServiceName(self):
@@ -34,11 +35,10 @@ class Subtitle(object):
 
 
 	def serviceProcess(self):
-		pass
-
-
-
-
+		if self.serviceType:
+			self.serviceClass = self.supportedServices[self.serviceType]()
+		else:
+			print("Service Not Supported")
 
 
 
