@@ -1,6 +1,6 @@
 import os
-import netflix
-import hulu
+#import netflix
+#import hulu
 #import amazon
 #import bbc
 #import youtube
@@ -22,8 +22,7 @@ class Subtitle(object):
 	def __init__(self):
 		self.urlName = ""
 		self.serviceType = ""
-		self.supportedServices = {"netflix",:"hulu"}
-		#"amazon","bbc","youtube","hbo","crackle","vudu","epix","syfy","sky","shomi","fox"]
+		self.supportedServices = ["netflix","hulu","amazon","bbc","youtube","hbo","crackle","vudu","epix","syfy","sky","shomi","fox"]
 
 
 	def getServiceName(self):
@@ -35,7 +34,7 @@ class Subtitle(object):
 
 
 	def serviceProcess(self):
-
+		pass
 
 
 
