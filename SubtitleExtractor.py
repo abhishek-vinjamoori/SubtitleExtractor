@@ -25,37 +25,46 @@ class Subtitle(object):
 		self.supportedServices = {"netflix":netflixExtractor,"hulu":huluExtractor,"youtube":youtubeExtractor}
 		#,"amazon","bbc","hbo","crackle","vudu","epix","syfy","sky","shomi","fox"]
 
-
+		#Dictionary of all the supported services with the respective class name as the value.
+		self.debug = True
+		
 	def getServiceName(self):
-		self.urlName = input("Paste the link here : ")
+		self.urlName = input("Paste the link here : ") 
 		for names in self.supportedServices:
-			if names in self.urlName:
+			if names in self.urlName: 					#Parsing URL input
 				self.serviceType = names
 				break
 
 
 	def serviceProcess(self):
 		if self.serviceType:
-			self.serviceClass = self.supportedServices[self.serviceType]()
+			self.serviceClass = self.supportedServices[self.serviceType](self.urlName)  #Creating instance of the sub-class
+			#try:
+			self.serviceClass.getSubtitles()
+
+			#except:
+			#print("Unable to get the subtitles. Please open an issue to request for support for this video.")
 		else:
-			print("Service Not Supported")
+			print("Service Not Supported. Please open an issue to request for support.")
 
 
+	def getServiceinfo(self):
+		pass
 
 
 def main():
 
 	#try:
 	Extractor = Subtitle()
-	Extractor.getServiceName()
+	Extractor.getServiceName() #Parse the URL and find out which Internet service it is
 	if Extractor.serviceType:
 		print(Extractor.serviceType)
 
-	Extractor.serviceProcess()
+	Extractor.serviceProcess() #Proces the corresponding sub-module 
 
 
 	# except:
-	# 	print("An error occurred")
+	# 	print("An unknown error occurred")
 	# 	pass
 
 if __name__ == "__main__":

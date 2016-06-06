@@ -6,4 +6,5 @@ class youtubeExtractor(object):
 	
 	def __init__(self):
 		print("YouTubes processing")
+		self.loginRequired = False
 		pass

@@ -6,4 +6,5 @@ class netflixExtractor(object):
 	
 	def __init__(self):
 		print("Netflix processing")
-		pass
+		self.loginRequired = True
+		pass 
