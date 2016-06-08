@@ -23,14 +23,17 @@ class Subtitle(object):
 	def __init__(self):
 		self.urlName = ""
 		self.serviceType = ""
-		self.supportedServices = {"netflix":netflixExtractor,"hulu":huluExtractor,"youtube":youtubeExtractor}
+		self.supportedServices = {"hulu":huluExtractor,"netflix":netflixExtractor,"youtube":youtubeExtractor}
 		#,"amazon","bbc","hbo","crackle","vudu","epix","syfy","sky","shomi","fox"]
 
 		#Dictionary of all the supported services with the respective class name as the value.
 		self.debug = True
 		
 	def getServiceName(self):
-		self.urlName = input("Paste the link here : ") 
+		#self.urlName = input("Paste the link here : ")
+		self.urlName = "http://www.hulu.com/watch/876132" 
+		self.urlName = "http://www.hulu.com/watch/815743"
+		self.urlName = "http://www.hulu.com/watch/781835"
 		for names in self.supportedServices:
 			if names in self.urlName: 					#Parsing URL input
 				self.serviceType = names
