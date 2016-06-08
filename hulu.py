@@ -15,4 +15,11 @@ class huluExtractor(object):
 		pass
 
 	def getSubtitles(self):
+		requestObject = requests.get(self.urlName)
+
+		self.fileHandler = open("requests.txt", "w")
+		self.fileHandler.write(requestObject.text)
+		print(requestObject.headers)
+		self.fileHandler.close() 
+		
 		pass

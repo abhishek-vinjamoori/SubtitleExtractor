@@ -1,4 +1,5 @@
 import os
+import getpass
 from netflix import netflixExtractor
 from hulu import huluExtractor
 from youtube import youtubeExtractor
@@ -40,6 +41,11 @@ class Subtitle(object):
 		if self.serviceType:
 			self.serviceClass = self.supportedServices[self.serviceType](self.urlName)  #Creating instance of the sub-class
 			#try:
+			if self.serviceClass.loginRequired is True:
+				print("Login is required. Your details are safe and secure\n")
+				self.serviceClass.username = input("Username : ")
+				self.serviceClass.password = getpass.getpass("Password : ")
+				print(self.serviceClass.password)
 			self.serviceClass.getSubtitles()
 
 			#except:
