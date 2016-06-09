@@ -43,9 +43,17 @@ class huluExtractor(object):
 
 		#print(soupText.encode("utf8"))
 		# fh = open("soup1.txt", "w")
-		# fh.write(soupText.contents)
+		for line in fh.read():
+                        junkText, separator, contentID = line.partition("video/")
+                        if contendID == "":
+                                junkText, separator, contentID = line.partition("movie/")
+                                if contendID:
+                                        break
+                        else:
+                                break
 		# fh.close()		
 		# fh = open("soup2.txt", "w")
 		# fh.write(str(soupText2))
 		# fh.close()		
 		pass
+     
