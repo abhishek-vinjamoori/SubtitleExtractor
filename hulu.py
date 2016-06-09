@@ -24,28 +24,78 @@ class huluExtractor(object):
 		if self.debug:
 			print(requestObject.headers)
 		self.fileHandler.close() 
-		soupText = BeautifulSoup(requestObject.text,from_encoding="utf8")
-		print(requestObject.encoding)
+		self.soupText = BeautifulSoup(requestObject.text,from_encoding="utf8")
 		#soupText1 = BeautifulSoup(requestObject.text,"lxml")
-		print(soupText.original_encoding)
+		print(self.soupText.original_encoding)
 		#print(soupText.encode("utf8"))
 
 		fh = open("soup.txt", "w")
-		fh.write(str(soupText))
+		fh.write(str(self.soupText))
 		fh.close()
-		listedSoup = str(soupText).split('"')
+		self.contentID = self.getContentID1()
+		try:
+			self.contentID = int(self.contentID)+"123"
+		except:
+			print("Trying an alternative method to fetch Content ID")
+			self.contentID = self.getContentID2()
+
+		try:
+			self.contentID = int(self.contentID)
+		except:
+			print("Unable to fetch the contentID.")
+
+		print(self.contentID)
+
+
+	def getContentID1(self):
+		
+		"""This is one of the methodologies to get the content ID. If this fails the alternative method will be called"""
+
+		listedSoup = str(self.soupText).split('"')
 		contentCounter = 0
 		for counter in range(len(listedSoup)):
 			if "content_id" in listedSoup[counter]:
 				contentCounter = counter+2
 				break
-		print(listedSoup[contentCounter])
+		#print(listedSoup[contentCounter])
+		contentId = ""
+		
+		for i in listedSoup[contentCounter]:
+			if i.isdigit():
+				contentId+=i
+		return contentId		
 
-		#print(soupText.encode("utf8"))
-		# fh = open("soup1.txt", "w")
-		# fh.write(soupText.contents)
-		# fh.close()		
-		# fh = open("soup2.txt", "w")
-		# fh.write(str(soupText2))
-		# fh.close()		
+
+	def getContentID2(self):
+
+		"""
+		This is the alternative method to obtain the contentID. 
+		Sample line 1) - <link href="http://ib3.huluim.com/video/60585710?region=US&amp;size=220x124"
+		Sample line 2) - <link href="http://ib3.huluim.com/movie/60535322?region=US&amp;size=220x318"
+		Required content ID's are 60585710 & 60535322 respectively.
+		"""
+		fh = open("soup.txt", "r")		
+		listOfOptions = ["video/","movie/"]
+		foundContent = False
+		contentId = ""
+		for line in fh:
+			
+			for option in listOfOptions:
+				junkText, separator, contentIdContainer = line.partition(option)
+				#The Content Id has been found.
+				if contentIdContainer:
+					foundContent = True
+					break
+			
+			#The Content ID has been found. No need to read the file anymore.
+			#Get the Content ID from the container 			
+			if foundContent:    
+				contentId,separator, junkText = contentIdContainer.partition("?")
+				if separator:
+					break
+				else:
+					foundContent = False		
+		
+		return contentId
+		
 		pass
