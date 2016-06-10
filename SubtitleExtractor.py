@@ -32,8 +32,8 @@ class Subtitle(object):
 	def getServiceName(self):
 		#self.urlName = input("Paste the link here : ")
 		self.urlName = "http://www.hulu.com/watch/876132" 
-		self.urlName = "http://www.hulu.com/watch/815743"
 		self.urlName = "http://www.hulu.com/watch/781835"
+		self.urlName = "http://www.hulu.com/watch/815743"
 		for names in self.supportedServices:
 			if names in self.urlName: 					#Parsing URL input
 				self.serviceType = names
@@ -49,7 +49,7 @@ class Subtitle(object):
 				self.serviceClass.username = input("Username : ")
 				self.serviceClass.password = getpass.getpass("Password : ")
 				print(self.serviceClass.password)
-			self.serviceClass.getSubtitles()
+			returnValue = self.serviceClass.getSubtitles()
 
 			#except:
 			#print("Unable to get the subtitles. Please open an issue to request for support for this video.")

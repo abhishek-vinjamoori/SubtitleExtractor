@@ -19,22 +19,22 @@ class huluExtractor(object):
 	def getSubtitles(self):
 		requestObject = requests.get(self.urlName)
 
-		self.fileHandler = open("requests.txt", "w")
-		self.fileHandler.write(requestObject.text)
-		if self.debug:
-			print(requestObject.headers)
-		self.fileHandler.close() 
-		self.soupText = BeautifulSoup(requestObject.text,from_encoding="utf8")
-		#soupText1 = BeautifulSoup(requestObject.text,"lxml")
-		print(self.soupText.original_encoding)
-		#print(soupText.encode("utf8"))
+		fileHandler = open("requests.txt", "w")
+		fileHandler.write(requestObject.text)
+		fileHandler.close() 
+		
+		self.soupObject = BeautifulSoup(requestObject.text,from_encoding="utf8")
+		#soupObject1 = BeautifulSoup(requestObject.text,"lxml")
+		#print(self.soupObject.original_encoding)
 
 		fh = open("soup.txt", "w")
-		fh.write(str(self.soupText))
+		fh.write(str(self.soupObject))
 		fh.close()
+		
 		self.contentID = self.getContentID1()
+		
 		try:
-			self.contentID = int(self.contentID)+"123"
+			self.contentID = int(self.contentID)
 		except:
 			print("Trying an alternative method to fetch Content ID")
 			self.contentID = self.getContentID2()
@@ -43,15 +43,23 @@ class huluExtractor(object):
 			self.contentID = int(self.contentID)
 		except:
 			print("Unable to fetch the contentID.")
+			return 0
 
 		print(self.contentID)
 
+		self.smiLink = self.getSmiSubtitlesLink()
+		
+		if not self.smiLink:
+			print("Unable to fetch the subtitles.No subtitles present")
+			return 0			
+
+		return 1
 
 	def getContentID1(self):
 		
 		"""This is one of the methodologies to get the content ID. If this fails the alternative method will be called"""
 
-		listedSoup = str(self.soupText).split('"')
+		listedSoup = str(self.soupObject).split('"')
 		contentCounter = 0
 		for counter in range(len(listedSoup)):
 			if "content_id" in listedSoup[counter]:
@@ -97,5 +105,29 @@ class huluExtractor(object):
 					foundContent = False		
 		
 		return contentId
+		
+		pass
+
+
+	def getSmiSubtitlesLink(self):
+		
+		"""
+		This function returns the SMI subtitle link based on the contentID.
+		Currently, the link resides in the xmlLinkTemplate variable
+		"""
+
+		smiLink = ""
+		xmlLinkTemplate = "http://www.hulu.com/captions.xml?content_id="
+		xmlLink = xmlLinkTemplate + str(self.contentID)
+		xmlRequest = requests.get(xmlLink)
+		if self.debug:
+			print(xmlRequest.text)
+		smiSoup = BeautifulSoup(xmlRequest.text)
+		
+		if smiSoup.en:
+			print(smiSoup.en.string)
+			smiLink = smiSoup.en.string
+		
+		return smiLink
 		
 		pass
