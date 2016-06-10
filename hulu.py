@@ -60,6 +60,7 @@ class huluExtractor(object):
 			print(vttLink)
 		
 		self.createVttSubtitleFile(vttLink)
+		self.convertVttToSrt()
 
 		return 1
 
@@ -173,3 +174,28 @@ class huluExtractor(object):
 		subsFileHandler.close()
 
 		pass
+	
+	def convertVttToSrt(self):
+
+		"""
+		This function converts the VTT subtitle file into SRT format.
+		"""
+
+		f =  open("subtitles.vtt","r")
+		fh = open("finalSubtitle.srt","w")
+		
+		count = 1
+		for line in f.readlines():
+			if line[:6] == 'WEBVTT':
+				continue
+
+			line = re.sub(r'(:\d+)\.(\d+)', r'\1,\2', line)
+
+			if line == '\n':	
+				fh.write("\n" + str(count)+"\n")
+				count += 1
+			else:
+				fh.write(line.strip()+"\n")
+
+		f.close()
+		fh.close()
