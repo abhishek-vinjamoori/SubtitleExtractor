@@ -12,7 +12,7 @@ class huluExtractor(object):
 		print("Detected Hulu\nProcessing....\n")
 		self.loginRequired = False
 		self.urlName = url
-		self.debug = False
+		self.debug = True
 		pass
 		#http://stream-recorder.com/forum/hulu-subtitles-t20120.html
 
@@ -44,14 +44,22 @@ class huluExtractor(object):
 		except:
 			print("Unable to fetch the contentID.")
 			return 0
+		if self.debug:
+			print(self.contentID)
 
-		print(self.contentID)
+		smiLink = self.getSmiSubtitlesLink()
 
-		self.smiLink = self.getSmiSubtitlesLink()
-		
-		if not self.smiLink:
-			print("Unable to fetch the subtitles.No subtitles present")
+		if not smiLink:
+			print("Unable to fetch the subtitles. No subtitles present")
 			return 0			
+		if self.debug:
+			print(smiLink)
+		
+		vttLink = self.transformToVtt(smiLink)
+		if self.debug:
+			print(vttLink)
+		
+		self.createVttSubtitleFile(vttLink)
 
 		return 1
 
@@ -125,9 +133,43 @@ class huluExtractor(object):
 		smiSoup = BeautifulSoup(xmlRequest.text)
 		
 		if smiSoup.en:
-			print(smiSoup.en.string)
+			#print(smiSoup.en.string)
 			smiLink = smiSoup.en.string
 		
 		return smiLink
 		
+		pass
+
+	def transformToVtt(self,smiLink):
+		
+		"""
+		This function takes an smiLink and returns the corressponding subtitles in VTT format(a link)
+		"""
+		#print(smiLink)
+		vttLink = ""
+		replaceDict = {"captions":"captions_webvtt", "smi":"vtt"}
+
+		for keys in replaceDict:
+			smiLink = smiLink.replace(keys,replaceDict[keys])
+
+		vttLink = smiLink
+		#print(vttLink)
+
+		return vttLink	
+
+		pass
+
+	def createVttSubtitleFile(self,vttLink):
+
+		"""
+		This function fetches the captions and writes them into a file in VTT format
+		"""
+
+		requestObjectv = requests.get(vttLink)
+		#print(requestObjectv.text)
+
+		subsFileHandler = open("subtitles.vtt","w")
+		subsFileHandler.write(requestObjectv.text)
+		subsFileHandler.close()
+
 		pass
