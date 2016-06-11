@@ -31,9 +31,13 @@ class Subtitle(object):
 		
 	def getServiceName(self):
 		#self.urlName = input("Paste the link here : ")
-		self.urlName = "http://www.hulu.com/watch/781835"
+
+		urlTestList = ["http://www.hulu.com/watch/245881","http://www.hulu.com/watch/815743","http://www.hulu.com/watch/781835","http://www.hulu.com/watch/876132"
+		]
 		self.urlName = "http://www.hulu.com/watch/815743"
+		self.urlName = "http://www.hulu.com/watch/781835"
 		self.urlName = "http://www.hulu.com/watch/876132" 
+		self.urlName = "http://www.hulu.com/watch/245881"
 		for names in self.supportedServices:
 			if names in self.urlName: 					#Parsing URL input
 				self.serviceType = names
@@ -57,7 +61,7 @@ class Subtitle(object):
 
 				return 1
 
-			except:
+			except ValueError:
 				print("Unable to get the subtitles. Please open an issue to request for support for this video.")
 				return 0		
 		else:
@@ -84,7 +88,7 @@ def main():
 		else:
 			print("Subtitles not downloaded.")
 
-	except:
+	except IndexError:
 		print("An unknown error occurred")
 		pass
 

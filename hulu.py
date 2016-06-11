@@ -25,31 +25,35 @@ class huluExtractor(object):
 
 		requestObject = requests.get(self.urlName)
 
-		fileHandler = open("requests.txt", "w")
-		fileHandler.write(requestObject.text)
-		fileHandler.close() 
+		# fileHandler = open("requests.txt", "w")
+		# fileHandler.write(requestObject.text)
+		# fileHandler.close() 
 		
 		self.soupObject = BeautifulSoup(requestObject.text,from_encoding="utf8")
 		#soupObject1 = BeautifulSoup(requestObject.text,"lxml")
 		#print(self.soupObject.original_encoding)
 
-		fh = open("soup.txt", "w")
+		fh = open("iDoNotExistDefinitelyOnThisComputerFolder.txt", "w")
 		fh.write(str(self.soupObject))
 		fh.close()
 		
-		self.contentID = self.getContentID1()
+		self.getTitle()
+
+		self.contentID = self.getContentID1() #Method-1
 		
 		try:
 			self.contentID = int(self.contentID)
 		except:
 			print("Trying an alternative method to fetch Content ID")
-			self.contentID = self.getContentID2()
+			self.contentID = self.getContentID2()  #Method-2
 
 		try:
 			self.contentID = int(self.contentID)
 		except:
 			print("Unable to fetch the contentID.")
+			self.deleteUnnecessaryfiles()
 			return 0
+
 		if self.debug:
 			print(self.contentID)
 
@@ -57,7 +61,9 @@ class huluExtractor(object):
 
 		if not smiLink:
 			print("Unable to fetch the subtitles. No subtitles present.")
-			return 0			
+			self.deleteUnnecessaryfiles()
+			return 0
+
 		if self.debug:
 			print(smiLink)
 		
@@ -67,6 +73,8 @@ class huluExtractor(object):
 		
 		self.createVttSubtitleFile(vttLink)
 		self.convertVttToSrt()
+
+		self.deleteUnnecessaryfiles()
 
 		return 1
 
@@ -106,7 +114,7 @@ class huluExtractor(object):
 
 		Partition technique is used to obtain the content ID.
 		"""
-		fh = open("soup.txt", "r")		
+		fh = open("iDoNotExistDefinitelyOnThisComputerFolder.txt", "r")		
 		listOfOptions = ["video/","movie/"]
 		foundContent = False
 		contentId = ""
@@ -196,7 +204,7 @@ class huluExtractor(object):
 		requestObjectv = requests.get(vttLink)
 		#print(requestObjectv.text)
 
-		subsFileHandler = open("subtitles.vtt","w")
+		subsFileHandler = open(self.title + ".vtt","w")
 		subsFileHandler.write(requestObjectv.text)
 		subsFileHandler.close()
 
@@ -209,9 +217,9 @@ class huluExtractor(object):
 		Credits - http://goo.gl/XRllyy for the conversion method.
 		"""
 
-		f =  open("subtitles.vtt","r")
-		fh = open("finalSubtitle.srt","w")
-		print("Creating finalSubtitle.srt ...")
+		f =  open(self.title + ".vtt","r")
+		fh = open(self.title + ".srt","w")
+		print("Creating %s.srt ..."%(self.title))
 		
 		count = 1
 
@@ -232,3 +240,26 @@ class huluExtractor(object):
 
 		f.close()
 		fh.close()
+
+	def getTitle(self):
+
+		"""
+		This function returns the title of the video. This is also used for naming the file.
+
+		<meta name="twitter:title" value="Interstellar"/>   --> Extracting the value from here
+		
+		"""
+
+		#print(self.soupObject.title.string)
+		s=self.soupObject.find("meta",attrs={"name":"twitter:title"})
+		self.title = s['value']
+
+		pass
+
+	def deleteUnnecessaryfiles(self):
+
+		try:
+			os.remove("iDoNotExistDefinitelyOnThisComputerFolder.txt")
+			os.remove(self.title+".vtt")
+		except:
+			pass
