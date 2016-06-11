@@ -9,14 +9,20 @@ class huluExtractor(object):
 	"""docstring for netflixExtractor"""
 	
 	def __init__(self,url):
+
 		print("Detected Hulu\nProcessing....\n")
 		self.loginRequired = False
 		self.urlName = url
-		self.debug = True
+		self.debug = False
 		pass
-		#http://stream-recorder.com/forum/hulu-subtitles-t20120.html
+		
 
 	def getSubtitles(self):
+
+		"""
+		The main function which uses helper functions to get the subtitles
+		"""
+
 		requestObject = requests.get(self.urlName)
 
 		fileHandler = open("requests.txt", "w")
@@ -50,7 +56,7 @@ class huluExtractor(object):
 		smiLink = self.getSmiSubtitlesLink()
 
 		if not smiLink:
-			print("Unable to fetch the subtitles. No subtitles present")
+			print("Unable to fetch the subtitles. No subtitles present.")
 			return 0			
 		if self.debug:
 			print(smiLink)
@@ -66,7 +72,14 @@ class huluExtractor(object):
 
 	def getContentID1(self):
 		
-		"""This is one of the methodologies to get the content ID. If this fails the alternative method will be called"""
+		"""This is one of the methodologies to get the content ID. If this fails the alternative method will be called
+		
+		In the Beautiful soup text it can be found that every video has this paramter.
+		\"content_id\": \"60535322\"
+		
+		So we first use '"'(quotes) as the delimetter and split the text. Then access the content ID from the returned list.
+
+		"""
 
 		listedSoup = str(self.soupObject).split('"')
 		contentCounter = 0
@@ -90,6 +103,8 @@ class huluExtractor(object):
 		Sample line 1) - <link href="http://ib3.huluim.com/video/60585710?region=US&amp;size=220x124"
 		Sample line 2) - <link href="http://ib3.huluim.com/movie/60535322?region=US&amp;size=220x318"
 		Required content ID's are 60585710 & 60535322 respectively.
+
+		Partition technique is used to obtain the content ID.
 		"""
 		fh = open("soup.txt", "r")		
 		listOfOptions = ["video/","movie/"]
@@ -123,6 +138,10 @@ class huluExtractor(object):
 		"""
 		This function returns the SMI subtitle link based on the contentID.
 		Currently, the link resides in the xmlLinkTemplate variable
+		
+		The XML Link for any subtitle video is - "http://www.hulu.com/captions.xml?content_id=CONTENTID"
+		Where, CONTENTID is the unique content_ID of the video.
+		
 		"""
 
 		smiLink = ""
@@ -145,6 +164,14 @@ class huluExtractor(object):
 		
 		"""
 		This function takes an smiLink and returns the corressponding subtitles in VTT format(a link)
+		Source - http://stream-recorder.com/forum/hulu-subtitles-t20120.html
+		
+		http://assets.huluim.com/"captions"/380/60601380_US_en_en."smi"  -----> 
+		http://assets.huluim.com/"captions_webvtt"/380/60601380_US_en_en."vtt"
+		
+		captions --> captions_webvtt
+		smi      --> vtt
+
 		"""
 		#print(smiLink)
 		vttLink = ""
@@ -179,18 +206,24 @@ class huluExtractor(object):
 
 		"""
 		This function converts the VTT subtitle file into SRT format.
+		Credits - http://goo.gl/XRllyy for the conversion method.
 		"""
 
 		f =  open("subtitles.vtt","r")
 		fh = open("finalSubtitle.srt","w")
+		print("Creating finalSubtitle.srt ...")
 		
 		count = 1
+
+		#Removing WEBVTT Header line.
 		for line in f.readlines():
 			if line[:6] == 'WEBVTT':
 				continue
 
+			#Substituting '.' with ',' in the time-stamps
 			line = re.sub(r'(:\d+)\.(\d+)', r'\1,\2', line)
 
+			#Printing the header number in each line. This is required for the SRT format.
 			if line == '\n':	
 				fh.write("\n" + str(count)+"\n")
 				count += 1

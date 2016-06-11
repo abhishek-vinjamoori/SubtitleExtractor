@@ -31,9 +31,9 @@ class Subtitle(object):
 		
 	def getServiceName(self):
 		#self.urlName = input("Paste the link here : ")
-		self.urlName = "http://www.hulu.com/watch/876132" 
 		self.urlName = "http://www.hulu.com/watch/781835"
 		self.urlName = "http://www.hulu.com/watch/815743"
+		self.urlName = "http://www.hulu.com/watch/876132" 
 		for names in self.supportedServices:
 			if names in self.urlName: 					#Parsing URL input
 				self.serviceType = names
@@ -43,18 +43,27 @@ class Subtitle(object):
 	def serviceProcess(self):
 		if self.serviceType:
 			self.serviceClass = self.supportedServices[self.serviceType](self.urlName)  #Creating instance of the sub-class
-			#try:
-			if self.serviceClass.loginRequired is True:
-				print("Login is required. Your details are safe and secure\n")
-				self.serviceClass.username = input("Username : ")
-				self.serviceClass.password = getpass.getpass("Password : ")
-				print(self.serviceClass.password)
-			returnValue = self.serviceClass.getSubtitles()
+			try:
+				if self.serviceClass.loginRequired is True:
+					print("Login is required. Your details are safe and secure\n")
+					self.serviceClass.username = input("Username : ")
+					self.serviceClass.password = getpass.getpass("Password : ")
+					print(self.serviceClass.password)
+				returnValue = self.serviceClass.getSubtitles()
 
-			#except:
-			#print("Unable to get the subtitles. Please open an issue to request for support for this video.")
+				if not returnValue:
+					print("Please report the issue and make sure that the video contains subtitles.")
+					return 0
+
+				return 1
+
+			except:
+				print("Unable to get the subtitles. Please open an issue to request for support for this video.")
+				return 0		
 		else:
 			print("Service Not Supported. Please open an issue to request for support.")
+			return 0
+
 
 
 	def getServiceinfo(self):
@@ -63,18 +72,21 @@ class Subtitle(object):
 
 def main():
 
-	#try:
-	Extractor = Subtitle()
-	Extractor.getServiceName() #Parse the URL and find out which Internet service it is
-	if Extractor.serviceType:
-		print(Extractor.serviceType)
+	try:
+		Extractor = Subtitle()
+		Extractor.getServiceName() #Parse the URL and find out which Internet service it is
+		if Extractor.serviceType:
+			print(Extractor.serviceType)
 
-	Extractor.serviceProcess() #Proces the corresponding sub-module 
+		finalStatus = Extractor.serviceProcess() #Proces the corresponding sub-module 
+		if finalStatus:
+			print("Subtitles downloaded successfully !")
+		else:
+			print("Subtitles not downloaded.")
 
-
-	# except:
-	# 	print("An unknown error occurred")
-	# 	pass
+	except:
+		print("An unknown error occurred")
+		pass
 
 if __name__ == "__main__":
 	main()
