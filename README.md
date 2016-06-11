@@ -1,2 +1,5 @@
 # SubtitleExtractor
-This repository is aimed at downloading subtitles from popular Internet Services.
+This repository aims to download subtitles from popular Internet Services.
+
+Supported Services - 
+1) Hulu
