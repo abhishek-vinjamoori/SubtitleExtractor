@@ -32,12 +32,13 @@ class Subtitle(object):
 	def getServiceName(self):
 		#self.urlName = input("Paste the link here : ")
 
-		urlTestList = ["http://www.hulu.com/watch/245881","http://www.hulu.com/watch/815743","http://www.hulu.com/watch/781835","http://www.hulu.com/watch/876132"
-		]
+		urlTestList = ["http://www.hulu.com/watch/245881","http://www.hulu.com/watch/815743","http://www.hulu.com/watch/781835","http://www.hulu.com/watch/876132",
+		"http://www.hulu.com/watch/245895","http://www.hulu.com/watch/759738","http://www.hulu.com/watch/215845"]
+		self.urlName = "http://www.hulu.com/watch/915444"
 		self.urlName = "http://www.hulu.com/watch/815743"
-		self.urlName = "http://www.hulu.com/watch/781835"
 		self.urlName = "http://www.hulu.com/watch/876132" 
-		self.urlName = "http://www.hulu.com/watch/245881"
+		self.urlName = "http://www.hulu.com/watch/851358"
+
 		for names in self.supportedServices:
 			if names in self.urlName: 					#Parsing URL input
 				self.serviceType = names

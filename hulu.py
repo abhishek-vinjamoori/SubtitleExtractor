@@ -23,19 +23,7 @@ class huluExtractor(object):
 		The main function which uses helper functions to get the subtitles
 		"""
 
-		requestObject = requests.get(self.urlName)
-
-		# fileHandler = open("requests.txt", "w")
-		# fileHandler.write(requestObject.text)
-		# fileHandler.close() 
-		
-		self.soupObject = BeautifulSoup(requestObject.text,from_encoding="utf8")
-		#soupObject1 = BeautifulSoup(requestObject.text,"lxml")
-		#print(self.soupObject.original_encoding)
-
-		fh = open("iDoNotExistDefinitelyOnThisComputerFolder.txt", "w")
-		fh.write(str(self.soupObject))
-		fh.close()
+		self.createSoupObject()
 		
 		self.getTitle()
 
@@ -78,6 +66,25 @@ class huluExtractor(object):
 
 		return 1
 
+	def createSoupObject(self):
+		
+		requestObject = requests.get(self.urlName)
+
+		# fileHandler = open("requests.txt", "w")
+		# fileHandler.write(requestObject.text)
+		# fileHandler.close() 
+		
+		self.soupObject = BeautifulSoup(requestObject.text,from_encoding="utf8")
+		#soupObject1 = BeautifulSoup(requestObject.text,"lxml")
+		#print(self.soupObject.original_encoding)
+
+		fh = open("iDoNotExistDefinitelyOnThisComputerFolder.txt", "w")
+		fh.write(str(self.soupObject))
+		fh.close()		
+
+		pass
+
+		
 	def getContentID1(self):
 		
 		"""This is one of the methodologies to get the content ID. If this fails the alternative method will be called
@@ -160,6 +167,14 @@ class huluExtractor(object):
 			print(xmlRequest.text)
 		smiSoup = BeautifulSoup(xmlRequest.text)
 		
+		li = smiSoup.find("transcripts")
+		s=li.findChildren()
+		print(s)
+		
+		if len(s)>1:
+			for languages in s:
+				print("Enter", "to download in ",languages.name)
+
 		if smiSoup.en:
 			#print(smiSoup.en.string)
 			smiLink = smiSoup.en.string
@@ -258,8 +273,9 @@ class huluExtractor(object):
 
 	def deleteUnnecessaryfiles(self):
 
-		try:
-			os.remove("iDoNotExistDefinitelyOnThisComputerFolder.txt")
-			os.remove(self.title+".vtt")
-		except:
-			pass
+		if not self.debug:
+			try:
+				os.remove("iDoNotExistDefinitelyOnThisComputerFolder.txt")
+				os.remove(self.title+".vtt")
+			except:
+				pass
