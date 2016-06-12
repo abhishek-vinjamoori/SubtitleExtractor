@@ -84,7 +84,7 @@ class huluExtractor(object):
 
 		pass
 
-		
+
 	def getContentID1(self):
 		
 		"""This is one of the methodologies to get the content ID. If this fails the alternative method will be called
@@ -168,16 +168,37 @@ class huluExtractor(object):
 		smiSoup = BeautifulSoup(xmlRequest.text)
 		
 		li = smiSoup.find("transcripts")
-		s=li.findChildren()
-		print(s)
+		listOfLanguages = li.findChildren()
 		
-		if len(s)>1:
-			for languages in s:
-				print("Enter", "to download in ",languages.name)
+		if self.debug:
+			print(listOfLanguages)
+		
+		
+		#If more than one language subtitles are present, the user can choose the desired language.
+		if len(listOfLanguages)>1:
 
-		if smiSoup.en:
-			#print(smiSoup.en.string)
-			smiLink = smiSoup.en.string
+			print("<<<------ Choose the corressponding number for selecting the language ----->>>")
+			
+			for languages in range(len(listOfLanguages)):
+				print("<%d> - %s"%(languages+1,listOfLanguages[languages].name))
+
+			optionChoice = input()
+			optionChoice = int(optionChoice)
+
+			if self.debug:
+				print(smiSoup.find(listOfLanguages[optionChoice-1].name).string)
+			
+			try:
+				smiLink = smiSoup.find(listOfLanguages[optionChoice-1].name).string
+			
+			except:
+				print("You have entered an invalid option. Application will exit.")
+				exit()
+		
+		else:
+			
+			if smiSoup.en:
+				smiLink = smiSoup.en.string
 		
 		return smiLink
 		
@@ -234,7 +255,7 @@ class huluExtractor(object):
 
 		f =  open(self.title + ".vtt","r")
 		fh = open(self.title + ".srt","w")
-		print("Creating %s.srt ..."%(self.title))
+		print("Creating ~  '%s.srt' ..."%(self.title))
 		
 		count = 1
 
