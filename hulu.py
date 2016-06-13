@@ -287,6 +287,7 @@ class huluExtractor(object):
 		"""
 
 		#print(self.soupObject.title.string)
+		self.title = "subtitles"
 		s=self.soupObject.find("meta",attrs={"name":"twitter:title"})
 		self.title = s['value']
 
