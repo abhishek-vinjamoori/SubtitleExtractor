@@ -14,6 +14,7 @@ class huluExtractor(object):
 		self.loginRequired = False
 		self.urlName = url
 		self.debug = False
+		self.requestsFileName = "iDoNotExistDefinitelyOnThisComputerFolder.html"
 		pass
 		
 
@@ -78,7 +79,7 @@ class huluExtractor(object):
 		#soupObject1 = BeautifulSoup(requestObject.text,"lxml")
 		#print(self.soupObject.original_encoding)
 
-		fh = open("iDoNotExistDefinitelyOnThisComputerFolder.txt", "w")
+		fh = open(self.requestsFileName, "w")
 		fh.write(str(self.soupObject))
 		fh.close()		
 
@@ -121,7 +122,7 @@ class huluExtractor(object):
 
 		Partition technique is used to obtain the content ID.
 		"""
-		fh = open("iDoNotExistDefinitelyOnThisComputerFolder.txt", "r")		
+		fh = open(self.requestsFileName, "r")		
 		listOfOptions = ["video/","movie/"]
 		foundContent = False
 		contentId = ""
@@ -297,7 +298,7 @@ class huluExtractor(object):
 
 		if not self.debug:
 			try:
-				os.remove("iDoNotExistDefinitelyOnThisComputerFolder.txt")
+				os.remove(self.requestsFileName)
 				os.remove(self.title+".vtt")
 			except:
 				pass
