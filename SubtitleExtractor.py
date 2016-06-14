@@ -32,7 +32,9 @@ class Subtitle(object):
 	def getServiceName(self):
 		
 		self.urlName = input("Paste the link here : ")
-
+		self.urlName = "https://www.youtube.com/watch?v=eS7m85d96Mc"
+		self.urlName = "https://www.youtube.com/watch?v=P9LHzVEPodg"
+		self.urlName = "https://www.youtube.com/watch?v=X6p5AZp7r_Q"
 		for names in self.supportedServices:
 			if names in self.urlName: 					#Parsing URL input
 				self.serviceType = names
