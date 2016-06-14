@@ -32,9 +32,7 @@ class Subtitle(object):
 	def getServiceName(self):
 		
 		self.urlName = input("Paste the link here : ")
-		self.urlName = "https://www.youtube.com/watch?v=eS7m85d96Mc"
-		self.urlName = "https://www.youtube.com/watch?v=P9LHzVEPodg"
-		self.urlName = "https://www.youtube.com/watch?v=X6p5AZp7r_Q"
+
 		for names in self.supportedServices:
 			if names in self.urlName: 					#Parsing URL input
 				self.serviceType = names
@@ -59,7 +57,7 @@ class Subtitle(object):
 				return 1
 
 			except ValueError:
-				print("Unable to get the subtitles. Please open an issue to request for support for this video.")
+				print("Unable to get the subtitles. Please try again and open an issue to request for support for this video.")
 				return 0		
 		else:
 			print("Service Not Supported. Please open an issue to request for support.")
