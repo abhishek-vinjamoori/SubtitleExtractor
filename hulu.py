@@ -184,8 +184,12 @@ class huluExtractor(object):
 				print("<%d> - %s"%(languages+1,listOfLanguages[languages].name))
 
 			optionChoice = input()
-			optionChoice = int(optionChoice)
-
+			try:
+				optionChoice = int(optionChoice)
+			pass:
+				print("You have entered an invalid option. Application will exit.")
+				exit()
+				
 			if self.debug:
 				print(smiSoup.find(listOfLanguages[optionChoice-1].name).string)
 			
