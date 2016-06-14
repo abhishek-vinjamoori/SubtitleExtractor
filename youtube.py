@@ -11,7 +11,7 @@ class youtubeExtractor(object):
 	
 	def __init__(self,url):
 
-		print("YouTubes processing")
+		print("Detected YouTube\nProcessing....\n")
 		self.loginRequired = False
 		self.urlName = url
 		self.requestsFileName = "iDoNotExistDefinitelyOnThisComputerFolder.html"
@@ -38,16 +38,17 @@ class youtubeExtractor(object):
 		stringToAppend = self.checkAvailableLanguages()
 		FinalUrl = self.getFinalUrl(decodedLink,stringToAppend)
 		
-		print(FinalUrl)
+		if self.debug:
+			print(FinalUrl)
 
-		self.downloadXMLTranscript(FinalUrl)
+		returnValue = self.downloadXMLTranscript(FinalUrl)
 
 		#srtText = self.convertXMLToSrt(str(self.requestObjectv.text))
 		#srtText = self._parseXml(str(self.requestObjectv.text))
 		#print(srtText)
-		# self.deleteUnnecessaryfiles()
+		self.deleteUnnecessaryfiles()
 
-		return 1
+		return returnValue
 
 	def createSoupObject(self):
 		
@@ -70,11 +71,9 @@ class youtubeExtractor(object):
 	def getRawSubtitleLink(self):
 		
 		"""
-		This function returns the SMI subtitle link based on the contentID.
-		Currently, the link resides in the xmlLinkTemplate variable
-		
-		The XML Link for any subtitle video is - "http://www.hulu.com/captions.xml?content_id=CONTENTID"
-		Where, CONTENTID is the unique content_ID of the video.
+		This function returns the Raw Link which is in encoded format. 
+		Note - This is still an incomplete URL. 
+		The variable UglyString contains the complete URL.
 		
 		"""
 
@@ -116,6 +115,10 @@ class youtubeExtractor(object):
 
 	def decodeLink(self,rawLink):
 
+		"""
+		This function decodes the requested URL
+		"""
+
 		rawLink = urllib.parse.unquote(rawLink)
 		rawLink = rawLink.replace("\\u0026","&")
 		decodedLink = rawLink.replace("\\","")
@@ -125,6 +128,10 @@ class youtubeExtractor(object):
 
 
 	def checkAvailableLanguages(self):
+
+		"""
+		This function checks for the available subtitle languages and prmopts the user to select the language
+		"""
 		
 		print("<<<------ Choose the corressponding number for selecting the language ----->>>")
 		
@@ -143,9 +150,11 @@ class youtubeExtractor(object):
 		for languages in range(len(availableLangList)):
 			
 			langKey,equalKey,Language = availableLangList[languages].partition("=")
-			#print(Language)
+			if self.debug:
+				print(Language)
 			LanguageKey,hyphenKey,randomVar = Language.partition("-")
-			#print(LanguageKey)
+			if self.debug:
+				print(LanguageKey)
 			print("<%d> - "%(languages+1),end="")
 
 #			[languageDict[k] for k in languageDict.keys() if 'zh' in k]
@@ -154,6 +163,7 @@ class youtubeExtractor(object):
 			print("(%s)"%(Language))
 
 		optionChoice = input()
+		
 		try:
 			optionChoice = int(optionChoice)
 		except:
@@ -164,17 +174,14 @@ class youtubeExtractor(object):
 		 	print(availableLangList[optionChoice-1])
 			
 		return availableLangList[optionChoice-1] 
-		# try:
-		# 	smiLink = smiSoup.find(listOfLanguages[optionChoice-1].name).string
 		
-		# except:
-		# 	print("You have entered an invalid option. Application will exit.")
-		# 	exit()
-		
-		# return smiLink		
 
 	def getFinalUrl(self, Link,subString):
 	
+		"""
+		This function returns the final URL which contains the transcripts
+		"""
+
 		Link += "&"
 		Link += subString
 		return Link
@@ -184,43 +191,46 @@ class youtubeExtractor(object):
 	def downloadXMLTranscript(self,FinalUrl):
 
 		"""
-		This function fetches the captions and writes them into a file in VTT format
+		This function fetches the captions and writes them into a file in XML
 		"""
+		try:
+			self.requestObjectv = requests.get(FinalUrl)
+			print("Creating ~  '%s.xml' ..."%(self.title))
+			subsFileHandler = open(self.title + ".xml","w")
+			self.requestObjectv = BeautifulSoup(self.requestObjectv.text)
+			subsFileHandler.write(str(self.requestObjectv.transcript.prettify()))
+			subsFileHandler.close()
 
-		self.requestObjectv = requests.get(FinalUrl)
-		#print(requestObjectv.text)
+			return 1
 
-		subsFileHandler = open(self.title + ".xml","w")
-		self.requestObjectv = BeautifulSoup(self.requestObjectv.text)
-		subsFileHandler.write(str(self.requestObjectv.transcript.prettify()))
-		subsFileHandler.close()
-
+		except:
+			return 0
 		pass
 	
 	def convertXMLToSrt(self,xml_string):
 		pass
-
-	def _parseXml(self,cc):
-		""" INPUT: XML file with captions
-		OUTPUT: parsed object like:
-		[{'texlines': [u"So, I'm going to rewrite this", 'in a more concise form as'],
-		'time': {'hours':'1', 'min':'2','sec':44,'msec':232} }]
-		"""
-		#htmlpar = HTMLParser.HTMLParser()
-		cc = cc.split("</text>") # ['<text start="2997.929">So, it will\nhas time', '<text start="3000.929">blah', ..]
-		captions = []
-		for line in cc:
-			if re.search('text', line):
-				time = re.search(r'start="(\d+)(?:\.(\d+)){0,1}', line).groups() # ('2997','929')
-				time = ( int(time[0]), int(0 if not time[1] else time[1]) )
-				    #convert seconds and millisec to int
-				text = re.search(r'">(.*)', line, re.DOTALL).group(1) # extract text i.e. 'So, it will\nhas time'
-				textlines = text.split('\n')
-				print(textlines)
-				    #unscape chars like &amp; or &#39;
-				ntime = {'hours':time[0]/3600,"min":time[0]%3600/60,"sec":time[0]%3600%60,"msec":time[1]}
-				captions.append({'time':ntime,'textlines':textlines})
-		return captions
+		#TODO
+	# def _parseXml(self,cc):
+	# 	""" INPUT: XML file with captions
+	# 	OUTPUT: parsed object like:
+	# 	[{'texlines': [u"So, I'm going to rewrite this", 'in a more concise form as'],
+	# 	'time': {'hours':'1', 'min':'2','sec':44,'msec':232} }]
+	# 	"""
+	# 	#htmlpar = HTMLParser.HTMLParser()
+	# 	cc = cc.split("</text>") # ['<text start="2997.929">So, it will\nhas time', '<text start="3000.929">blah', ..]
+	# 	captions = []
+	# 	for line in cc:
+	# 		if re.search('text', line):
+	# 			time = re.search(r'start="(\d+)(?:\.(\d+)){0,1}', line).groups() # ('2997','929')
+	# 			time = ( int(time[0]), int(0 if not time[1] else time[1]) )
+	# 			    #convert seconds and millisec to int
+	# 			text = re.search(r'">(.*)', line, re.DOTALL).group(1) # extract text i.e. 'So, it will\nhas time'
+	# 			textlines = text.split('\n')
+	# 			print(textlines)
+	# 			    #unscape chars like &amp; or &#39;
+	# 			ntime = {'hours':time[0]/3600,"min":time[0]%3600/60,"sec":time[0]%3600%60,"msec":time[1]}
+	# 			captions.append({'time':ntime,'textlines':textlines})
+	# 	return captions
 
     # def _generateSrt(self,captions):
     #     """ INPUT: array with captions, i.e.
@@ -257,11 +267,9 @@ class youtubeExtractor(object):
 		"""
 		This function returns the title of the video. This is also used for naming the file.
 
-		<meta name="twitter:title" value="Interstellar"/>   --> Extracting the value from here
+		<title>VIDEO NAME - YouTube</title>
 		
 		"""
-
-		#print(self.soupObject.title.string)
 		self.title = "YouTube_subtitles"
 		try:
 			titleString = self.soupObject.title.string
@@ -276,6 +284,5 @@ class youtubeExtractor(object):
 		if not self.debug:
 			try:
 				os.remove(self.requestsFileName)
-				os.remove(self.title+".vtt")
 			except:
 				pass
