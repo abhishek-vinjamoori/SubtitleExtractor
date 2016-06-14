@@ -21,7 +21,7 @@ class youtubeExtractor(object):
 
 	def getSubtitles(self):
 
-		"""
+		"""	
 		The main function which uses helper functions to get the subtitles
 		"""
 
@@ -39,14 +39,12 @@ class youtubeExtractor(object):
 		FinalUrl = self.getFinalUrl(decodedLink,stringToAppend)
 		
 		print(FinalUrl)
-		# if not smiLink:
-		# 	print("Unable to fetch the subtitles. No subtitles present.")
-		# 	self.deleteUnnecessaryfiles()
-		# 	return 0
 
 		self.downloadXMLTranscript(FinalUrl)
-		# self.convertVttToSrt()
 
+		#srtText = self.convertXMLToSrt(str(self.requestObjectv.text))
+		#srtText = self._parseXml(str(self.requestObjectv.text))
+		#print(srtText)
 		# self.deleteUnnecessaryfiles()
 
 		return 1
@@ -189,45 +187,70 @@ class youtubeExtractor(object):
 		This function fetches the captions and writes them into a file in VTT format
 		"""
 
-		requestObjectv = requests.get(FinalUrl)
+		self.requestObjectv = requests.get(FinalUrl)
 		#print(requestObjectv.text)
 
 		subsFileHandler = open(self.title + ".xml","w")
-		subsFileHandler.write(requestObjectv.text)
+		self.requestObjectv = BeautifulSoup(self.requestObjectv.text)
+		subsFileHandler.write(str(self.requestObjectv.transcript.prettify()))
 		subsFileHandler.close()
 
 		pass
 	
-	def convertVttToSrt(self):
+	def convertXMLToSrt(self,xml_string):
+		pass
 
+	def _parseXml(self,cc):
+		""" INPUT: XML file with captions
+		OUTPUT: parsed object like:
+		[{'texlines': [u"So, I'm going to rewrite this", 'in a more concise form as'],
+		'time': {'hours':'1', 'min':'2','sec':44,'msec':232} }]
 		"""
-		This function converts the VTT subtitle file into SRT format.
-		Credits - http://goo.gl/XRllyy for the conversion method.
-		"""
+		#htmlpar = HTMLParser.HTMLParser()
+		cc = cc.split("</text>") # ['<text start="2997.929">So, it will\nhas time', '<text start="3000.929">blah', ..]
+		captions = []
+		for line in cc:
+			if re.search('text', line):
+				time = re.search(r'start="(\d+)(?:\.(\d+)){0,1}', line).groups() # ('2997','929')
+				time = ( int(time[0]), int(0 if not time[1] else time[1]) )
+				    #convert seconds and millisec to int
+				text = re.search(r'">(.*)', line, re.DOTALL).group(1) # extract text i.e. 'So, it will\nhas time'
+				textlines = text.split('\n')
+				print(textlines)
+				    #unscape chars like &amp; or &#39;
+				ntime = {'hours':time[0]/3600,"min":time[0]%3600/60,"sec":time[0]%3600%60,"msec":time[1]}
+				captions.append({'time':ntime,'textlines':textlines})
+		return captions
 
-		f =  open(self.title + ".vtt","r")
-		fh = open(self.title + ".srt","w")
-		print("Creating ~  '%s.srt' ..."%(self.title))
-		
-		count = 1
-
-		#Removing WEBVTT Header line.
-		for line in f.readlines():
-			if line[:6] == 'WEBVTT':
-				continue
-
-			#Substituting '.' with ',' in the time-stamps
-			line = re.sub(r'(:\d+)\.(\d+)', r'\1,\2', line)
-
-			#Printing the header number in each line. This is required for the SRT format.
-			if line == '\n':	
-				fh.write("\n" + str(count)+"\n")
-				count += 1
-			else:
-				fh.write(line.strip()+"\n")
-
-		f.close()
-		fh.close()
+    # def _generateSrt(self,captions):
+    #     """ INPUT: array with captions, i.e.
+    #             [{'texlines': [u"So, I'm going to rewrite this", 'in a more concise form as'],
+    #             'time': {'hours':'1', 'min':'2','sec':44,'msec':232} }]
+    #         OUTPUT: srtformated string
+    #     """
+    #     caption_number = 0
+    #     srt_output = []
+    #     for caption in captions:
+    #         caption_number += 1
+    #         #CAPTION NUMBER
+    #         srt_output.append(str(caption_number))
+    #         #TIME
+    #         time_from = ( caption['time']['hours'], caption['time']['min'], caption['time']['sec'], caption['time']['msec'] ) 
+    #         if len(captions)>caption_number:
+    #             #display caption until next one
+    #             next_caption_time = captions[caption_number]['time']
+    #             time_to = ( next_caption_time['hours'], next_caption_time['min'], next_caption_time['sec'], next_caption_time['msec'] )
+    #         else:
+    #             #display caption for 2 seconds
+    #             time_to = (time_from[0],time_from[1]+2,time_from[2],time_from[3]) 
+    #         srt_output.append( (":").join([str(i) for i in time_from[0:-1]])+","+str(time_from[-1])+" --> "+(":").join([str(i) for i in time_to[0:-1]])+","+str(time_to[-1]))
+    #         #CAPTIONS
+    #         for caption_line in caption['textlines']:
+    #             srt_output.append(caption_line)
+    #         #Add two empty lines to serarate every caption showed
+    #         srt_output.append("")
+    #         srt_output.append("")
+    #     return srt_output
 
 	def getTitle(self):
 
