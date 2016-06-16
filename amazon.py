@@ -16,6 +16,28 @@ class amazonExtractor(object):
 		self.urlName = url
 		self.debug = False
 		self.requestsFileName = "iDoNotExistDefinitelyOnThisComputerFolder.html"
+		
+		#Parameters requireed for Obtaining the URL
+
+		self.parametersDict = {
+			"asin"                              : "" ,
+			"consumptionType"                   : "Streaming" ,
+			"desiredResources"                  : "SubtitleUrls" ,
+			"deviceID"                          : "9bebcddcffc488b4e527a1014a0b8fd146dcd801b0497aa5ae1f7bca" ,
+			"deviceTypeID"                      : "AOAGZA014O5RE" ,
+			"firmware"                          : "1" ,
+			"marketplaceID"                     : "ATVPDKIKX0DER" ,
+			"resourceUsage"                     : "ImmediateConsumption" ,
+			"videoMaterialType"                 : "Feature" ,
+			"operatingSystemName"               : "Linux" ,
+			"customerID"                        : "A355O3APTO5FZM" ,
+			"token"                             : "51f4c2eca280ac2b22f8f2c59f126342" ,
+			"deviceDrmOverride"                 : "CENC" ,
+			"deviceStreamingTechnologyOverride" : "DASH" ,
+			"deviceProtocolOverride"            : "Https" ,
+			"deviceBitrateAdaptationsOverride"  : "CVBR,CBR" ,
+			"titleDecorationScheme"             : "primary-content"
+		}
 		pass 
 
 	def getSubtitles(self):
@@ -28,9 +50,10 @@ class amazonExtractor(object):
 		
 		self.getTitle()
 		print(self.title)
+		self.getAsinID() #Method-1
+		print(self.parametersDict['asin'])
 		return 0
-		# self.contentID = self.getContentID1() #Method-1
-		
+				
 		# try:
 		# 	self.contentID = int(self.contentID)
 		# except:
@@ -88,6 +111,7 @@ class amazonExtractor(object):
 			if errorNames[0] in titleString and errorNames[1] in titleString:
 				print("Request Throttle Error\n Trying Again....")
 				numberOfTrials -= 1 
+				continue
 			else:
 				print("Request successful")
 				numberOfTrials = 0
@@ -98,30 +122,26 @@ class amazonExtractor(object):
 		pass
 
 
-	def getContentID1(self):
+	def getAsinID(self):
 		
-		"""This is one of the methodologies to get the content ID. If this fails the alternative method will be called
-		
-		In the Beautiful soup text it can be found that every video has this paramter.
-		\"content_id\": \"60535322\"
-		
-		So we first use '"'(quotes) as the delimetter and split the text. Then access the content ID from the returned list.
+		"""This is one of the methodologies to get the asin ID. 
+
+		Obtaining the asin from here -
+
+		<input name="asin" type="hidden" value="B000I9WVAK"/>
+		The value contains the asin.
 
 		"""
 
-		listedSoup = str(self.soupObject).split('"')
-		contentCounter = 0
-		for counter in range(len(listedSoup)):
-			if "content_id" in listedSoup[counter]:
-				contentCounter = counter+2
-				break
-		#print(listedSoup[contentCounter])
-		contentId = ""
-		
-		for i in listedSoup[contentCounter]:
-			if i.isdigit():
-				contentId+=i
-		return contentId		
+		try:
+			s=self.soupObject.find("input",attrs={"name":"asin"})
+			self.parametersDict['asin'] = str(s['value'])
+			if not self.title:
+				s = int("deliberateError")
+
+		except:
+			pass
+
 
 
 	def getContentID2(self):
