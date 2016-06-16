@@ -279,11 +279,12 @@ class youtubeExtractor(object):
 		<title>VIDEO NAME - YouTube</title>
 		
 		"""
-		self.title = "YouTube_subtitles"
 		try:
 			titleString = self.soupObject.title.string
 			self.title = titleString.replace(" - YouTube","")			
+			self.title = self.title.strip()
 		except:
+			self.title = "YouTube_subtitles"
 			pass
 
 		pass

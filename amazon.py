@@ -18,10 +18,9 @@ class amazonExtractor(object):
 		self.requestsFileName = "iDoNotExistDefinitelyOnThisComputerFolder.html"
 		pass 
 
-
 	def getSubtitles(self):
 
-		"""	
+		"""
 		The main function which uses helper functions to get the subtitles
 		"""
 
@@ -29,26 +28,45 @@ class amazonExtractor(object):
 		
 		self.getTitle()
 		print(self.title)
+		return 0
+		# self.contentID = self.getContentID1() #Method-1
 		
-		rawLink = self.getRawSubtitleLink()
-		decodedLink = self.decodeLink(rawLink)
-		if self.debug:
-			print(decodedLink)
+		# try:
+		# 	self.contentID = int(self.contentID)
+		# except:
+		# 	print("Trying an alternative method to fetch Content ID")
+		# 	self.contentID = self.getContentID2()  #Method-2
+
+		# try:
+		# 	self.contentID = int(self.contentID)
+		# except:
+		# 	print("Unable to fetch the contentID.")
+		# 	self.deleteUnnecessaryfiles()
+		# 	return 0
+
+		# if self.debug:
+		# 	print(self.contentID)
+
+		# smiLink = self.getSmiSubtitlesLink()
+
+		# if not smiLink:
+		# 	print("Unable to fetch the subtitles. No subtitles present.")
+		# 	self.deleteUnnecessaryfiles()
+		# 	return 0
+
+		# if self.debug:
+		# 	print(smiLink)
 		
-		stringToAppend = self.checkAvailableLanguages()
-		FinalUrl = self.getFinalUrl(decodedLink,stringToAppend)
+		# vttLink = self.transformToVtt(smiLink)
+		# if self.debug:
+		# 	print(vttLink)
 		
-		if self.debug:
-			print(FinalUrl)
+		# self.createVttSubtitleFile(vttLink)
+		# self.convertVttToSrt()
 
-		returnValue = self.downloadXMLTranscript(FinalUrl)
+		# self.deleteUnnecessaryfiles()
 
-		#srtText = self.convertDfxpToSrt(str(self.requestObjectv.text))
-		#srtText = self._parseXml(str(self.requestObjectv.text))
-		#print(srtText)
-		self.deleteUnnecessaryfiles()
-
-		return returnValue
+		return 1
 
 	def createSoupObject(self):
 		
@@ -68,172 +86,222 @@ class amazonExtractor(object):
 
 		pass
 
-	def getRawSubtitleLink(self):
+
+	def getContentID1(self):
 		
-		"""
-		This function returns the Raw Link which is in encoded format. 
-		Note - This is still an incomplete URL. 
-		The variable UglyString contains the complete URL.
+		"""This is one of the methodologies to get the content ID. If this fails the alternative method will be called
 		
+		In the Beautiful soup text it can be found that every video has this paramter.
+		\"content_id\": \"60535322\"
+		
+		So we first use '"'(quotes) as the delimetter and split the text. Then access the content ID from the returned list.
+
 		"""
 
-		rawLink = ""
-		self.uglyString = ""
+		listedSoup = str(self.soupObject).split('"')
+		contentCounter = 0
+		for counter in range(len(listedSoup)):
+			if "content_id" in listedSoup[counter]:
+				contentCounter = counter+2
+				break
+		#print(listedSoup[contentCounter])
+		contentId = ""
+		
+		for i in listedSoup[contentCounter]:
+			if i.isdigit():
+				contentId+=i
+		return contentId		
 
-		searchStringList = ["timed","TTS_URL","caption_tracks"]
-		print()
-		fh = open(self.requestsFileName,"r")
 
-		for lines in fh:
+	def getContentID2(self):
+
+		"""
+		This is the alternative method to obtain the contentID. 
+		Sample line 1) - <link href="http://ib3.huluim.com/video/60585710?region=US&amp;size=220x124"
+		Sample line 2) - <link href="http://ib3.huluim.com/movie/60535322?region=US&amp;size=220x318"
+		Required content ID's are 60585710 & 60535322 respectively.
+
+		Partition technique is used to obtain the content ID.
+		"""
+		fh = open(self.requestsFileName, "r")		
+		listOfOptions = ["video/","movie/"]
+		foundContent = False
+		contentId = ""
+		for line in fh:
 			
-			if searchStringList[0] in lines and searchStringList[1] in lines :
-				lis  = lines.split('"')
-				captionPosition = 0
-				for i in range(len(lis)):
-					if searchStringList[1] in lis[i]:
-						captionPosition = i+1
-						break
-					
-				rawLink = str(lis[captionPosition])
+			for option in listOfOptions:
+				junkText, separator, contentIdContainer = line.partition(option)
+				#The Content Id has been found.
+				if contentIdContainer:
+					foundContent = True
+					break
+			
+			#The Content ID has been found. No need to read the file anymore.
+			#Get the Content ID from the container 			
+			if foundContent:    
+				contentId,separator, junkText = contentIdContainer.partition("?")
+				if separator:
+					break
+				else:
+					foundContent = False		
+		
+		return contentId
+		
+		pass
 
-			elif searchStringList[0] in lines:
-				lis = lines.split('"')
-				position = 0
-				#print(lis)
-				for i in range(len(lis)):
-					if searchStringList[2] in lis[i]:
-						position = i+2
-						break
-				if position:
-					self.uglyString = str(lis[position])
 
+	def getSmiSubtitlesLink(self):
+		
+		"""
+		This function returns the SMI subtitle link based on the contentID.
+		Currently, the link resides in the xmlLinkTemplate variable
+		
+		The XML Link for any subtitle video is - "http://www.hulu.com/captions.xml?content_id=CONTENTID"
+		Where, CONTENTID is the unique content_ID of the video.
+		
+		"""
+
+		smiLink = ""
+		xmlLinkTemplate = "http://www.hulu.com/captions.xml?content_id="
+		xmlLink = xmlLinkTemplate + str(self.contentID)
+		xmlRequest = requests.get(xmlLink)
+		if self.debug:
+			print(xmlRequest.text)
+		smiSoup = BeautifulSoup(xmlRequest.text)
+		
+		li = smiSoup.find("transcripts")
+		listOfLanguages = li.findChildren()
+		
+		if self.debug:
+			print(listOfLanguages)
+		
+		
+		#If more than one language subtitles are present, the user can choose the desired language.
+		if len(listOfLanguages)>1:
+
+			print("<<<------ Choose the corressponding number for selecting the language ----->>>")
+			
+			for languages in range(len(listOfLanguages)):
+				print("<%d> - %s"%(languages+1,listOfLanguages[languages].name))
+
+			optionChoice = input()
+			try:
+				optionChoice = int(optionChoice)
+			except:
+				print("You have entered an invalid option. Application will exit.")
+				exit()
+
+			if self.debug:
+				print(smiSoup.find(listOfLanguages[optionChoice-1].name).string)
+			
+			try:
+				smiLink = smiSoup.find(listOfLanguages[optionChoice-1].name).string
+			
+			except:
+				print("You have entered an invalid option. Application will exit.")
+				exit()
+		
+		else:
+			
+			if smiSoup.en:
+				smiLink = smiSoup.en.string
+		
+		return smiLink
+		
+		pass
+
+	def transformToVtt(self,smiLink):
+		
+		"""
+		This function takes an smiLink and returns the corressponding subtitles in VTT format(a link)
+		Source - http://stream-recorder.com/forum/hulu-subtitles-t20120.html
+		
+		http://assets.huluim.com/"captions"/380/60601380_US_en_en."smi"  -----> 
+		http://assets.huluim.com/"captions_webvtt"/380/60601380_US_en_en."vtt"
+		
+		captions --> captions_webvtt
+		smi      --> vtt
+
+		"""
+		#print(smiLink)
+		vttLink = ""
+		replaceDict = {"captions":"captions_webvtt", "smi":"vtt"}
+
+		for keys in replaceDict:
+			smiLink = smiLink.replace(keys,replaceDict[keys])
+
+		vttLink = smiLink
+		#print(vttLink)
+
+		return vttLink	
+
+		pass
+
+	def createVttSubtitleFile(self,vttLink):
+
+		"""
+		This function fetches the captions and writes them into a file in VTT format
+		"""
+
+		requestObjectv = requests.get(vttLink)
+		#print(requestObjectv.text)
+
+		subsFileHandler = open(self.title + ".vtt","w")
+		subsFileHandler.write(requestObjectv.text)
+		subsFileHandler.close()
+
+		pass
+	
+	def convertVttToSrt(self):
+
+		"""
+		This function converts the VTT subtitle file into SRT format.
+		Credits - http://goo.gl/XRllyy for the conversion method.
+		"""
+
+		f =  open(self.title + ".vtt","r")
+		fh = open(self.title + ".srt","w")
+		print("Creating ~  '%s.srt' ..."%(self.title))
+		
+		count = 1
+
+		#Removing WEBVTT Header line.
+		for line in f.readlines():
+			if line[:6] == 'WEBVTT':
+				continue
+
+			#Substituting '.' with ',' in the time-stamps
+			line = re.sub(r'(:\d+)\.(\d+)', r'\1,\2', line)
+
+			#Printing the header number in each line. This is required for the SRT format.
+			if line == '\n':	
+				fh.write("\n" + str(count)+"\n")
+				count += 1
+			else:
+				fh.write(line.strip()+"\n")
+
+		f.close()
 		fh.close()
 
-		return rawLink
-		
-		pass
-
-	def decodeLink(self,rawLink):
-
-		"""
-		This function decodes the requested URL
-		"""
-
-		rawLink = urllib.parse.unquote(rawLink)
-		rawLink = rawLink.replace("\\u0026","&")
-		decodedLink = rawLink.replace("\\","")
-		
-		return decodedLink
-		pass
-
-
-	def checkAvailableLanguages(self):
-
-		"""
-		This function checks for the available subtitle languages and prmopts the user to select the language
-		"""
-		
-		print("<<<------ Choose the corressponding number for selecting the language ----->>>")
-		
-		self.uglyString = urllib.parse.unquote(str(self.uglyString))
-		self.uglyString = self.uglyString.replace("\\u0026","&")
-		self.uglyString = self.uglyString.replace("\\","")
-
-	#	print(self.uglyString)
-		lang = self.uglyString.split("&")
-		availableLangList = []
-		for info in lang:
-			if info.startswith( 'lang' ):
-				availableLangList.append(info)
-		if self.debug:
-			print(availableLangList)
-		for languages in range(len(availableLangList)):
-			
-			langKey,equalKey,Language = availableLangList[languages].partition("=")
-			if self.debug:
-				print(Language)
-			LanguageKey,hyphenKey,randomVar = Language.partition("-")
-			if self.debug:
-				print(LanguageKey)
-			print("<%d> - "%(languages+1),end="")
-
-#			[languageDict[k] for k in languageDict.keys() if 'zh' in k]
-			if LanguageKey in self.languageDict.keys():
-				print(self.languageDict[LanguageKey],end="  ")
-			print("(%s)"%(Language))
-
-		optionChoice = input()
-		
-		try:
-			optionChoice = int(optionChoice)
-		except:
-			print("You have entered an invalid option. Application will download the first option available.")
-			optionChoice = 1			
-
-		if self.debug:
-		 	print(availableLangList[optionChoice-1])
-			
-		return availableLangList[optionChoice-1] 
-		
-
-	def getFinalUrl(self, Link,subString):
-	
-		"""
-		This function returns the final URL which contains the transcripts
-		"""
-
-		Link += "&"
-		Link += subString
-		return Link
-
-		pass
-
-	def downloadXMLTranscript(self,FinalUrl):
-
-		"""
-		This function fetches the captions and writes them into a file in XML
-		"""
-
-		autoGeneratedUrl = "&kind=asr"
-		try:
-			self.requestObjectv = requests.get(FinalUrl)
-			print("Creating ~  '%s.xml' ..."%(self.title))
-			subsFileHandler = open(self.title + ".xml","w")
-			
-			#It probably could be auto-generated subtitles. Lets try even that here.
-			#Auto-generated subtitles need - "&kind=asr" to be appended to the FinalUrl
-
-			if not self.requestObjectv.text:
-					FinalUrl += autoGeneratedUrl
-					self.requestObjectv = requests.get(FinalUrl)
-			self.requestObjectv = BeautifulSoup(self.requestObjectv.text)
-			subsFileHandler.write(str(self.requestObjectv.transcript.prettify()))
-			subsFileHandler.close()
-
-			return 1
-
-		except:
-			return 0
-		pass
-	
-	def convertDfxpToSrt(self,xml_string):
-		
-		pass
-		
 	def getTitle(self):
 
 		"""
 		This function returns the title of the video. This is also used for naming the file.
 
-		<title>VIDEO NAME - YouTube</title>
+		<meta name="twitter:title" content="Interstellar"/>   --> Extracting the value from here
 		
 		"""
-		self.title = "YouTube_subtitles"
+
+		#print(self.soupObject.title.string)
 		try:
-			titleString = self.soupObject.title.string
-			self.title = titleString.replace(" - YouTube","")			
+			s = self.soupObject.find("meta",attrs={"name":"twitter:title"})
+			self.title = str(s['content'])
+			self.title = self.title.strip()
+			if not self.title:
+				s = int("deliberateError")
+
 		except:
-			pass
+			self.title = "Amazonsubtitles"
 
 		pass
 
@@ -242,5 +310,6 @@ class amazonExtractor(object):
 		if not self.debug:
 			try:
 				os.remove(self.requestsFileName)
+				os.remove(self.title+".vtt")
 			except:
 				pass
