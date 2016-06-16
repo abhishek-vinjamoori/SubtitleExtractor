@@ -70,19 +70,30 @@ class amazonExtractor(object):
 
 	def createSoupObject(self):
 		
-		requestObject = requests.get(self.urlName)
+		#This is to tackle the Request Throttle error which occurs on Amazon frequently.
+		numberOfTrials = 10
+		errorNames = ["Service","Error"]
 
-		# fileHandler = open("requests.txt", "w")
-		# fileHandler.write(requestObject.text)
-		# fileHandler.close() 
-		
-		self.soupObject = BeautifulSoup(requestObject.text,from_encoding="utf8")
-		#soupObject1 = BeautifulSoup(requestObject.text,"lxml")
-		#print(self.soupObject.original_encoding)
+		while numberOfTrials:
+			requestObject = requests.get(self.urlName)
 
-		fh = open(self.requestsFileName, "w")
-		fh.write(str(self.soupObject))
-		fh.close()		
+			# fileHandler = open("requests.txt", "w")
+			# fileHandler.write(requestObject.text)
+			# fileHandler.close() 
+			
+			self.soupObject = BeautifulSoup(requestObject.text,from_encoding="utf8")
+			#soupObject1 = BeautifulSoup(requestObject.text,"lxml")
+			#print(self.soupObject.original_encoding)
+			titleString = str(self.soupObject.title.string)
+			if errorNames[0] in titleString and errorNames[1] in titleString:
+				print("Request Throttle Error\n Trying Again....")
+				numberOfTrials -= 1 
+			else:
+				print("Request successful")
+				numberOfTrials = 0
+			fh = open(self.requestsFileName, "w")
+			fh.write(str(self.soupObject))
+			fh.close()		
 
 		pass
 
