@@ -60,17 +60,15 @@ class amazonExtractor(object):
 		
 		if self.debug:
 			print(self.subtitleURLContainer)
-		return 0
 
-		# FinalUrl = self.getFinalUrl(decodedLink,stringToAppend)
-		
-		# if self.debug:
-		# 	print(FinalUrl)
+		SubtitlesURL = self.getSubtitleURL()
+		if self.debug:
+		 	print(SubtitlesURL)
 
-		# if not FinalUrl:
-		#  	print("Unable to fetch the subtitles. No subtitles present.")
-		#  	self.deleteUnnecessaryfiles()
-		#  	return 0
+		if not SubtitlesURL:
+			print("Unable to fetch the subtitles. No subtitles present.")
+			self.deleteUnnecessaryfiles()
+			return 0
 
 		
 		# returnValue = self.downloadDfxpTranscript(FinalUrl)
@@ -132,8 +130,6 @@ class amazonExtractor(object):
 		except:
 			pass
 
-
-
 	
 	def getSubtitlesContainer(self):
 		
@@ -154,6 +150,13 @@ class amazonExtractor(object):
 		pass
 
 
+	def getSubtitleURL(self):
+
+		subRequestObject = requests.get(self.subtitleURLContainer)
+		
+		parsedJsonObject = json.loads(str(subRequestObject.text))
+		print(parsedJsonObject['subtitleUrls'][0]['url'])
+		pass
 
 	def downloadDfxpTranscript(self,SubsLink):
 
@@ -161,11 +164,11 @@ class amazonExtractor(object):
 		This function fetches the captions and writes them into a file in VTT format
 		"""
 
-		requestObjectv = requests.get(SubsLink)
-		#print(requestObjectv.text)
+		subRequestObject = requests.get(SubsLink)
+		#print(subRequestObject.text)
 
 		subsFileHandler = open(self.title + ".dfxp","w")
-		subsFileHandler.write(requestObjectv.text)
+		subsFileHandler.write(subRequestObject.text)
 		subsFileHandler.close()
 
 		pass
