@@ -14,7 +14,7 @@ class amazonExtractor(object):
 		print("Detected Amazon\nProcessing....\n")
 		self.loginRequired = False
 		self.urlName = url
-		self.debug = True
+		self.debug = False
 		self.requestsFileName = "iDoNotExistDefinitelyOnThisComputerFolder.html"
 		
 		#Parameters requireed for Obtaining the URL
@@ -171,6 +171,7 @@ class amazonExtractor(object):
 			#print(subRequestObject.text)
 
 			subsFileHandler = open(self.title + ".dfxp","w")
+			print("Creating ~  '%s.dfxp' ..."%(self.title))			
 			subsFileHandler.write(subRequestObject.text)
 			subsFileHandler.close()
 			return 1
@@ -208,6 +209,5 @@ class amazonExtractor(object):
 		if not self.debug:
 			try:
 				os.remove(self.requestsFileName)
-				os.remove(self.title+".dfxp")
 			except:
 				pass
