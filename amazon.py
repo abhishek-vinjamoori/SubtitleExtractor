@@ -71,13 +71,13 @@ class amazonExtractor(object):
 			return 0
 
 		
-		# returnValue = self.downloadDfxpTranscript(FinalUrl)
+		returnValue = self.downloadDfxpTranscript(SubtitlesURL)
 
-		# # self.convertDfxpToSrt()
+		#self.convertDfxpToSrt()
 
-		# self.deleteUnnecessaryfiles()
+		self.deleteUnnecessaryfiles()
 
-		return 1
+		return returnValue
 
 	def createSoupObject(self):
 		
@@ -155,7 +155,10 @@ class amazonExtractor(object):
 		subRequestObject = requests.get(self.subtitleURLContainer)
 		
 		parsedJsonObject = json.loads(str(subRequestObject.text))
-		print(parsedJsonObject['subtitleUrls'][0]['url'])
+		SubsURL = parsedJsonObject['subtitleUrls'][0]['url']
+		
+		return SubsURL
+
 		pass
 
 	def downloadDfxpTranscript(self,SubsLink):
@@ -163,14 +166,18 @@ class amazonExtractor(object):
 		"""
 		This function fetches the captions and writes them into a file in VTT format
 		"""
+		try:
+			subRequestObject = requests.get(SubsLink)
+			#print(subRequestObject.text)
 
-		subRequestObject = requests.get(SubsLink)
-		#print(subRequestObject.text)
-
-		subsFileHandler = open(self.title + ".dfxp","w")
-		subsFileHandler.write(subRequestObject.text)
-		subsFileHandler.close()
-
+			subsFileHandler = open(self.title + ".dfxp","w")
+			subsFileHandler.write(subRequestObject.text)
+			subsFileHandler.close()
+			return 1
+		
+		except:
+			return 0
+		
 		pass
 	
 
