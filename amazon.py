@@ -4,7 +4,7 @@ import requests
 from bs4 import BeautifulSoup
 import urllib.request
 import urllib.parse
-
+import json
 
 class amazonExtractor(object):
 	
@@ -14,24 +14,24 @@ class amazonExtractor(object):
 		print("Detected Amazon\nProcessing....\n")
 		self.loginRequired = False
 		self.urlName = url
-		self.debug = False
+		self.debug = True
 		self.requestsFileName = "iDoNotExistDefinitelyOnThisComputerFolder.html"
 		
 		#Parameters requireed for Obtaining the URL
-
 		self.parametersDict = {
+			"PreURL"                            : "https://atv-ps.amazon.com/cdp/catalog/GetPlaybackResources?",
 			"asin"                              : "" ,
 			"consumptionType"                   : "Streaming" ,
 			"desiredResources"                  : "SubtitleUrls" ,
-			"deviceID"                          : "9bebcddcffc488b4e527a1014a0b8fd146dcd801b0497aa5ae1f7bca" ,
-			"deviceTypeID"                      : "AOAGZA014O5RE" ,
+			"deviceID"                          : "" ,
+			"deviceTypeID"                      : "" ,
 			"firmware"                          : "1" ,
 			"marketplaceID"                     : "ATVPDKIKX0DER" ,
 			"resourceUsage"                     : "ImmediateConsumption" ,
 			"videoMaterialType"                 : "Feature" ,
 			"operatingSystemName"               : "Linux" ,
-			"customerID"                        : "A355O3APTO5FZM" ,
-			"token"                             : "51f4c2eca280ac2b22f8f2c59f126342" ,
+			"customerID"                        : "" ,
+			"token"                             : "" ,
 			"deviceDrmOverride"                 : "CENC" ,
 			"deviceStreamingTechnologyOverride" : "DASH" ,
 			"deviceProtocolOverride"            : "Https" ,
@@ -49,33 +49,23 @@ class amazonExtractor(object):
 		self.createSoupObject()
 		
 		self.getTitle()
-		print(self.title)
-		self.getAsinID() #Method-1
-		print(self.parametersDict['asin'])
+		if self.debug:
+			print(self.title)
+		
+		self.getAsinID() #Method-1		
+		if self.debug:
+		 	print(self.parametersDict['asin'])
+
+		self.getSubtitlesContainer()
+		
+		if self.debug:
+			print(self.subtitleURLContainer)
 		return 0
-				
-		# try:
-		# 	self.contentID = int(self.contentID)
-		# except:
-		# 	print("Trying an alternative method to fetch Content ID")
-		# 	self.contentID = self.getContentID2()  #Method-2
-
-		# try:
-		# 	self.contentID = int(self.contentID)
-		# except:
-		# 	print("Unable to fetch the contentID.")
-		# 	self.deleteUnnecessaryfiles()
-		# 	return 0
-
-		# if self.debug:
-		# 	print(self.contentID)
-
-		# smiLink = self.getSmiSubtitlesLink()
 
 		# if not smiLink:
 		# 	print("Unable to fetch the subtitles. No subtitles present.")
 		# 	self.deleteUnnecessaryfiles()
-		# 	return 0
+		# 	return
 
 		# if self.debug:
 		# 	print(smiLink)
@@ -94,7 +84,7 @@ class amazonExtractor(object):
 	def createSoupObject(self):
 		
 		#This is to tackle the Request Throttle error which occurs on Amazon frequently.
-		numberOfTrials = 10
+		numberOfTrials = 20
 		errorNames = ["Service","Error"]
 
 		while numberOfTrials:
@@ -181,64 +171,22 @@ class amazonExtractor(object):
 		pass
 
 
-	def getSmiSubtitlesLink(self):
+	def getSubtitlesContainer(self):
 		
 		"""
-		This function returns the SMI subtitle link based on the contentID.
-		Currently, the link resides in the xmlLinkTemplate variable
-		
-		The XML Link for any subtitle video is - "http://www.hulu.com/captions.xml?content_id=CONTENTID"
-		Where, CONTENTID is the unique content_ID of the video.
+		This function returns the final URL which contains the link to the Subtitles file.
 		
 		"""
+		self.subtitleURLContainer = ""
 
-		smiLink = ""
-		xmlLinkTemplate = "http://www.hulu.com/captions.xml?content_id="
-		xmlLink = xmlLinkTemplate + str(self.contentID)
-		xmlRequest = requests.get(xmlLink)
-		if self.debug:
-			print(xmlRequest.text)
-		smiSoup = BeautifulSoup(xmlRequest.text)
-		
-		li = smiSoup.find("transcripts")
-		listOfLanguages = li.findChildren()
-		
-		if self.debug:
-			print(listOfLanguages)
-		
-		
-		#If more than one language subtitles are present, the user can choose the desired language.
-		if len(listOfLanguages)>1:
+		self.subtitleURLContainer += self.parametersDict['PreURL']
 
-			print("<<<------ Choose the corressponding number for selecting the language ----->>>")
-			
-			for languages in range(len(listOfLanguages)):
-				print("<%d> - %s"%(languages+1,listOfLanguages[languages].name))
-
-			optionChoice = input()
-			try:
-				optionChoice = int(optionChoice)
-			except:
-				print("You have entered an invalid option. Application will exit.")
-				exit()
-
-			if self.debug:
-				print(smiSoup.find(listOfLanguages[optionChoice-1].name).string)
-			
-			try:
-				smiLink = smiSoup.find(listOfLanguages[optionChoice-1].name).string
-			
-			except:
-				print("You have entered an invalid option. Application will exit.")
-				exit()
-		
-		else:
-			
-			if smiSoup.en:
-				smiLink = smiSoup.en.string
-		
-		return smiLink
-		
+		for parameters in self.parametersDict:
+			if parameters != "PreURL":
+				self.subtitleURLContainer += "&"
+				self.subtitleURLContainer += parameters
+				self.subtitleURLContainer += "="
+				self.subtitleURLContainer += self.parametersDict[parameters]
 		pass
 
 	def transformToVtt(self,smiLink):
