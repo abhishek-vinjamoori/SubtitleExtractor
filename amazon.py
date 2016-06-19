@@ -14,7 +14,7 @@ class amazonExtractor(object):
 		print("Detected Amazon\nProcessing....\n")
 		self.loginRequired = False
 		self.urlName = url
-		self.debug = False
+		self.debug = True
 		self.requestsFileName = "iDoNotExistDefinitelyOnThisComputerFolder.html"
 		
 		#Parameters requireed for Obtaining the URL
@@ -23,8 +23,8 @@ class amazonExtractor(object):
 			"asin"                              : "" ,
 			"consumptionType"                   : "Streaming" ,
 			"desiredResources"                  : "SubtitleUrls" ,
-			"deviceID"                          : "" ,
-			"deviceTypeID"                      : "" ,
+			"deviceID"                          : "b63345bc3fccf7275dcad0cf7f683a8f" ,
+			"deviceTypeID"                      : "AOAGZA014O5RE" ,
 			"firmware"                          : "1" ,
 			"marketplaceID"                     : "ATVPDKIKX0DER" ,
 			"resourceUsage"                     : "ImmediateConsumption" ,
@@ -152,10 +152,18 @@ class amazonExtractor(object):
 
 	def getSubtitleURL(self):
 
+		"""
+		The json content looks like this -	
+	
+		{"returnedTitleRendition":{""},"subtitleUrls":[{"url":"linkforsubtitle.dfxp"}]}
+
+		"""
+		IndexingParameters = ["subtitleUrls",0,"url"]
+
 		subRequestObject = requests.get(self.subtitleURLContainer)
 		
 		parsedJsonObject = json.loads(str(subRequestObject.text))
-		SubsURL = parsedJsonObject['subtitleUrls'][0]['url']
+		SubsURL = parsedJsonObject[IndexingParameters[0]][IndexingParameters[1]][IndexingParameters[2]]
 		
 		return SubsURL
 
