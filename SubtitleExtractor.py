@@ -25,7 +25,7 @@ class Subtitle(object):
 	def __init__(self):
 		self.urlName = ""
 		self.serviceType = ""
-		self.supportedServices = {"hulu":huluExtractor,"netflix":netflixExtractor,"youtube":youtubeExtractor,"amazon":amazonExtractor}
+		self.supportedServices = {"hulu":huluExtractor,"review":netflixExtractor,"youtube":youtubeExtractor,"amazon":amazonExtractor}
 		#,"bbc","hbo","crackle","vudu","epix","syfy","sky","shomi","fox"]
 
 		#Dictionary of all the supported services with the respective class name as the value.
@@ -45,11 +45,11 @@ class Subtitle(object):
 		if self.serviceType:
 			self.serviceClass = self.supportedServices[self.serviceType](self.urlName)  #Creating instance of the sub-class
 			try:
-				if self.serviceClass.loginRequired is True:
-					print("Login is required. Your details are safe and secure\n")
-					self.serviceClass.username = input("Username : ")
-					self.serviceClass.password = getpass.getpass("Password : ")
-					print(self.serviceClass.password)
+				# if self.serviceClass.loginRequired is True:
+				# 	print("Login is required. Your details are safe and secure\n")
+				# 	self.serviceClass.username = input("Username : ")
+				# 	self.serviceClass.password = getpass.getpass("Password : ")
+				# 	print(self.serviceClass.password)
 				returnValue = self.serviceClass.getSubtitles()
 
 				if not returnValue:
