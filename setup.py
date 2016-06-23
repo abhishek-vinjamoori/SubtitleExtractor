@@ -6,7 +6,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import Select
 from selenium.common.exceptions import NoSuchElementException
 from configparser import SafeConfigParser
-import os
+import os,sys
 from bs4 import BeautifulSoup
 import json
 
@@ -15,18 +15,20 @@ filename = "temporaryFile.html"
 def amazonUpdate():
 
 	#Initialising the parser
-	parser = SafeConfigParser()
-	parser.read('userconfig.ini')
-	
+	userParser = SafeConfigParser()
+	userParser.read('userconfig.ini')
+	userParser.optionxform = str
 	parsingDictionary = {"service":"AMAZON"}
 
 	#Required variables for filling in config file
-	baseurl  = parser.get(parsingDictionary['service'], 'url')
-	username = parser.get(parsingDictionary['service'], 'username')
-	password = parser.get(parsingDictionary['service'], 'password')
+	baseurl  = userParser.get(parsingDictionary['service'], 'url')
+	username = userParser.get(parsingDictionary['service'], 'username')
+	password = userParser.get(parsingDictionary['service'], 'password')
 
+	parser = SafeConfigParser()
 	parser.read('config.ini')
-	customerUrl = parser.get(parsingDictionary['service'], 'customerUrl')
+	parser.optionxform = str
+	customerUrl = parser.get(parsingDictionary['service'], 'customerurl')
 
 	xpaths = { 'usernameBox' : "//*[@id='ap_email']",
 	           'passwordBox' : "//*[@id='ap_password']",
@@ -64,8 +66,14 @@ def amazonUpdate():
 	try:
 		parsedSource = json.loads(pageSource)
 		customerID = parsedSource[obtainFrom[0]][obtainFrom[1]]
-		print(customerID)
-	except:
+		#print(customerID)
+		parser.set(parsingDictionary['service'], 'customerid', customerID)
+		
+		fileHandler = open('config.ini',"w") 
+		parser.write(fileHandler)
+		fileHandler.close()
+
+	except ZeroDivisionError:
 		print("An error ocurred. Please report the issue.")
 		pass
 	amazonDriver.close()
