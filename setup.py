@@ -6,9 +6,11 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import Select
 from selenium.common.exceptions import NoSuchElementException
 from configparser import SafeConfigParser
+import os
+from bs4 import BeautifulSoup
+import json
 
-
-
+filename = "temporaryFile.html"
 
 def amazonUpdate():
 
@@ -52,7 +54,20 @@ def amazonUpdate():
 	amazonDriver.find_element_by_xpath(xpaths['submitButton']).click()
 	amazonDriver.get(customerUrl)
 	pageSource = amazonDriver.page_source
-	print(pageSource)
+	pageSource = BeautifulSoup(pageSource).pre.text
+	#print(pageSource)
+
+	#Removing escaped characters like \n \t and literal double quotes
+	pageSource = pageSource.replace('\\"',"").replace('\\n',"").replace('\\t',"")
+	
+	obtainFrom = ["customerInfo","customerID"]
+	try:
+		parsedSource = json.loads(pageSource)
+		customerID = parsedSource[obtainFrom[0]][obtainFrom[1]]
+		print(customerID)
+	except:
+		print("An error ocurred. Please report the issue.")
+		pass
 	amazonDriver.close()
 
 
@@ -62,6 +77,12 @@ def main():
 
 	for services in updateServices:
 		updateServices[services]()
+	
+	# try:
+	# 	os.remove(filename)
+	# except:
+	# 	pass
+
 	pass
 if __name__ == "__main__":
 	main()
