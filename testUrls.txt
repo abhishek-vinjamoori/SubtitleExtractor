@@ -1,0 +1,83 @@
+		urlTestList = ["http://www.hulu.com/watch/245881","http://www.hulu.com/watch/815743","http://www.hulu.com/watch/781835","http://www.hulu.com/watch/876132",
+		"http://www.hulu.com/watch/245895","http://www.hulu.com/watch/759738","http://www.hulu.com/watch/215845","http://www.hulu.com/watch/945797"]
+		self.urlName = "http://www.hulu.com/watch/915444"
+		self.urlName = "http://www.hulu.com/watch/815743"
+		self.urlName = "http://www.hulu.com/watch/876132" 
+		self.urlName = "http://www.hulu.com/watch/945797"
+
+
+
+		self.urlName = "https://www.youtube.com/watch?v=eS7m85d96Mc"
+		self.urlName = "https://www.youtube.com/watch?v=X6p5AZp7r_Q"
+		self.urlName = "https://www.youtube.com/watch?v=P9LHzVEPodg"
+
+
+
+
+https://www.youtube.com/api/timedtext?sparams=asr_langs,caps,v,expire&expire=1465825782&v=eS7m85d96Mc&caps=asr&asr_langs=nl,pt,ru,fr,en,ko,it,de,ja,es&hl=en_US&key=yttt1&signature=0DA4439FF253D47FADFC28280ED786348A0A8D27.247819EB5F956ABD70CD6B446807846C97DAED24&lang=en-US
+
+https://www.youtube.com/api/timedtext?signature=8B02FEFA1C3EC9A472644551D5244A9DCE5B7135.B61C80FD730DE6F46C8DF64DFDE60C13AF72F758&hl=en_US&asr_langs=ja,ko,ru,en,pt,de,fr,nl,es,it&expire=1465916061&v=s8Un0XB_8xk&caps=asr&key=yttt1&sparams=asr_langs,caps,v,expire&lang=en
+
+
+https://www.youtube.com/api/timedtext?expire=1465916180&v=eS7m85d96Mc&caps=asr&hl=en_US&key=yttt1&asr_langs=ja,en,fr,de,ko,it,nl,pt,es,ru&signature=97DC9F8D71F0E683A5C69A59FB7AAC960F516D53.E15ACB650BA3414906EDAF4593F457B659D22F11&sparams=asr_langs,caps,v,expire&lang=en-US
+
+https://www.youtube.com/api/timedtext?sparams=asr_langs,caps,v,expire&expire=1465825069&v=X6p5AZp7r_Q&caps=asr&asr_langs=en,ja,de,ko,it,pt,fr,ru,es,nl&hl=en_US&key=yttt1&signature=0BBCB7B213D2ECD554E803001B761A3F64ED497C.2B61BC1F28784115FCF05FFFE2287B1A87556741&lang=en
+
+https://www.youtube.com/api/timedtext?key=yttt1&expire=1465827096&signature=B3ADB50771BB2AA33D1920868137C17784B75DD7.37E819F4272912F18F4CD57FF7B329C1E6E5BAFF&caps=asr&sparams=asr_langs,caps,v,expire&asr_langs=it,ko,ja,nl,en,pt,fr,es,ru,de&hl=en_US&v=eS7m85d96Mc&lang=en-US&fmt=srv3
+
+https://www.youtube.com/api/timedtext?sparams=asr_langs,caps,v,expire&hl=en_US&caps=asr&v=eS7m85d96Mc&asr_langs=nl,pt,ru,fr,en,ko,it,de,ja,es&key=yttt1&signature=0DA4439FF253D47FADFC28280ED786348A0A8D27.247819EB5F956ABD70CD6B446807846C97DAED24&expire=1465825782
+
+
+https://www.youtube.com/api/timedtext?expire=1465836459&key=yttt1&asr_langs=ja,nl,en,pt,fr,ru,it,ko,de,es&hl=en_US&v=s8Un0XB_8xk&signature=1A4C2CAA427784EF6A94C785E0D276C743DD4E3E.DF088372193D2FC3260BC424066CBED02A47F7EF&caps=asr&sparams=asr_langs,caps,v,expire&kind=asr&lang=en&v=a.en
+
+https://www.youtube.com/api/timedtext?key=yttt1&signature=3B1C01A3256754A39263EBA95B0EF34C0F5C2A94.290C4D958A7E8A491C36900DED2AF230E6714E48&v=X6p5AZp7r_Q&asr_langs=ja,en,fr,ko,de,it,nl,pt,ru,es&caps=asr&hl=en_US&sparams=asr_langs,caps,v,expire&expire=1465836760&lang=da&v=.da
+
+https://www.youtube.com/api/timedtext?signature=6C93AAE0E88438B08FB06D5FD52E0213E3B3E88E.BFEC1741C80A90B61925A07503565593D483895B&key=yttt1&asr_langs=de,ko,it,en,ja,fr,es,ru,nl,pt&v=P9LHzVEPodg&sparams=asr_langs,caps,v,expire&expire=1465842960&caps=asr&hl=en_US&lang=ar&n=Arabic
+
+
+https://www.youtube.com/api/timedtext?v=P9LHzVEPodg&caps=asr&asr_langs=fr,ru,es,nl,it,de,ko,en,pt,ja&sparams=asr_langs,caps,v,expire&expire=1465870678&key=yttt1&hl=en_US&signature=5095D796A0357544C4770A411244C9A3B7F67E1B.69934F67210C2228A2AE58621EBBF71E5E25FDF0&lang=en
+
+
+https://www.youtube.com/watch?v=6R-qLPf6ZSs
+
+
+{"Afrikaans" : "af","Albanian" : "sq","Amharic" : "am","Arabic" : "ar","Armenian" : "hy","Azerbaijani" : "az","Basque" : "eu","Belarusian" : "be","Bengali" : "bn","Bosnian" : "bs","Bulgarian" : "bg","Burmese" : "my","Catalan" : "ca","Cebuano" : "ceb","Chinese+%28Simplified%29" : "zh-Hans","Chinese+%28Traditional%29" : "zh-Hant","Corsican" : "co","Croatian" : "hr","Czech" : "cs","Danish" : "da","Dutch" : "nl","English" : "en","Esperanto" : "eo","Estonian" : "et","Filipino" : "fil","Finnish" : "fi","French" : "fr","Galician" : "gl","Georgian" : "ka","German" : "de","Greek" : "el","Gujarati" : "gu","Haitian+Creole" : "ht","Hausa" : "ha","Hawaiian" : "haw","Hebrew" : "iw","Hindi" : "hi","Hmong" : "hmn","Hungarian" : "hu","Icelandic" : "is","Igbo" : "ig","Indonesian" : "id","Irish" : "ga","Italian" : "it","Japanese" : "ja","Javanese" : "jv","Kannada" : "kn","Kazakh" : "kk","Khmer" : "km","Korean" : "ko","Kurdish" : "ku","Kyrgyz" : "ky","Lao" : "lo","Latin" : "la","Latvian" : "lv","Lithuanian" : "lt","Luxembourgish" : "lb","Macedonian" : "mk","Malagasy" : "mg","Malay" : "ms","Malayalam" : "ml","Maltese" : "mt","Maori" : "mi","Marathi" : "mr","Mongolian" : "mn","Nepali" : "ne","Norwegian" : "no","Nyanja" : "ny","Pashto" : "ps","Persian" : "fa","Polish" : "pl","Portuguese" : "pt","Punjabi" : "pa","Romanian" : "ro","Russian" : "ru","Samoan" : "sm","Scottish+Gaelic" : "gd","Serbian" : "sr","Shona" : "sn","Sindhi" : "sd","Sinhala" : "si","Slovak" : "sk","Slovenian" : "sl","Somali" : "so","Southern+Sotho" : "st","Spanish" : "es","Sundanese" : "su","Swahili" : "sw","Swedish" : "sv","Tajik" : "tg","Tamil" : "ta","Telugu" : "te","Thai" : "th","Turkish" : "tr","Ukrainian" : "uk","Urdu" : "ur","Uzbek" : "uz","Vietnamese" : "vi","Welsh" : "cy","Western+Frisian" : "fy","Xhosa" : "xh","Yiddish" : "yi","Yoruba" : "yo",Zulu" : "zu}		
+
+
+
+https://www.amazon.com/gp/product/B00TU9UFTS/ref=s9_nwrsa_gw_g318_i4_r?ie=UTF8&fpl=fresh&pf_rd_m=ATVPDKIKX0DER&pf_rd_s=desktop-1&pf_rd_r=PASQTWD8JRAB7Y9Y7MFK&pf_rd_t=36701&pf_rd_p=a5c1d758-e7c8-4532-be6f-cda40b84b455&pf_rd_i=desktop
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
