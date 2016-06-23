@@ -5,10 +5,11 @@ from bs4 import BeautifulSoup
 import urllib.request
 import urllib.parse
 import json
+from configparser import SafeConfigParser
 
 class amazonExtractor(object):
 	
-	"""docstring for netflixExtractor"""
+	"""docstring for amazonExtractor"""
 	
 	def __init__(self,url):
 		print("Detected Amazon\nProcessing....\n")
@@ -16,7 +17,8 @@ class amazonExtractor(object):
 		self.urlName = url
 		self.debug = True
 		self.requestsFileName = "iDoNotExistDefinitelyOnThisComputerFolder.html"
-		
+		#self.videoType = "Movie"
+
 		#Parameters requireed for Obtaining the URL
 		self.parametersDict = {
 			"PreURL"                            : "https://atv-ps.amazon.com/cdp/catalog/GetPlaybackResources?",
@@ -31,7 +33,7 @@ class amazonExtractor(object):
 			"videoMaterialType"                 : "Feature" ,
 			"operatingSystemName"               : "Linux" ,
 			"customerID"                        : "" ,
-			"token"                             : "" ,
+			"token"                             : "51f4c2eca280ac2b22f8f2c59f126342" ,
 			"deviceDrmOverride"                 : "CENC" ,
 			"deviceStreamingTechnologyOverride" : "DASH" ,
 			"deviceProtocolOverride"            : "Https" ,
@@ -51,8 +53,9 @@ class amazonExtractor(object):
 		self.getTitle()
 		if self.debug:
 			print(self.title)
-		
-		self.getAsinID() #Method-1		
+		#os.system("sudo phantomjs phantom.js")
+		self.getAsinID1() #Method-1		
+		self.getcustomerID()
 		if self.debug:
 		 	print(self.parametersDict['asin'])
 
@@ -109,11 +112,19 @@ class amazonExtractor(object):
 
 		pass
 
+	def getcustomerID(self):
 
-	def getAsinID(self):
+		parser = SafeConfigParser()
+		parser.read('config.ini')
+		self.parametersDict['customerID'] = parser.get('AMAZON', 'customerid')
+		pass
+
+
+	def getAsinID1(self):
 		
-		"""This is one of the methodologies to get the asin ID. 
-
+		"""
+		This is one of the methodologies to get the asin ID. 
+		If it is a movie, we use this methodology.
 		Obtaining the asin from here -
 
 		<input name="asin" type="hidden" value="B000I9WVAK"/>
@@ -124,13 +135,33 @@ class amazonExtractor(object):
 		try:
 			s=self.soupObject.find("input",attrs={"name":"asin"})
 			self.parametersDict['asin'] = str(s['value'])
+			#print(s)
 			if not self.title:
 				s = int("deliberateError")
 
 		except:
 			pass
 
-	
+	def getAsinID2(self):
+		
+		"""
+		This is one of the methodologies to get the asin ID. 
+		If it is a movie, we use this methodology.
+		Obtaining the asin from here -
+
+		<input name="asin" type="hidden" value="B000I9WVAK"/>
+		The value contains the asin.
+
+		"""
+
+		try:
+			asinList = [i['data-aliases'] for i in self.soupObject.find_all('div',attrs={'data-aliases' : True})]
+			if not self.title:
+				s = int("deliberateError")
+
+		except:
+			pass	
+
 	def getSubtitlesContainer(self):
 		
 		"""
@@ -158,15 +189,20 @@ class amazonExtractor(object):
 		{"returnedTitleRendition":{""},"subtitleUrls":[{"url":"linkforsubtitle.dfxp"}]}
 
 		"""
-		IndexingParameters = ["subtitleUrls",0,"url"]
 
-		subRequestObject = requests.get(self.subtitleURLContainer)
-		
-		parsedJsonObject = json.loads(str(subRequestObject.text))
-		SubsURL = parsedJsonObject[IndexingParameters[0]][IndexingParameters[1]][IndexingParameters[2]]
-		
-		return SubsURL
+		#If it is a movie, we use this methodology -
+		try:
+			IndexingParameters = ["subtitleUrls",0,"url"]
 
+			subRequestObject = requests.get(self.subtitleURLContainer)
+			
+			parsedJsonObject = json.loads(str(subRequestObject.text))
+			SubsURL = parsedJsonObject[IndexingParameters[0]][IndexingParameters[1]][IndexingParameters[2]]
+			
+			return SubsURL
+
+		except:
+			pass
 		pass
 
 	def downloadDfxpTranscript(self,SubsLink):
