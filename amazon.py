@@ -50,6 +50,8 @@ class amazonExtractor(object):
 
 		self.createSoupObject()
 		
+		self.getcustomerID()
+				
 		self.getTitle()
 		if self.debug:
 			print(self.title)
@@ -58,33 +60,38 @@ class amazonExtractor(object):
 		if self.debug:
 			print(self.videoType)
 
-		self.getAsinID1() #Method-1		
-		if self.debug:
-		 	print(self.parametersDict['asin'])
+		#if self.videoType == "movie":
+		if True:
+			self.getAsinID1() #Method-1		
+			if self.debug:
+				print(self.parametersDict['asin'])
+
+			returnValue = self.standardFunctionCalls()
+		else:
+
+			returnValue = self.standardFunctionCalls()
 		
-		self.getcustomerID()
-		
-		self.getSubtitlesContainer()
-		if self.debug:
-			print(self.subtitleURLContainer)
+		# self.getSubtitlesContainer()
+		# if self.debug:
+		# 	print(self.subtitleURLContainer)
 
 
-		SubtitlesURL = self.getSubtitleURL()
-		if self.debug:
-		 	print(SubtitlesURL)
+		# SubtitlesURL = self.getSubtitleURL()
+		# if self.debug:
+		#  	print(SubtitlesURL)
 
 
-		if not SubtitlesURL:
-			print("Unable to fetch the subtitles. No subtitles present.")
-			self.deleteUnnecessaryfiles()
-			return 0
+		# if not SubtitlesURL:
+		# 	print("Unable to fetch the subtitles. No subtitles present.")
+		# 	self.deleteUnnecessaryfiles()
+		# 	return 0
 
 		
-		returnValue = self.downloadDfxpTranscript(SubtitlesURL)
+		# returnValue = self.downloadDfxpTranscript(SubtitlesURL)
 
-		#self.convertDfxpToSrt()
+		# #self.convertDfxpToSrt()
 
-		self.deleteUnnecessaryfiles()
+		# self.deleteUnnecessaryfiles()
 
 		return returnValue
 
@@ -288,3 +295,30 @@ class amazonExtractor(object):
 				os.remove(self.requestsFileName)
 			except:
 				pass
+
+	def standardFunctionCalls(self):
+		
+		self.getSubtitlesContainer()
+		if self.debug:
+			print(self.subtitleURLContainer)
+
+
+		SubtitlesURL = self.getSubtitleURL()
+		if self.debug:
+		 	print(SubtitlesURL)
+
+
+		if not SubtitlesURL:
+			print("Unable to fetch the subtitles. No subtitles present.")
+			self.deleteUnnecessaryfiles()
+			return 0
+
+		
+		returnValue = self.downloadDfxpTranscript(SubtitlesURL)
+
+		#self.convertDfxpToSrt()
+
+		self.deleteUnnecessaryfiles()
+
+		return returnValue
+		pass
