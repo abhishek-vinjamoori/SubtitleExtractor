@@ -1,2 +1,3 @@
 sudo npm install -g phantomjs-prebuilt 
 pip install selenium
+pip install beautifulsoup4
