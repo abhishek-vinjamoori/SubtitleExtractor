@@ -34,8 +34,14 @@ def amazonUpdate():
 	           'passwordBox' : "//*[@id='ap_password']",
 	           'submitButton' :   "//*[@id='signInSubmit']"
 	         }
+	
+	firefox_profile = webdriver.FirefoxProfile()
+	firefox_profile.set_preference('permissions.default.stylesheet', 2)
+	firefox_profile.set_preference('permissions.default.image', 2)
+	firefox_profile.set_preference('dom.ipc.plugins.enabled.libflashplayer.so', 'false')
 
-	amazonDriver = webdriver.Firefox()
+
+	amazonDriver = webdriver.Firefox(firefox_profile=firefox_profile)
 	amazonDriver.userAgent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.9; rv:36.0) Gecko/20100101 Firefox/36.0 WebKit'
 	amazonDriver.cookiesEnabled = True
 	amazonDriver.javascriptEnabled = True
