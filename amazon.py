@@ -6,6 +6,8 @@ import urllib.request
 import urllib.parse
 import json
 from configparser import SafeConfigParser
+from selenium import webdriver
+
 
 class amazonExtractor(object):
 	
@@ -60,17 +62,29 @@ class amazonExtractor(object):
 		if self.debug:
 			print(self.videoType)
 
-		#if self.videoType == "movie":
-		if True:
+		if self.videoType == "movie":
+			
 			self.getAsinID1() #Method-1		
 			if self.debug:
 				print(self.parametersDict['asin'])
 
 			returnValue = self.standardFunctionCalls()
+
 		else:
 
-			returnValue = self.standardFunctionCalls()
-		
+			self.getAsinID2()
+			if self.debug:
+				print(self.asinList)
+
+			episodeNum = 1
+			for asins in self.asinList:
+				self.parametersDict['asin'] = asins 			
+				currentTitle = self.title
+				self.title += str(episodeNum) 
+				returnValue = self.standardFunctionCalls()
+				self.title = currentTitle
+				episodeNum+=1
+			#returnValue = 0
 		# self.getSubtitlesContainer()
 		# if self.debug:
 		# 	print(self.subtitleURLContainer)
@@ -186,18 +200,27 @@ class amazonExtractor(object):
 		
 		"""
 		This is one of the methodologies to get the asin ID. 
-		If it is a movie, we use this methodology.
+		If it is a TV Series, we use this methodology.
 		Obtaining the asin from here -
 
-		<input name="asin" type="hidden" value="B000I9WVAK"/>
+		<div class="a-section dv-episode-container aok-clearfix" data-aliases="B000I9WVAK" id="dv-el-id-2">
 		The value contains the asin.
 
 		"""
 
+		self.loginAmazon()
+
 		try:
 			self.asinList = [i['data-aliases'] for i in self.soupObject.find_all('div',attrs={'data-aliases' : True})]
-			if not self.title:
-				s = int("deliberateError")
+			
+			#There maybe multiple ASIN's present which are separated by comma. So we just take one of it.
+
+			for i in range(len(self.asinList)):
+				tempList = self.asinList[i].split(",")
+				for ids in tempList:
+					if ids != "":
+						self.asinList[i] = ids
+						break
 
 		except:
 			pass	
@@ -322,3 +345,64 @@ class amazonExtractor(object):
 
 		return returnValue
 		pass
+
+
+	def loginAmazon(self):
+
+		#Initialising the parser
+		userParser = SafeConfigParser()
+		userParser.read('userconfig.ini')
+		userParser.optionxform = str
+		parsingDictionary = {"service":"AMAZON"}
+
+		#Required variables for filling in config file
+		baseurl  = userParser.get(parsingDictionary['service'], 'url')
+		username = userParser.get(parsingDictionary['service'], 'username')
+		password = userParser.get(parsingDictionary['service'], 'password')
+
+		parser = SafeConfigParser()
+		parser.read('config.ini')
+		parser.optionxform = str
+
+		xpaths = { 'usernameBox' : "//*[@id='ap_email']",
+		           'passwordBox' : "//*[@id='ap_password']",
+		           'submitButton' :   "//*[@id='signInSubmit']"
+		         }
+
+		firefox_profile = webdriver.FirefoxProfile()
+		firefox_profile.set_preference('permissions.default.stylesheet', 2)
+		firefox_profile.set_preference('permissions.default.image', 2)
+		firefox_profile.set_preference('dom.ipc.plugins.enabled.libflashplayer.so', 'false')
+
+
+		amazonDriver = webdriver.Firefox(firefox_profile=firefox_profile)
+
+		amazonDriver.userAgent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.9; rv:36.0) Gecko/20100101 Firefox/36.0 WebKit'
+		amazonDriver.cookiesEnabled = True
+		amazonDriver.javascriptEnabled = True
+		amazonDriver.get(baseurl)
+		#Clearing Username TextBox 
+		amazonDriver.find_element_by_xpath(xpaths['usernameBox']).clear()
+
+		#Typing in the username as obtained from config file
+		amazonDriver.find_element_by_xpath(xpaths['usernameBox']).send_keys(username)
+
+		#Clearing password field 
+		amazonDriver.find_element_by_xpath(xpaths['passwordBox']).clear()
+
+		#Typing in the password
+		amazonDriver.find_element_by_xpath(xpaths['passwordBox']).send_keys(password)
+		
+		#Clicking on Submit button
+		amazonDriver.find_element_by_xpath(xpaths['submitButton']).click()
+		temp = input()
+		amazonDriver.get(self.urlName)
+		pageSource = amazonDriver.page_source
+		self.soupObject = BeautifulSoup(pageSource,from_encoding="utf8")
+		#print(pageSource)
+		fh = open(self.requestsFileName, "w")
+		fh.write(str(self.soupObject))
+		fh.close()
+		
+		pass
+		amazonDriver.close()
