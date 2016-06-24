@@ -1,3 +1,4 @@
-sudo npm install -g phantomjs-prebuilt 
+//sudo npm install -g phantomjs-prebuilt 
+pip install requests
 pip install selenium
 pip install beautifulsoup4
