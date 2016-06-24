@@ -75,13 +75,22 @@ class amazonExtractor(object):
 			self.getAsinID2()
 			if self.debug:
 				print(self.asinList)
+			
+			folderPath = "./"			
+			directoryName = folderPath + self.title
+			os.mkdir(directoryName)
 
+			self.title = directoryName + "/" + self.title
 			episodeNum = 1
 			for asins in self.asinList:
 				self.parametersDict['asin'] = asins 			
 				currentTitle = self.title
+
 				self.title += str(episodeNum) 
-				returnValue = self.standardFunctionCalls()
+				try:
+					returnValue = self.standardFunctionCalls()
+				except:
+					pass
 				self.title = currentTitle
 				episodeNum+=1
 			#returnValue = 0
