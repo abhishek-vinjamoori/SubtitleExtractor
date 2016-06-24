@@ -1,4 +1,5 @@
-//sudo npm install -g phantomjs-prebuilt 
+For Amazon downloads - "Firefox 46 or below is required"
+
 pip install requests
 pip install selenium
 pip install beautifulsoup4
