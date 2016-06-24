@@ -416,7 +416,7 @@ class amazonExtractor(object):
 		
 		#Clicking on Submit button
 		amazonDriver.find_element_by_xpath(xpaths['submitButton']).click()
-		#temp = input()
+		temp = input()
 		amazonDriver.get(self.urlName)
 		pageSource = amazonDriver.page_source
 		self.soupObject = BeautifulSoup(pageSource,from_encoding="utf8")
