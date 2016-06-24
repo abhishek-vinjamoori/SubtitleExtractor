@@ -29,7 +29,8 @@ def amazonUpdate():
 	parser.read('config.ini')
 	parser.optionxform = str
 	customerUrl = parser.get(parsingDictionary['service'], 'customerurl')
-
+	tokenUrl = parser.get(parsingDictionary['service'], 'tokenurl')
+	
 	xpaths = { 'usernameBox' : "//*[@id='ap_email']",
 	           'passwordBox' : "//*[@id='ap_password']",
 	           'submitButton' :   "//*[@id='signInSubmit']"
@@ -74,7 +75,13 @@ def amazonUpdate():
 		customerID = parsedSource[obtainFrom[0]][obtainFrom[1]]
 		#print(customerID)
 		parser.set(parsingDictionary['service'], 'customerid', customerID)
-		
+		amazonDriver.get(tokenUrl)
+		pageSource = amazonDriver.page_source
+		token = BeautifulSoup(pageSource).pre.text
+		tokenId = token.replace("onWebToken_fccab172c7f94fe78ff8dc7d985dd3e4","").replace('(',"").replace(")","").replace(';',"")
+		token = json.loads(tokenId)
+		token = token['token']
+		parser.set(parsingDictionary['service'], 'token', token)
 		fileHandler = open('config.ini',"w") 
 		parser.write(fileHandler)
 		fileHandler.close()

@@ -35,7 +35,7 @@ class amazonExtractor(object):
 			"videoMaterialType"                 : "Feature" ,
 			"operatingSystemName"               : "Linux" ,
 			"customerID"                        : "" ,
-			"token"                             : "51f4c2eca280ac2b22f8f2c59f126342" ,
+			"token"                             : "" ,
 			"deviceDrmOverride"                 : "CENC" ,
 			"deviceStreamingTechnologyOverride" : "DASH" ,
 			"deviceProtocolOverride"            : "Https" ,
@@ -53,7 +53,7 @@ class amazonExtractor(object):
 		self.createSoupObject()
 		
 		self.getcustomerID()
-				
+		self.getToken()
 		self.getTitle()
 		if self.debug:
 			print(self.title)
@@ -78,7 +78,11 @@ class amazonExtractor(object):
 			
 			folderPath = "./"			
 			directoryName = folderPath + self.title
-			os.mkdir(directoryName)
+			try:
+				os.mkdir(directoryName)
+			except:
+				print("Directory exists")
+				pass
 
 			self.title = directoryName + "/" + self.title
 			episodeNum = 1
@@ -153,6 +157,14 @@ class amazonExtractor(object):
 		parser.read('config.ini')
 		self.parametersDict['customerID'] = parser.get('AMAZON', 'customerid')
 		pass
+
+	def getToken(self):
+
+		parser = SafeConfigParser()
+		parser.read('config.ini')
+		self.parametersDict['token'] = parser.get('AMAZON', 'token')
+		pass
+
 
 	def getVideoType(self):
 
@@ -404,7 +416,7 @@ class amazonExtractor(object):
 		
 		#Clicking on Submit button
 		amazonDriver.find_element_by_xpath(xpaths['submitButton']).click()
-		temp = input()
+		#temp = input()
 		amazonDriver.get(self.urlName)
 		pageSource = amazonDriver.page_source
 		self.soupObject = BeautifulSoup(pageSource,from_encoding="utf8")
