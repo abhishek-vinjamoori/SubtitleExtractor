@@ -17,7 +17,7 @@ class amazonExtractor(object):
 		self.urlName = url
 		self.debug = True
 		self.requestsFileName = "iDoNotExistDefinitelyOnThisComputerFolder.html"
-		#self.videoType = "Movie"
+		self.videoType = ""
 
 		#Parameters requireed for Obtaining the URL
 		self.parametersDict = {
@@ -53,20 +53,26 @@ class amazonExtractor(object):
 		self.getTitle()
 		if self.debug:
 			print(self.title)
-		#os.system("sudo phantomjs phantom.js")
+
+		self.getVideoType()
+		if self.debug:
+			print(self.videoType)
+
 		self.getAsinID1() #Method-1		
-		self.getcustomerID()
 		if self.debug:
 		 	print(self.parametersDict['asin'])
-
-		self.getSubtitlesContainer()
 		
+		self.getcustomerID()
+		
+		self.getSubtitlesContainer()
 		if self.debug:
 			print(self.subtitleURLContainer)
+
 
 		SubtitlesURL = self.getSubtitleURL()
 		if self.debug:
 		 	print(SubtitlesURL)
+
 
 		if not SubtitlesURL:
 			print("Unable to fetch the subtitles. No subtitles present.")
@@ -90,7 +96,6 @@ class amazonExtractor(object):
 
 		while numberOfTrials:
 			requestObject = requests.get(self.urlName)
-
 			# fileHandler = open("requests.txt", "w")
 			# fileHandler.write(requestObject.text)
 			# fileHandler.close() 
@@ -119,6 +124,36 @@ class amazonExtractor(object):
 		self.parametersDict['customerID'] = parser.get('AMAZON', 'customerid')
 		pass
 
+	def getVideoType(self):
+
+		"""
+
+		<script data-a-state='{"key":"dv-dp-state"}' type="a-state">{"pageType":"tv","pageAsin":null}</script>
+
+		"""
+		parsingParams = {"tagname":"script","tagAttrs":["type","a-state"], "jsonparam":"pagetype"}
+
+		try:
+			scriptTags = self.soupObject.findAll(parsingParams['tagname'],attrs={parsingParams['tagAttrs'][0]:parsingParams['tagAttrs'][1]})
+			for allTags in scriptTags: 
+				try:
+					jsonString = allTags.string.lower()
+					jsonparser = json.loads(jsonString)
+					self.videoType = jsonparser[parsingParams['jsonparam']]
+					break
+				except:
+					continue
+			#print(s)
+
+		except:
+			pass		
+
+		#Unable to get the type. Using movie as the default case.
+
+		if self.videoType == "":
+			self.videoType = "movie"
+
+		pass
 
 	def getAsinID1(self):
 		
@@ -133,11 +168,9 @@ class amazonExtractor(object):
 		"""
 
 		try:
-			s=self.soupObject.find("input",attrs={"name":"asin"})
-			self.parametersDict['asin'] = str(s['value'])
+			asinObject = self.soupObject.find("input",attrs={"name" : re.compile("^asin$", re.I)})
+			self.parametersDict['asin'] = str(asinObject['value'])
 			#print(s)
-			if not self.title:
-				s = int("deliberateError")
 
 		except:
 			pass
@@ -155,7 +188,7 @@ class amazonExtractor(object):
 		"""
 
 		try:
-			asinList = [i['data-aliases'] for i in self.soupObject.find_all('div',attrs={'data-aliases' : True})]
+			self.asinList = [i['data-aliases'] for i in self.soupObject.find_all('div',attrs={'data-aliases' : True})]
 			if not self.title:
 				s = int("deliberateError")
 
