@@ -37,6 +37,8 @@ Note - For Amazon subtitle downloads - "Firefox 46 or below is required"
 [AMAZON]
 -----------------------Instructions for AMAZON ---------------
 
+Note - Amazon requires that you have a valid subscription for that particular video to download the subtitles
+
 These instructions need to followed whenever you want to "change login details". - 
 1) Ensure that SubtitleExtractor.py and "setup.py" are executable. 
 (Command for making them executable - chmod +x SubtitleExtractor.py setup.py)
@@ -50,7 +52,7 @@ These instructions need to be followed when you are done with the one time setup
 
 
 1) Run the python file - ./SubtitleExtractor.py
-2) Paste the desired Amazon URL from which Subtitles have to extracted and press "ENTER".
+2) Paste the desired Amazon URL from which Subtitles have to be extracted and press "ENTER".
 3) If it is a movie, Subtitles will be downloaded normally.
 4) If it is a TV Series, all the episodes of that season will be downloaded in a new folder with the corressponding title.
 
