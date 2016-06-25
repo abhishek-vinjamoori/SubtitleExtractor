@@ -5,3 +5,5 @@ Supported Services -  <br/>
 1) Hulu  <br/>
 2) YouTube <br/>
 3) Amazon
+
+Follow the instructions in "setup.txt"
