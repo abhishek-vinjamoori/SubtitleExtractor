@@ -1,5 +1,22 @@
-For Amazon downloads - "Firefox 46 or below is required"
+Ensure that "python 3" is installed on your computer.
+sudo apt-get install python3
+
+
+Dependencies to be installed - 
 
 pip install requests
-pip install selenium
+sudo pip3 install -U selenium
 pip install beautifulsoup4
+
+
+
+Note - For Amazon subtitle downloads - "Firefox 46 or below is required"
+
+
+-----------------------Instructions for Hulu ---------------
+
+1) Ensure that SubtitleExtractor.py executable. (Command for making it executable - chmod +x SubtitleExtractor.py)
+2) Run the python file - ./SubtitleExtractor.py
+3) Paste the desired URL from which Subtitles have to extracted and press "ENTER".
+4) If multiple languages are avaiable you will be prompted to choose the desired language option.
+5) Subtitles will be downloaded.
