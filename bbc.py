@@ -13,6 +13,7 @@ class bbcExtractor(object):
 		self.loginRequired = False
 		self.urlName = url
 		self.requestsFileName = "iDoNotExistDefinitelyOnThisComputerFolders.html"
+		self.debug = True
 		pass 
 
 
@@ -27,7 +28,10 @@ class bbcExtractor(object):
 		# self.getTitle()
 		# print(self.title)
 		
-		# rawLink = self.getEpisodeID()
+		episodeID = self.getEpisodeID()
+		if self.debug:
+			print(episodeID)
+
 		# decodedLink = self.decodeLink(rawLink)
 		# if self.debug:
 		# 	print(decodedLink)
@@ -65,50 +69,22 @@ class bbcExtractor(object):
 
 		pass
 
-	# def getEpisodeID(self):
+	def getEpisodeID(self):
 		
-	# 	"""
-	# 	This function returns the Raw Link which is in encoded format. 
-	# 	Note - This is still an incomplete URL. 
-	# 	The variable UglyString contains the complete URL.
+		"""
+		This function returns the Raw Link which is in encoded format. 
+		Note - This is still an incomplete URL. 
+		The variable UglyString contains the complete URL.
 		
-	# 	"""
+		"""
 
-	# 	rawLink = ""
-	# 	self.uglyString = ""
+		searchStringList = ["episode/"]
+		juknkData,episodeName,IDContainer = self.urlName.partition(searchStringList[0])
+		episodeID,Slash,Junk = IDContainer.partition("/")
+		return episodeID
 
-	# 	searchStringList = ["timed","TTS_URL","caption_tracks"]
-	# 	print()
-	# 	fh = open(self.requestsFileName,"r")
-
-	# 	for lines in fh:
-			
-	# 		if searchStringList[0] in lines and searchStringList[1] in lines :
-	# 			lis  = lines.split('"')
-	# 			captionPosition = 0
-	# 			for i in range(len(lis)):
-	# 				if searchStringList[1] in lis[i]:
-	# 					captionPosition = i+1
-	# 					break
-					
-	# 			rawLink = str(lis[captionPosition])
-
-	# 		elif searchStringList[0] in lines:
-	# 			lis = lines.split('"')
-	# 			position = 0
-	# 			#print(lis)
-	# 			for i in range(len(lis)):
-	# 				if searchStringList[2] in lis[i]:
-	# 					position = i+2
-	# 					break
-	# 			if position:
-	# 				self.uglyString = str(lis[position])
-
-	# 	fh.close()
-
-	# 	return rawLink
 		
-	# 	pass
+		pass
 
 	# def decodeLink(self,rawLink):
 
