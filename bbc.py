@@ -26,9 +26,7 @@ class bbcExtractor(object):
 
 		self.createSoupObject()
 		
-		# self.getTitle()
-		# print(self.title)
-		
+
 		episodeID = self.getEpisodeID()
 		if self.debug:
 			print(episodeID)
@@ -40,6 +38,10 @@ class bbcExtractor(object):
 		availablePIDs = self.getPID(PIDLink)
 		if self.debug:
 			print(availablePIDs)
+
+		self.getTitle()
+		if self.debug:
+			print(self.title)
 
 		self.getSubtitleURL(availablePIDs)
 		if self.debug:
@@ -124,7 +126,7 @@ class bbcExtractor(object):
 			
 			if self.debug:
 				print(MediaUrl)
-							
+
 			try:
 				requestObject = requests.get(MediaUrl)
 				soup = BeautifulSoup(requestObject.text,"lxml",from_encoding="utf8")
@@ -151,8 +153,8 @@ class bbcExtractor(object):
 		# fileHandler.write(requestObject.text)
 		# fileHandler.close() 
 		pidList = []
-		soup = BeautifulSoup(requestObject.text,"lxml",from_encoding="utf8")
-		versionList = soup.programme.versions.findAll("version")
+		self.soup = BeautifulSoup(requestObject.text,"lxml",from_encoding="utf8")
+		versionList = self.soup.programme.versions.findAll("version")
 
 		for versions in versionList:
 			pidList.append(versions.pid.string)
@@ -244,23 +246,27 @@ class bbcExtractor(object):
 	# #         srt_output.append("")
 	# #     return srt_output
 
-	# def getTitle(self):
+	def getTitle(self):
 
-	# 	"""
-	# 	This function returns the title of the video. This is also used for naming the file.
+		"""
+		This function returns the title of the video. This is also used for naming the file.
 
-	# 	<title>VIDEO NAME - YouTube</title>
+		<title>VIDEO NAME - YouTube</title>
 		
-	# 	"""
-	# 	try:
-	# 		titleString = self.soupObject.title.string
-	# 		self.title = titleString.replace(" - YouTube","")			
-	# 		self.title = self.title.strip()
-	# 	except:
-	# 		self.title = "YouTube_subtitles"
-	# 		pass
+		"""
+		try:
+			titleString = self.soup.programme.display_title.title.string
+			try:
+				titleString += self.soup.programme.display_title.subtitle.string
+			except:
+				pass
+			self.title = titleString.strip()
 
-	# 	pass
+		except:
+			self.title = "BBC_subtitles"
+			pass
+
+		pass
 
 	# def deleteUnnecessaryfiles(self):
 
