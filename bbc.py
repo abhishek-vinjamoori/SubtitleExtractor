@@ -47,14 +47,14 @@ class bbcExtractor(object):
 		if self.debug:
 		 	print(self.SubtitleUrl)
 
-		#returnValue = self.downloadXMLTranscript()
+		returnValue = self.downloadXMLTranscript()
 
 		# #srtText = self.convertXMLToSrt(str(self.requestObjectv.text))
 		# #srtText = self._parseXml(str(self.requestObjectv.text))
 		# #print(srtText)
-		# self.deleteUnnecessaryfiles()
+		self.deleteUnnecessaryfiles()
 
-		return 0
+		return returnValue
 
 	def createSoupObject(self):
 		
@@ -154,7 +154,10 @@ class bbcExtractor(object):
 		# fileHandler.close() 
 		pidList = []
 		self.soup = BeautifulSoup(requestObject.text,"lxml",from_encoding="utf8")
-		versionList = self.soup.programme.versions.findAll("version")
+		try:
+			versionList = self.soup.programme.versions.findAll("version")
+		except:
+			print("Unable to get requested page.")
 
 		for versions in versionList:
 			pidList.append(versions.pid.string)
@@ -163,33 +166,33 @@ class bbcExtractor(object):
 
 		pass
 
-	# def downloadXMLTranscript(self):
+	def downloadXMLTranscript(self):
 
-	# 	"""
-	# 	This function fetches the captions and writes them into a file in XML
-	# 	"""
+		"""
+		This function fetches the captions and writes them into a file in XML
+		"""
 
-	# 	try:
-	# 		self.requestObjectv = requests.get(FinalUrl)
+		try:
+			self.requestObjectv = requests.get(self.SubtitleUrl)
 			
-	# 		print("Creating ~  '%s.xml' ..."%(self.title))
-	# 		subsFileHandler = open(self.title + ".xml","w")
+			print("Creating ~  '%s.xml' ..."%(self.title))
+			subsFileHandler = open(self.title + ".xml","w")
 			
-	# 		#It probably could be auto-generated subtitles. Lets try even that here.
-	# 		#Auto-generated subtitles need - "&kind=asr" to be appended to the FinalUrl
+			#It probably could be auto-generated subtitles. Lets try even that here.
+			#Auto-generated subtitles need - "&kind=asr" to be appended to the FinalUrl
 
-	# 		if not self.requestObjectv.text:
-	# 			return 0
+			if not self.requestObjectv.text:
+				return 0
 
-	# 		self.requestObjectv = BeautifulSoup(self.requestObjectv.text)
-	# 		subsFileHandler.write(str(self.requestObjectv.transcript.prettify()))
-	# 		subsFileHandler.close()
+			self.requestObjectv = BeautifulSoup(self.requestObjectv.text)
+			subsFileHandler.write(str(self.requestObjectv.prettify()))
+			subsFileHandler.close()
 
-	# 		return 1
+			return 1
 
-	# 	except:
-	# 		return 0
-	# 	pass
+		except:
+			return 0
+		pass
 
 	# def convertXMLToSrt(self,xml_string):
 	# 	pass
@@ -268,10 +271,10 @@ class bbcExtractor(object):
 
 		pass
 
-	# def deleteUnnecessaryfiles(self):
+	def deleteUnnecessaryfiles(self):
 
-	# 	if not self.debug:
-	# 		try:
-	# 			os.remove(self.requestsFileName)
-	# 		except:
-	# 			pass
+		if not self.debug:
+			try:
+				os.remove(self.requestsFileName)
+			except:
+				pass
