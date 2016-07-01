@@ -77,10 +77,7 @@ class bbcExtractor(object):
 	def getEpisodeID(self):
 		
 		"""
-		This function returns the Raw Link which is in encoded format. 
-		Note - This is still an incomplete URL. 
-		The variable UglyString contains the complete URL.
-		
+		This function returns the Episode ID from the URL given.
 		"""
 
 		searchStringList = ["episode/"]
@@ -94,7 +91,7 @@ class bbcExtractor(object):
 	def getPIDurl(self,episodeID):
 
 		"""
-		This function decodes the requested URL
+		This function makes the URL which contains the required PID
 		"""
 
 		parser = SafeConfigParser()
@@ -112,7 +109,7 @@ class bbcExtractor(object):
 	def getSubtitleURL(self,availablePIDs):
 
 		"""
-		This function decodes the requested URL
+		This function fetches the subtitl URL based on the PIDs
 		"""
 
 		self.SubtitleUrl = ""
@@ -139,7 +136,6 @@ class bbcExtractor(object):
 		
 		pass
 		
-		pass
 		
 
 	def getPID(self, Link):
@@ -254,7 +250,10 @@ class bbcExtractor(object):
 		"""
 		This function returns the title of the video. This is also used for naming the file.
 
-		<title>VIDEO NAME - YouTube</title>
+		<display_title>
+		<title>NAME</title>
+		<subtitle>OPTIONAL SUBTITLE</subtitle>
+		</display_title>
 		
 		"""
 		try:
