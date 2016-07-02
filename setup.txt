@@ -58,4 +58,16 @@ These instructions need to be followed when you are done with the one time setup
 
 
 
+[BBC]
+-----------------------Instructions for BBC ---------------
+Note:Please check that you are able to stream the video without any geo-location errors.
+
+
+1) Ensure that SubtitleExtractor.py executable. (Command for making it executable - chmod +x SubtitleExtractor.py)
+2) Run the python file - ./SubtitleExtractor.py
+3) Paste the desired URL (from BBC website) for which Subtitles have to extracted and press "ENTER".
+5) Subtitles will be downloaded.
+
 Please report any errors on GitHub along with the error message for support.
+
+
