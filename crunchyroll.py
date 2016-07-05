@@ -2,6 +2,10 @@ import os
 import re
 import requests
 from bs4 import BeautifulSoup
+import base64
+import zlib
+
+from hashlib import sha1
 
 
 class crunchyrollExtractor(object):
@@ -43,11 +47,9 @@ class crunchyrollExtractor(object):
 		
 		self.standardCheck(captionsLink)		
 		
-		# vttLink = self.transformToVtt(smiLink)
-		# if self.debug:
-		# 	print(vttLink)
+		self.createEncryptedSubtitleFile(captionsLink)
 		
-		# self.createVttSubtitleFile(vttLink)
+		#s=self.decryptSubtitleData()
 		# self.convertVttToSrt()
 
 		# self.deleteUnnecessaryfiles()
@@ -181,81 +183,79 @@ class crunchyrollExtractor(object):
 			print("You have entered an invalid option. The first available option will be downloaded.")
 			optionChoice = 1
 		
-		# xmlLink = self.subtitleSource + str(self.contentID)
-		# xmlRequest = requests.get(xmlLink)
-		# if self.debug:
-		# 	print(xmlRequest.text)
-		# smiSoup = BeautifulSoup(xmlRequest.text)
+		try:
+			xmlLink = self.subtitleSource + str(self.ssidList[optionChoice-1][0])
 		
-		# li = smiSoup.find("transcripts")
-		# listOfLanguages = li.findChildren()
+		except:
+			print("You have entered an invalid option. The first available option will be downloaded.")
+			optionChoice = 1
 		
-		# if self.debug:
-		# 	print(listOfLanguages)
-		
-		
-		# #If more than one language subtitles are present, the user can choose the desired language.
-		# if len(listOfLanguages)>1:
 
-			
+		xmlLink = self.subtitleSource + str(self.ssidList[optionChoice-1][0])
+		return xmlLink
 
-		# 	if self.debug:
-		# 		print(smiSoup.find(listOfLanguages[optionChoice-1].name).string)
-			
-		# 	
-		# 		exit()
 		
-		# else:
-			
-		# 	if smiSoup.en:
-		# 		smiLink = smiSoup.en.string
-		
-		# return smiLink
-		return "ABHISHEK"
 		pass
 
-	# def transformToVtt(self,smiLink):
+
+	def createEncryptedSubtitleFile(self,Link):
+
+		"""
+		This function fetches the encrypted captions and writes them into a file.
+		"""
+
+		requestObjectv = requests.get(Link)
+		#print(requestObjectv.text)
+
+		subsFileHandler = open(self.title + ".txt","w")
 		
-	# 	"""
-	# 	This function takes an smiLink and returns the corressponding subtitles in VTT format(a link)
-	# 	Source - http://stream-recorder.com/forum/hulu-subtitles-t20120.html
-		
-	# 	http://assets.huluim.com/"captions"/380/60601380_US_en_en."smi"  -----> 
-	# 	http://assets.huluim.com/"captions_webvtt"/380/60601380_US_en_en."vtt"
-		
-	# 	captions --> captions_webvtt
-	# 	smi      --> vtt
+		soupData = BeautifulSoup(requestObjectv.text,from_encoding="utf8")
+		self.encryptedData = soupData.data.string
+		subsFileHandler.write(self.encryptedData)
+		subsFileHandler.close()
 
-	# 	"""
-	# 	#print(smiLink)
-	# 	vttLink = ""
-	# 	replaceDict = {"captions":"captions_webvtt", "smi":"vtt"}
+		#Required parameters for decrypting the subtitles
+		self.subtitleId = soupData.subtitle['id']
+		self.subtitleIV = soupData.iv.string
 
-	# 	for keys in replaceDict:
-	# 		smiLink = smiLink.replace(keys,replaceDict[keys])
-
-	# 	vttLink = smiLink
-	# 	#print(vttLink)
-
-	# 	return vttLink	
-
-	# 	pass
-
-	# def createVttSubtitleFile(self,vttLink):
-
-	# 	"""
-	# 	This function fetches the captions and writes them into a file in VTT format
-	# 	"""
-
-	# 	requestObjectv = requests.get(vttLink)
-	# 	#print(requestObjectv.text)
-
-	# 	subsFileHandler = open(self.title + ".vtt","w")
-	# 	subsFileHandler.write(requestObjectv.text)
-	# 	subsFileHandler.close()
-
-	# 	pass
+		if self.debug:
+			print(self.subtitleId)
+			print(self.subtitleIV)
+		pass
 	
+
+
+	# def decryptSubtitleData(self):
+		
+	# 	self.encryptedData = bytes_to_intlist(base64.b64decode(self.encryptedData.encode('utf-8')))
+	# 	self.subtitleIV = bytes_to_intlist(base64.b64decode(self.subtitleIV.encode('utf-8')))
+	# 	self.subtitleId = int(self.subtitleId)
+
+	# 	def obfuscate_key_aux(count, modulo, start):
+	# 		output = list(start)
+	# 		for _ in range(count):
+	# 			output.append(output[-1] + output[-2])
+	# 		# cut off start values
+	# 		output = output[2:]
+	# 		output = list(map(lambda x: x % modulo + 33, output))
+	# 		return output
+
+	# 	def obfuscate_key(key):
+	# 		num1 = int(floor(pow(2, 25) * sqrt(6.9)))
+	# 		num2 = (num1 ^ key) << 5
+	# 		num3 = key ^ num1
+	# 		num4 = num3 ^ (num3 >> 3) ^ num2
+	# 		prefix = intlist_to_bytes(obfuscate_key_aux(20, 97, (1, 2)))
+	# 		shaHash = bytes_to_intlist(sha1(prefix + str(num4).encode('ascii')).digest())
+	# 		# Extend 160 Bit hash to 256 Bit
+	# 		return shaHash + [0] * 12
+
+	# 	key = obfuscate_key(self.subtitleId)
+
+	# 	decrypted_data = intlist_to_bytes(aes_cbc_decrypt(key))
+	# 	return zlib.decompress(decrypted_data)
+
+
 	# def convertVttToSrt(self):
 
 	# 	"""
@@ -320,3 +320,29 @@ class crunchyrollExtractor(object):
 			print("Unable to fetch the subtitles.")
 			self.deleteUnnecessaryfiles()
 			exit()
+
+
+	# def aes_cbc_decrypt(self,key):
+ #    """
+ #    Decrypt with aes in CBC mode
+
+ #    @param {int[]} data        cipher
+ #    @param {int[]} key         16/24/32-Byte cipher key
+ #    @param {int[]} iv          16-Byte IV
+ #    @returns {int[]}           decrypted data
+ #    """
+	# 	expanded_key = key_expansion(key)
+	# 	block_count = int(ceil(float(len(data)) / BLOCK_SIZE_BYTES))
+
+	# 	decrypted_data = []
+	# 	previous_cipher_block = self.subtitleIV
+	# 	for i in range(block_count):
+	# 		block = data[i * BLOCK_SIZE_BYTES: (i + 1) * BLOCK_SIZE_BYTES]
+	# 		block += [0] * (BLOCK_SIZE_BYTES - len(block))
+
+	# 		decrypted_block = aes_decrypt(block, expanded_key)
+	# 		decrypted_data += xor(decrypted_block, previous_cipher_block)
+	# 		previous_cipher_block = block
+	# 	decrypted_data = decrypted_data[:len(data)]
+
+	# 	return decrypted_data
