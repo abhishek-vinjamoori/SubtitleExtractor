@@ -75,7 +75,7 @@ class huluExtractor(object):
 		# fileHandler.write(requestObject.text)
 		# fileHandler.close() 
 		
-		self.soupObject = BeautifulSoup(requestObject.text,from_encoding="utf8")
+		self.soupObject = BeautifulSoup(requestObject.text,from_encoding="utf8","lxml")
 		#soupObject1 = BeautifulSoup(requestObject.text,"lxml")
 		#print(self.soupObject.original_encoding)
 
