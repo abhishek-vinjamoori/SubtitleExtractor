@@ -35,15 +35,13 @@ class crunchyrollExtractor(object):
 		if self.debug:
 			print(self.ssidList)
 
-		# smiLink = self.getSmiSubtitlesLink()
+		self.standardCheck(self.ssidList)
 
-		# if not smiLink:
-		# 	print("Unable to fetch the subtitles. No subtitles present.")
-		# 	self.deleteUnnecessaryfiles()
-		# 	return 0
-
-		# if self.debug:
-		# 	print(smiLink)
+		captionsLink = self.getSubtitleLink()
+		if self.debug:
+			print(captionsLink)
+		
+		self.standardCheck(captionsLink)		
 		
 		# vttLink = self.transformToVtt(smiLink)
 		# if self.debug:
@@ -159,65 +157,62 @@ class crunchyrollExtractor(object):
 	# 	pass
 
 
-	# def getSmiSubtitlesLink(self):
+	def getSubtitleLink(self):
 		
-	# 	"""
-	# 	This function returns the SMI subtitle link based on the contentID.
-	# 	Currently, the link resides in the xmlLinkTemplate variable
+		"""
+		This function returns the SMI subtitle link based on the contentID.
+		Currently, the link resides in the xmlLinkTemplate variable
 		
-	# 	The XML Link for any subtitle video is - "http://www.hulu.com/captions.xml?content_id=CONTENTID"
-	# 	Where, CONTENTID is the unique content_ID of the video.
+		The XML Link for any subtitle video is - "http://www.hulu.com/captions.xml?content_id=CONTENTID"
+		Where, CONTENTID is the unique content_ID of the video.
 		
-	# 	"""
-
-	# 	smiLink = ""
-	# 	xmlLinkTemplate = "http://www.hulu.com/captions.xml?content_id="
-	# 	xmlLink = xmlLinkTemplate + str(self.contentID)
-	# 	xmlRequest = requests.get(xmlLink)
-	# 	if self.debug:
-	# 		print(xmlRequest.text)
-	# 	smiSoup = BeautifulSoup(xmlRequest.text)
-		
-	# 	li = smiSoup.find("transcripts")
-	# 	listOfLanguages = li.findChildren()
-		
-	# 	if self.debug:
-	# 		print(listOfLanguages)
-		
-		
-	# 	#If more than one language subtitles are present, the user can choose the desired language.
-	# 	if len(listOfLanguages)>1:
-
-	# 		print("<<<------ Choose the corressponding number for selecting the language ----->>>")
+		"""
+		print("<<<------ Choose the corressponding number for selecting the language ----->>>")
 			
-	# 		for languages in range(len(listOfLanguages)):
-	# 			print("<%d> - %s"%(languages+1,listOfLanguages[languages].name))
+		for languages in range(len(self.ssidList)):
+			print("<%d> - %s"%(languages+1,self.ssidList[languages][1]))
 
-	# 		optionChoice = input()
-	# 		try:
-	# 			optionChoice = int(optionChoice)
-	# 		except:
-	# 			print("You have entered an invalid option. Application will exit.")
-	# 			exit()
+		optionChoice = input()
+		
+		try:
+			optionChoice = int(optionChoice)
+		
+		except:
+			print("You have entered an invalid option. The first available option will be downloaded.")
+			optionChoice = 1
+		
+		# xmlLink = self.subtitleSource + str(self.contentID)
+		# xmlRequest = requests.get(xmlLink)
+		# if self.debug:
+		# 	print(xmlRequest.text)
+		# smiSoup = BeautifulSoup(xmlRequest.text)
+		
+		# li = smiSoup.find("transcripts")
+		# listOfLanguages = li.findChildren()
+		
+		# if self.debug:
+		# 	print(listOfLanguages)
+		
+		
+		# #If more than one language subtitles are present, the user can choose the desired language.
+		# if len(listOfLanguages)>1:
 
-	# 		if self.debug:
-	# 			print(smiSoup.find(listOfLanguages[optionChoice-1].name).string)
 			
-	# 		try:
-	# 			smiLink = smiSoup.find(listOfLanguages[optionChoice-1].name).string
+
+		# 	if self.debug:
+		# 		print(smiSoup.find(listOfLanguages[optionChoice-1].name).string)
 			
-	# 		except:
-	# 			print("You have entered an invalid option. Application will exit.")
-	# 			exit()
+		# 	
+		# 		exit()
 		
-	# 	else:
+		# else:
 			
-	# 		if smiSoup.en:
-	# 			smiLink = smiSoup.en.string
+		# 	if smiSoup.en:
+		# 		smiLink = smiSoup.en.string
 		
-	# 	return smiLink
-		
-	# 	pass
+		# return smiLink
+		return "ABHISHEK"
+		pass
 
 	# def transformToVtt(self,smiLink):
 		
@@ -310,11 +305,18 @@ class crunchyrollExtractor(object):
 
 		pass
 
-	# def deleteUnnecessaryfiles(self):
+	def deleteUnnecessaryfiles(self):
 
-	# 	if not self.debug:
-	# 		try:
-	# 			os.remove(self.requestsFileName)
-	# 			os.remove(self.title+".vtt")
-	# 		except:
-	# 			pass
+		if not self.debug:
+			try:
+				os.remove(self.requestsFileName)
+			except:
+				pass
+
+
+	def standardCheck(self,variableToCheck):
+
+		if not variableToCheck:
+			print("Unable to fetch the subtitles.")
+			self.deleteUnnecessaryfiles()
+			exit()
