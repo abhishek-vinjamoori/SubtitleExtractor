@@ -13,7 +13,7 @@ import struct
 #SUBTITLES DECRYPTING HAS BEEN TAKEN FROM youtube-dl repository on GitHub. 
 
 
-#CREADITS:youtube-dl
+#CREDITS:youtube-dl
 
 
 BLOCK_SIZE_BYTES = 16
