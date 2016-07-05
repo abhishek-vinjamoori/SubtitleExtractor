@@ -132,15 +132,13 @@ class crunchyrollExtractor(object):
 		
 		self.createEncryptedSubtitleFile(captionsLink)
 		
-		s=self.decryptSubtitleData()
-		f=open("CRUNCH.xml","w")
-		f.write(str(s))
-		f.close()
-		# self.convertVttToSrt()
+		decryptedData = self.decryptSubtitleData()
+		
+		returnValue = self.writeToFile(decryptedData)
 
-		# self.deleteUnnecessaryfiles()
+		self.deleteUnnecessaryfiles()
 
-		return 0
+		return returnValue
 
 	def createSoupObject(self):
 		
@@ -256,12 +254,10 @@ class crunchyrollExtractor(object):
 		requestObjectv = requests.get(Link)
 		#print(requestObjectv.text)
 
-		subsFileHandler = open(self.title + ".txt","w")
+		#subsFileHandler = open(self.title + ".txt","w")
 		
 		soupData = BeautifulSoup(requestObjectv.text,from_encoding="utf8")
 		self.encryptedData = soupData.data.string
-		subsFileHandler.write(self.encryptedData)
-		subsFileHandler.close()
 
 		#Required parameters for decrypting the subtitles
 		self.subtitleId = soupData.subtitle['id']
@@ -273,6 +269,23 @@ class crunchyrollExtractor(object):
 		pass
 	
 
+	def writeToFile(self,data):
+
+		"""
+		This function writes the XML data into a file.
+		"""
+
+		try:
+			subsFileHandler = open(self.title + ".xml","w")
+			
+			soupData = BeautifulSoup(data.decode("utf-8"))
+			subsFileHandler.write(soupData.prettify())
+			subsFileHandler.close()
+		
+		except:
+			return 0
+		
+		return 1
 
 	def decryptSubtitleData(self):
 		
