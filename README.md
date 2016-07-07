@@ -6,5 +6,6 @@ Supported Services -  <br/>
 2) YouTube <br/>
 3) Amazon <br/>
 4) BBC iPlayer <br/>
+5) CrunchyRoll <br/>
 
 Follow the instructions in "setup.txt"
