@@ -112,3 +112,15 @@ Note:Please check that you are able to stream the video without any geo-location
 Please report any errors on GitHub along with the error message for support.
 
 
+[Netflix]
+-----------------------Instructions for Netflix  ---------------
+Note:Please check that you are able to stream the video without any geo-location errors.
+
+
+1) Ensure that SubtitleExtractor.py executable. (Command for making it executable - chmod +x SubtitleExtractor.py)
+2) Open the file "userconfig.ini".
+3) Type in your new Netflix Username and Netflix Password in the respective fields.
+4) Save and exit.
+5) Run the python file - ./SubtitleExtractor.py
+6) Paste the desired URL of the video (from Netflix website) for which Subtitles have to extracted and press "ENTER".
+4) Subtitles will be downloaded.
