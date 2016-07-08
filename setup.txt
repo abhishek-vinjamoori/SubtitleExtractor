@@ -1,16 +1,42 @@
 Ensure that "python 3" is installed on your computer.
 sudo apt-get install python3
 
-
+[DEPENDENCIES]
+------------------------------INSTALLATION INSTRUCTIONS--------------------------------
 Dependencies to be installed - 
 
 pip install requests
+
+
+If pip3 is not installed - 
+
+sudo apt-get install python3-setuptools
+sudo easy_install3 pip
+sudo mv /usr/local/bin/pip /usr/local/bin/pip-3
+
 sudo pip3 install -U selenium
 pip install beautifulsoup4
 
 
 Disclaimer- Use it at your own risk. 
-Note - For Amazon subtitle downloads - "Firefox 46 or below is required"
+Note - For Amazon,Netflix subtitle downloads - "Stable release of Google Chrome is required."
+
+
+For Amazon, Netflix -
+Make sure you already have Google Chrome installed.
+Then download and extract the contents of - http://chromedriver.storage.googleapis.com/index.html?path=2.22/
+You will get a file named "chromedriver"
+Then go to the directory where "chromedriver" is present and execute the following command -
+
+sudo mv -t /usr/local/bin/ chromedriver
+(Move the chromedriver file into /usr/local/bin)
+
+
+
+
+
+
+
 
 [HULU]
 -----------------------Instructions for Hulu ---------------
@@ -85,5 +111,4 @@ Note:Please check that you are able to stream the video without any geo-location
 
 Please report any errors on GitHub along with the error message for support.
 
-CHROME WEBDRIVER - ./usr/local/bin/chromedriver
-http://chromedriver.storage.googleapis.com/index.html?path=2.22/
+
