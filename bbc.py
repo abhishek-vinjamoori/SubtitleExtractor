@@ -29,23 +29,23 @@ class bbcExtractor(object):
 
 		episodeID = self.getEpisodeID()
 		if self.debug:
-			print(episodeID)
+			print("Episode ID - ",episodeID)
 
 		PIDLink = self.getPIDurl(episodeID)
 		if self.debug:
-		 	print(PIDLink)
+		 	print("PIDLINK", PIDLink)
 		
 		availablePIDs = self.getPID(PIDLink)
 		if self.debug:
-			print(availablePIDs)
+			print("Available PIDs ",availablePIDs)
 
 		self.getTitle()
 		if self.debug:
-			print(self.title)
+			print("Title - ",self.title)
 
 		self.getSubtitleURL(availablePIDs)
 		if self.debug:
-		 	print(self.SubtitleUrl)
+		 	print("Subtitle URL - ",self.SubtitleUrl)
 
 		returnValue = self.downloadXMLTranscript()
 
@@ -174,8 +174,6 @@ class bbcExtractor(object):
 			print("Creating ~  '%s.xml' ..."%(self.title))
 			subsFileHandler = open(self.title + ".xml","w")
 			
-			#It probably could be auto-generated subtitles. Lets try even that here.
-			#Auto-generated subtitles need - "&kind=asr" to be appended to the FinalUrl
 
 			if not self.requestObjectv.text:
 				return 0
@@ -262,7 +260,8 @@ class bbcExtractor(object):
 				titleString += self.soup.programme.display_title.subtitle.string
 			except:
 				pass
-			self.title = titleString.strip()
+			titleString = titleString.strip()
+			self.title  = titleString.replace("/","")
 
 		except:
 			self.title = "BBC_subtitles"
