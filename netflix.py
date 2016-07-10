@@ -1,13 +1,13 @@
-import os
-import re
+import os, re
 import requests
 from bs4 import BeautifulSoup
-import urllib.request
-import urllib.parse
 import json
 from configparser import SafeConfigParser
 from selenium import webdriver
 import time
+import codecs
+import math
+import to_srt
 
 class netflixExtractor(object):
 	
@@ -17,7 +17,7 @@ class netflixExtractor(object):
 		print("Detected Netflix\nProcessing....\n")
 		self.loginRequired = False
 		self.urlName = url
-		self.debug = False
+		self.debug = True
 		self.requestsFileName = "iDoNotExistDefinitelyOnThisComputerFolder.html"
 
 		#Parameters requireed for Obtaining the URL
@@ -32,7 +32,7 @@ class netflixExtractor(object):
 		#self.createSoupObject()
 		
 		check = self.loginNetflix()
-		self.title = "netflixCaptions"
+		self.title = "NetflixCaptions"
 		#self.getTitle()
 		# if self.debug:
 		# 	print(self.title)
@@ -131,7 +131,7 @@ class netflixExtractor(object):
 				s = int("deliberateError")
 
 		except:
-			self.title = "netflixsubtitles"
+			self.title = "Netflixsubtitles"
 
 		pass
 
@@ -140,6 +140,7 @@ class netflixExtractor(object):
 		if not self.debug:
 			try:
 				os.remove(self.requestsFileName)
+				os.remove(self.title+".xml")
 			except:
 				pass
 
@@ -151,21 +152,25 @@ class netflixExtractor(object):
 		 	print(SubtitlesURL)
 
 
-		if not SubtitlesURL:
-			print("Unable to fetch the subtitles. No subtitles present.")
-			self.deleteUnnecessaryfiles()
-			return 0
-
+		self.standardCheck(SubtitlesURL)
 		
 		returnValue = self.downloadDfxpTranscript(SubtitlesURL)
 
-		#self.convertDfxpToSrt()
+		self.standardCheck(returnValue)
+
+		self.convertXMLToSrt()
 
 		self.deleteUnnecessaryfiles()
 
 		return returnValue
 		pass
 
+	def standardCheck(self,variableToCheck):
+
+		if not variableToCheck:
+			print("Unable to fetch the subtitles.")
+			self.deleteUnnecessaryfiles()
+			exit()
 
 	def loginNetflix(self):
 
@@ -268,3 +273,21 @@ class netflixExtractor(object):
 
 		pass
 		return 1
+
+
+	def convertXMLToSrt(self):
+
+		"""
+		
+		Taken from - https://github.com/isaacbernat/netflix-to-srt
+
+		"""
+
+		filename = self.title + ".xml"
+		outputFile   = self.title + ".srt"
+
+		with codecs.open(filename, 'rb', "utf-8") as f:
+			text = f.read()
+
+		with codecs.open(outputFile, 'wb', "utf-8") as f:
+			f.write(to_srt.to_srt(text))
