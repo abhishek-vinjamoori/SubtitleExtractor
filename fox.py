@@ -30,23 +30,23 @@ class foxExtractor(object):
 		if self.debug:
 			print(self.title)
 
-		# self.contentID = self.getContentID1() #Method-1
+		self.contentID = self.getContentID1(self.urlName) #Method-1
 		
-		# try:
-		# 	self.contentID = int(self.contentID)
-		# except:
-		# 	print("Trying an alternative method to fetch Content ID")
-		# 	self.contentID = self.getContentID2()  #Method-2
+		try:
+		 	self.contentID = int(self.contentID)
+		except:
+		 	print("Trying an alternative method to fetch Content ID")
+		 	self.contentID = self.getContentID2()  #Method-2
 
-		# try:
-		# 	self.contentID = int(self.contentID)
-		# except:
-		# 	print("Unable to fetch the contentID.")
-		# 	self.deleteUnnecessaryfiles()
-		# 	return 0
+		try:
+		 	self.contentID = int(self.contentID)
+		except:
+		 	print("Unable to fetch the contentID.")
+		 	self.deleteUnnecessaryfiles()
+		 	return 0
 
-		# if self.debug:
-		# 	print(self.contentID)
+		if self.debug:
+		 	print(self.contentID)
 
 		# smiLink = self.getSmiSubtitlesLink()
 
@@ -88,29 +88,22 @@ class foxExtractor(object):
 		pass
 
 
-	def getContentID1(self):
+	def getContentID1(self,url):
 		
 		"""This is one of the methodologies to get the content ID. If this fails the alternative method will be called
 		
-		In the Beautiful soup text it can be found that every video has this paramter.
-		\"content_id\": \"60535322\"
+		The URL follows a specific standard throughout.
 		
-		So we first use '"'(quotes) as the delimetter and split the text. Then access the content ID from the returned list.
+		http://www.fox.com/watch/684171331973/7684520448
+		
+		We need to split and return "684171331973"
 
 		"""
-
-		listedSoup = str(self.soupObject).split('"')
-		contentCounter = 0
-		for counter in range(len(listedSoup)):
-			if "content_id" in listedSoup[counter]:
-				contentCounter = counter+2
-				break
-		#print(listedSoup[contentCounter])
-		contentId = ""
 		
-		for i in listedSoup[contentCounter]:
-			if i.isdigit():
-				contentId+=i
+		searchStringList = ["watch/"]
+		juknkData,episodeName,IDContainer = url.partition(searchStringList[0])
+		contentId,Slash,Junk = IDContainer.partition("/")
+
 		return contentId		
 
 
@@ -119,29 +112,13 @@ class foxExtractor(object):
 		"""
 		This is the alternative method to obtain the contentID. 
 
-		Partition technique is used to obtain the content ID.
+		<meta content="http://www.fox.com/watch/681382467805/7683748608" property="og:url"/>
+		Obtained from the SOUP.
 		"""
-		fh = open(self.requestsFileName, "r")		
-		listOfOptions = ["video/","movie/"]
-		foundContent = False
-		contentId = ""
-		for line in fh:
-			
-			for option in listOfOptions:
-				junkText, separator, contentIdContainer = line.partition(option)
-				#The Content Id has been found.
-				if contentIdContainer:
-					foundContent = True
-					break
-			
-			#The Content ID has been found. No need to read the file anymore.
-			#Get the Content ID from the container 			
-			if foundContent:    
-				contentId,separator, junkText = contentIdContainer.partition("?")
-				if separator:
-					break
-				else:
-					foundContent = False		
+
+		UrlObj = self.soupObject.find("meta",attrs={"property":"og:url"})
+		Url = UrlObj['content']
+		contentId = self.getContentID1(Url)
 		
 		return contentId
 		
@@ -278,7 +255,7 @@ class foxExtractor(object):
 		"""
 		This function returns the title of the video. This is also used for naming the file.
 
-		<meta name="twitter:title" value="Interstellar"/>   --> Extracting the value from here
+		<title>Watch New Girl Online: Episode 21, Season 5 on FOX</title>   --> Extracting the value from here
 		
 		"""
 
