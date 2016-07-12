@@ -1,0 +1,304 @@
+import os
+import re
+import requests
+from bs4 import BeautifulSoup
+
+
+class foxExtractor(object):
+	
+	"""docstring for foxExtractor"""
+	
+	def __init__(self,url):
+
+		print("Detected FOX NOW\nProcessing....\n")
+		self.loginRequired = False
+		self.urlName = url
+		self.debug = True
+		self.requestsFileName = "iDoNotExistDefinitelyOnThisComputerFolder.html"
+		pass
+		
+
+	def getSubtitles(self):
+
+		"""
+		The main function which uses helper functions to get the subtitles
+		"""
+
+		self.createSoupObject()
+		
+		self.getTitle()
+		if self.debug:
+			print(self.title)
+
+		# self.contentID = self.getContentID1() #Method-1
+		
+		# try:
+		# 	self.contentID = int(self.contentID)
+		# except:
+		# 	print("Trying an alternative method to fetch Content ID")
+		# 	self.contentID = self.getContentID2()  #Method-2
+
+		# try:
+		# 	self.contentID = int(self.contentID)
+		# except:
+		# 	print("Unable to fetch the contentID.")
+		# 	self.deleteUnnecessaryfiles()
+		# 	return 0
+
+		# if self.debug:
+		# 	print(self.contentID)
+
+		# smiLink = self.getSmiSubtitlesLink()
+
+		# if not smiLink:
+		# 	print("Unable to fetch the subtitles. No subtitles present.")
+		# 	self.deleteUnnecessaryfiles()
+		# 	return 0
+
+		# if self.debug:
+		# 	print(smiLink)
+		
+		# vttLink = self.transformToVtt(smiLink)
+		# if self.debug:
+		# 	print(vttLink)
+		
+		# self.createVttSubtitleFile(vttLink)
+		# self.convertVttToSrt()
+
+		# self.deleteUnnecessaryfiles()
+
+		return 1
+
+	def createSoupObject(self):
+		
+		requestObject = requests.get(self.urlName)
+
+		# fileHandler = open("requests.txt", "w")
+		# fileHandler.write(requestObject.text)
+		# fileHandler.close() 
+		
+		self.soupObject = BeautifulSoup(requestObject.text,from_encoding="utf8")
+		#soupObject1 = BeautifulSoup(requestObject.text,"lxml")
+		#print(self.soupObject.original_encoding)
+
+		fh = open(self.requestsFileName, "w")
+		fh.write(str(self.soupObject))
+		fh.close()		
+
+		pass
+
+
+	def getContentID1(self):
+		
+		"""This is one of the methodologies to get the content ID. If this fails the alternative method will be called
+		
+		In the Beautiful soup text it can be found that every video has this paramter.
+		\"content_id\": \"60535322\"
+		
+		So we first use '"'(quotes) as the delimetter and split the text. Then access the content ID from the returned list.
+
+		"""
+
+		listedSoup = str(self.soupObject).split('"')
+		contentCounter = 0
+		for counter in range(len(listedSoup)):
+			if "content_id" in listedSoup[counter]:
+				contentCounter = counter+2
+				break
+		#print(listedSoup[contentCounter])
+		contentId = ""
+		
+		for i in listedSoup[contentCounter]:
+			if i.isdigit():
+				contentId+=i
+		return contentId		
+
+
+	def getContentID2(self):
+
+		"""
+		This is the alternative method to obtain the contentID. 
+
+		Partition technique is used to obtain the content ID.
+		"""
+		fh = open(self.requestsFileName, "r")		
+		listOfOptions = ["video/","movie/"]
+		foundContent = False
+		contentId = ""
+		for line in fh:
+			
+			for option in listOfOptions:
+				junkText, separator, contentIdContainer = line.partition(option)
+				#The Content Id has been found.
+				if contentIdContainer:
+					foundContent = True
+					break
+			
+			#The Content ID has been found. No need to read the file anymore.
+			#Get the Content ID from the container 			
+			if foundContent:    
+				contentId,separator, junkText = contentIdContainer.partition("?")
+				if separator:
+					break
+				else:
+					foundContent = False		
+		
+		return contentId
+		
+		pass
+
+
+	def getSmiSubtitlesLink(self):
+		
+		"""		
+		The XML Link for any subtitle video is - 
+		
+		"""
+
+		smiLink = ""
+		xmlLinkTemplate = ""
+		xmlLink = xmlLinkTemplate + str(self.contentID)
+		xmlRequest = requests.get(xmlLink)
+		if self.debug:
+			print(xmlRequest.text)
+		smiSoup = BeautifulSoup(xmlRequest.text)
+		
+		li = smiSoup.find("transcripts")
+		listOfLanguages = li.findChildren()
+		
+		if self.debug:
+			print(listOfLanguages)
+		
+		
+		#If more than one language subtitles are present, the user can choose the desired language.
+		if len(listOfLanguages)>1:
+
+			print("<<<------ Choose the corressponding number for selecting the language ----->>>")
+			
+			for languages in range(len(listOfLanguages)):
+				print("<%d> - %s"%(languages+1,listOfLanguages[languages].name))
+
+			optionChoice = input()
+			try:
+				optionChoice = int(optionChoice)
+			except:
+				print("You have entered an invalid option. Application will exit.")
+				exit()
+
+			if self.debug:
+				print(smiSoup.find(listOfLanguages[optionChoice-1].name).string)
+			
+			try:
+				smiLink = smiSoup.find(listOfLanguages[optionChoice-1].name).string
+			
+			except:
+				print("You have entered an invalid option. Application will exit.")
+				exit()
+		
+		else:
+			
+			if smiSoup.en:
+				smiLink = smiSoup.en.string
+		
+		return smiLink
+		
+		pass
+
+	def transformToVtt(self,smiLink):
+		
+		"""
+		This function takes an smiLink and returns the corressponding subtitles in VTT format(a link)
+
+		captions --> captions_webvtt
+		smi      --> vtt
+
+		"""
+		#print(smiLink)
+		vttLink = ""
+		replaceDict = {"captions":"captions_webvtt", "smi":"vtt"}
+
+		for keys in replaceDict:
+			smiLink = smiLink.replace(keys,replaceDict[keys])
+
+		vttLink = smiLink
+		#print(vttLink)
+
+		return vttLink	
+
+		pass
+
+	def createVttSubtitleFile(self,vttLink):
+
+		"""
+		This function fetches the captions and writes them into a file in VTT format
+		"""
+
+		requestObjectv = requests.get(vttLink)
+		#print(requestObjectv.text)
+
+		subsFileHandler = open(self.title + ".vtt","w")
+		subsFileHandler.write(requestObjectv.text)
+		subsFileHandler.close()
+
+		pass
+	
+	def convertVttToSrt(self):
+
+		"""
+		This function converts the VTT subtitle file into SRT format.
+		Credits - http://goo.gl/XRllyy for the conversion method.
+		"""
+
+		f =  open(self.title + ".vtt","r")
+		fh = open(self.title + ".srt","w")
+		print("Creating ~  '%s.srt' ..."%(self.title))
+		
+		count = 1
+
+		#Removing WEBVTT Header line.
+		for line in f.readlines():
+			if line[:6] == 'WEBVTT':
+				continue
+
+			#Substituting '.' with ',' in the time-stamps
+			line = re.sub(r'(:\d+)\.(\d+)', r'\1,\2', line)
+
+			#Printing the header number in each line. This is required for the SRT format.
+			if line == '\n':	
+				fh.write("\n" + str(count)+"\n")
+				count += 1
+			else:
+				fh.write(line.strip()+"\n")
+
+		f.close()
+		fh.close()
+
+	def getTitle(self):
+
+		"""
+		This function returns the title of the video. This is also used for naming the file.
+
+		<meta name="twitter:title" value="Interstellar"/>   --> Extracting the value from here
+		
+		"""
+
+		#print(self.soupObject.title.string)
+		try:
+
+			self.title = self.soupObject.title.string.strip()
+			if not self.title:
+				s = int("deliberateError")
+
+		except:
+			self.title = "DownloadedFOXNowSubtitles"
+
+		pass
+
+	def deleteUnnecessaryfiles(self):
+
+		if not self.debug:
+			try:
+				os.remove(self.requestsFileName)
+				os.remove(self.title+".vtt")
+			except:
+				pass
