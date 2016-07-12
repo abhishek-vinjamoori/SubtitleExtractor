@@ -71,8 +71,8 @@ class netflixExtractor(object):
 		"""
 		The json content looks like this -	
 	
-		{"returnedTitleRendition":{""},"subtitleUrls":[{"url":"linkforsubtitle.dfxp"}]}
-
+		https://ipv4_1-lagg0-c018.1.sea001.ix.nflxvideo.net/?o=AQFtvJqRtkpGGH0jaYbAeHDGEm3tLGTZN8tCWrNrzICT9fS14rFqdUC3QcK4ubNZ9F3wIYkfEFWsRfSUnJjwk5xe1gzkZvg52clcbA_tI5ZRZRKeT8tIMgImep2skGqb8C8laZdAkTrGFDFSIJKP&v=3&e=1467941170&t=nKoR2V91TssNcDr5AGDUUPJ_AmA
+		
 		"""
 
 		#If it is a movie, we use this methodology -

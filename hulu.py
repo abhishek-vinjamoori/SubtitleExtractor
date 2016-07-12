@@ -6,7 +6,7 @@ from bs4 import BeautifulSoup
 
 class huluExtractor(object):
 	
-	"""docstring for netflixExtractor"""
+	"""docstring for huluExtractor"""
 	
 	def __init__(self,url):
 
