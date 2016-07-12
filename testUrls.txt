@@ -49,35 +49,80 @@ https://www.amazon.com/gp/product/B00TU9UFTS/ref=s9_nwrsa_gw_g318_i4_r?ie=UTF8&f
 
 
 
+CRACKLE -
+
+
+http://www.crackle.com/comedians-in-cars-getting-coffee/2498898
+
+https://web-api-us.crackle.com/Service.svc/details/media/2490623/IN?format=json
+http://web-us-az.crackle.com//1//u//em//d7jyb_en-US_160627145100.xml
+
+2487955
+
+
+NETFLIX -
+
+
+https://www.netflix.com/watch/80049215?trackId=200256157&tctx=0%2C3%2C63a9fe99-1810-4a3a-830e-566ee3060360-101440289
+https://www.netflix.com/watch/70305606?trackId=14170286&tctx=0%2C0%2C9239e0fa-6bc2-4825-949e-c2fc1383c839-85694960
+https://www.netflix.com/watch/80010857?trackId=14170289&tctx=0%2C1%2Cd8007175-ffcf-4f35-ba13-5fd5f309d512-98382745
+https://www.netflix.com/watch/70305608?trackId=14170289&tctx=0%2C3%2C865213de-e6ab-4625-908d-fbe3208922b7-98508822
+https://www.netflix.com/watch/70232180?trackId=14183529&tctx=0%2C0%2C65d2bb08-d637-4ab2-a14d-f286e2b03f55-101368441
+https://www.netflix.com/watch/80023090?trackId=14183445&tctx=0%2C8%2Ccb701b83-a62a-4d17-b73c-1ac2b1a5f37a-101411458
+
+
+
+
+FOX NOW -
+
+http://www.fox.com/watch/677094979888/7683748608
+http://static-media.fox.com/cc/new-girl/NewGirl_5ATM20_677094979888.srt
+
+http://www.fox.com/watch/681382467805/7683748608
+http://static-media.fox.com/cc/new-girl/NewGirl_5ATM21_681382467805.srt
+
+
+
+http://www.fox.com/watch/684171331973/7684520448
+http://static-media.fox.com/cc/the-last-man-on-earth/TheLastManOnEarth_2AYB18_684171331973.dfxp
+
+videoGUID
+showid
+showname
+
+['foxAdobePassProvider']['videoGUID']
+
+http://www.fox.com/watch/711899203521/7809362688
+http://static-media.fox.com/cc/american-grit/AmericanGrit_YPS110_711899203521.srt
+
+
+
+No captions - http://www.fox.com/watch/255180355939/7684182528
+
+
+
+http://www.fox.com/watch/576384579574/7766135808
+http://static-media.fox.com/cc/minority-report/MinorityReport_1AYE10.srt
 
 
 
 
 
+http://www.fox.com/watch/690945603630/7684182528
+http://static-media.fox.com/cc/gotham/Gotham_GTH222_690945603630.srt
 
 
 
+http://www.fox.com/watch/660599363942/7684159488
+http://static-media.fox.com/cc/sleepy-hollow/SleepyHollow_3AWL18_660599363942.srt
 
 
+['foxProfileContinueWatching']['showid']
+['foxProfileContinueWatching']['showname']
 
 
+minority-report
+Minority Report
+1AYE10
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+http://www.fox.com/watch/688407619776/7684647168
