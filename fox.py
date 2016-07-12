@@ -2,7 +2,7 @@ import os
 import re
 import requests
 from bs4 import BeautifulSoup
-
+import json
 
 class foxExtractor(object):
 	
@@ -11,10 +11,14 @@ class foxExtractor(object):
 	def __init__(self,url):
 
 		print("Detected FOX NOW\nProcessing....\n")
-		self.loginRequired = False
-		self.urlName = url
-		self.debug = True
+		self.loginRequired    = False
+		self.urlName          = url
+		self.debug            = True
 		self.requestsFileName = "iDoNotExistDefinitelyOnThisComputerFolder.html"
+		self.showId           = ""
+		self.showName         = ""
+		self.videoGuid        = ""
+
 		pass
 		
 
@@ -47,6 +51,17 @@ class foxExtractor(object):
 
 		if self.debug:
 		 	print(self.contentID)
+
+		jsonString = self.getShowJson()
+		if self.debug:
+			print(jsonString)
+
+		
+		self.getShowDetails(jsonString)
+		if self.debug:
+			print(self.showId)
+			print(self.showName)
+			print(self.videoGuid)
 
 		# smiLink = self.getSmiSubtitlesLink()
 
@@ -125,61 +140,70 @@ class foxExtractor(object):
 		pass
 
 
-	def getSmiSubtitlesLink(self):
+	def getShowJson(self):
 		
 		"""		
-		The XML Link for any subtitle video is - 
+		The required script content  looks like this-
+
+		jQuery.extend(Drupal.settings, {"":...............}); 
 		
+		1) We add everything to a new string after encountering the first "{".
+		2) Remove the last parantheses and the semi-colon to create a valid JSON. ---- ');' 
+
+		"""
+		scripts = self.soupObject.findAll("script")
+		rawScript = ""
+
+		for strs in scripts:
+			if strs.string is not None:
+				if "showid" in strs.string:
+					rawScript = strs.string
+
+		addState = False
+		jsonString = ''
+		
+		for i in rawScript:
+			if i == "{" and addState is False:
+				addState = True
+			if addState is True:
+				jsonString += i
+		
+		jsonString = jsonString.replace(");","")
+
+		return jsonString
+
+		pass
+
+
+	def getShowDetails(self,jsonString):
+
+		"""
+		The json content looks like this -	
+	
+		{"foxProfileContinueWatching":{"showid":"empire","showname":"Empire"},..............
+		 "foxAdobePassProvider": {......,"videoGUID":"2AYB18"}}
+
 		"""
 
-		smiLink = ""
-		xmlLinkTemplate = ""
-		xmlLink = xmlLinkTemplate + str(self.contentID)
-		xmlRequest = requests.get(xmlLink)
-		if self.debug:
-			print(xmlRequest.text)
-		smiSoup = BeautifulSoup(xmlRequest.text)
-		
-		li = smiSoup.find("transcripts")
-		listOfLanguages = li.findChildren()
-		
-		if self.debug:
-			print(listOfLanguages)
-		
-		
-		#If more than one language subtitles are present, the user can choose the desired language.
-		if len(listOfLanguages)>1:
+		try:
+			IndexingParameters = [
+				["foxProfileContinueWatching","showid","showname"],
+				["foxAdobePassProvider","videoGUID"],
+			]
+			
+			parsedJsonObject = json.loads(jsonString)
 
-			print("<<<------ Choose the corressponding number for selecting the language ----->>>")
-			
-			for languages in range(len(listOfLanguages)):
-				print("<%d> - %s"%(languages+1,listOfLanguages[languages].name))
+			self.showId    = parsedJsonObject[IndexingParameters[0][0]][IndexingParameters[0][1]]
+			self.showName  = parsedJsonObject[IndexingParameters[0][0]][IndexingParameters[0][2]]
+			self.videoGuid = parsedJsonObject[IndexingParameters[1][0]][IndexingParameters[1][1]]
 
-			optionChoice = input()
-			try:
-				optionChoice = int(optionChoice)
-			except:
-				print("You have entered an invalid option. Application will exit.")
-				exit()
+		except:
+			print("Unable to parse Json. Please report.")
+			pass
 
-			if self.debug:
-				print(smiSoup.find(listOfLanguages[optionChoice-1].name).string)
-			
-			try:
-				smiLink = smiSoup.find(listOfLanguages[optionChoice-1].name).string
-			
-			except:
-				print("You have entered an invalid option. Application will exit.")
-				exit()
-		
-		else:
-			
-			if smiSoup.en:
-				smiLink = smiSoup.en.string
-		
-		return smiLink
-		
 		pass
+
+
 
 	def transformToVtt(self,smiLink):
 		
