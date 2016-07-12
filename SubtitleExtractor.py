@@ -8,14 +8,15 @@ from youtube import youtubeExtractor
 from amazon import amazonExtractor
 from bbc import bbcExtractor
 from crunchyroll import crunchyrollExtractor
+from fox import foxExtractor
+#from crackle import crackleExtractor
 #import hbo
-#import crackle
 #import vudu
 #import epix
 #import syfy
 #import sky
 #import shomi
-#import fox
+
 
 print("Downloading Subtitles")
 
@@ -27,8 +28,8 @@ class Subtitle(object):
 		self.urlName = ""
 		self.serviceType = ""
 		self.supportedServices = {"hulu":huluExtractor,"netflix":netflixExtractor,"youtube":youtubeExtractor,
-		"amazon":amazonExtractor,"bbc":bbcExtractor,"crunchyroll":crunchyrollExtractor}
-		#,"hbo","crackle","vudu","epix","syfy","sky","shomi","fox"]
+		"amazon":amazonExtractor,"bbc":bbcExtractor,"crunchyroll":crunchyrollExtractor,"fox":foxExtractor}
+		#,"crackle":crackleExtractor,"hbo","vudu","epix","syfy","sky","shomi","fox"]
 
 		#Dictionary of all the supported services with the respective class name as the value.
 		self.debug = True
