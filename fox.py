@@ -19,6 +19,8 @@ class foxExtractor(object):
 		self.showName         = ""
 		self.videoGuid        = ""
 
+		self.subtitleServer   = "http://static-media.fox.com/cc/"
+		self.fileExtension    = [".srt",".dfxp"]
 		pass
 		
 
@@ -55,34 +57,23 @@ class foxExtractor(object):
 		jsonString = self.getShowJson()
 		if self.debug:
 			print(jsonString)
+		self.standardCheck(jsonString)
 
-		
 		self.getShowDetails(jsonString)
 		if self.debug:
 			print(self.showId)
 			print(self.showName)
 			print(self.videoGuid)
 
-		# smiLink = self.getSmiSubtitlesLink()
+		self.standardCheck(self.showId, self.showName, self.videoGuid)
 
-		# if not smiLink:
-		# 	print("Unable to fetch the subtitles. No subtitles present.")
-		# 	self.deleteUnnecessaryfiles()
-		# 	return 0
+		CaptionList = self.getSubtitleUrl()
+		if self.debug:
+			print(CaptionList)
 
-		# if self.debug:
-		# 	print(smiLink)
-		
-		# vttLink = self.transformToVtt(smiLink)
-		# if self.debug:
-		# 	print(vttLink)
-		
-		# self.createVttSubtitleFile(vttLink)
-		# self.convertVttToSrt()
+		self.deleteUnnecessaryfiles()
 
-		# self.deleteUnnecessaryfiles()
-
-		return 1
+		return 0
 
 	def createSoupObject(self):
 		
@@ -115,9 +106,15 @@ class foxExtractor(object):
 
 		"""
 		
-		searchStringList = ["watch/"]
-		juknkData,episodeName,IDContainer = url.partition(searchStringList[0])
-		contentId,Slash,Junk = IDContainer.partition("/")
+		contentId = ''
+
+		try:
+			searchStringList = ["watch/"]
+			juknkData,episodeName,IDContainer = url.partition(searchStringList[0])
+			contentId,Slash,Junk = IDContainer.partition("/")
+
+		except:
+			pass
 
 		return contentId		
 
@@ -130,10 +127,15 @@ class foxExtractor(object):
 		<meta content="http://www.fox.com/watch/681382467805/7683748608" property="og:url"/>
 		Obtained from the SOUP.
 		"""
+		contentId = ''
 
-		UrlObj = self.soupObject.find("meta",attrs={"property":"og:url"})
-		Url = UrlObj['content']
-		contentId = self.getContentID1(Url)
+		try:
+			UrlObj = self.soupObject.find("meta",attrs={"property":"og:url"})
+			Url = UrlObj['content']
+			contentId = self.getContentID1(Url)
+
+		except:
+			pass
 		
 		return contentId
 		
@@ -204,75 +206,59 @@ class foxExtractor(object):
 		pass
 
 
+	def getSubtitleUrl(self):
 
-	def transformToVtt(self,smiLink):
+		"""
+		Sample Subtitle Link -
+		http://static-media.fox.com/cc/sleepy-hollow/SleepyHollow_3AWL18_660599363942.srt
+		http://static-media.fox.com/cc/sleepy-hollow/SleepyHollow_3AWL18_660599363942.dfxp
+
+		The standard followed is -
+		http://static-media.fox.com/cc/[showid]/showname_videoGUID_contentID.srt
+		OR
+		http://static-media.fox.com/cc/[showid]/showname_videoGUID_contentID.dfxp
+
+
+		Some Subtitle URL's follow this standard -
+		http://static-media.fox.com/cc/[showid]/showname_videoGUID.dfxp
+		http://static-media.fox.com/cc/[showid]/showname_videoGUID.srt
+
+		So we store both URL's and check both
+
+		"""
+		SubsUrl = self.subtitleServer
+		SecondarySubsUrl = ''
+
+		self.showName = self.processShowName(self.showName)
+
+		SubsUrl          += str(self.showId)
+		SubsUrl          += "/"
+
+		SubsUrl          += str(self.showName)
+		SubsUrl          += "_"
+
+		SubsUrl          += str(self.videoGuid)
+		SecondarySubsUrl  = SubsUrl
+		SubsUrl          += "_"
+
+		SubsUrl          += str(self.contentID)
+		SubsUrl          += self.fileExtension[0]
+
+		SecondarySubsUrl += self.fileExtension[0]
+
+		return [SubsUrl,SecondarySubsUrl]
+
+
+	def processShowName(self,name):
+
+		"""
+		
+		Removes white spaces
 		
 		"""
-		This function takes an smiLink and returns the corressponding subtitles in VTT format(a link)
+		name = name.replace(" ","")
+		return name
 
-		captions --> captions_webvtt
-		smi      --> vtt
-
-		"""
-		#print(smiLink)
-		vttLink = ""
-		replaceDict = {"captions":"captions_webvtt", "smi":"vtt"}
-
-		for keys in replaceDict:
-			smiLink = smiLink.replace(keys,replaceDict[keys])
-
-		vttLink = smiLink
-		#print(vttLink)
-
-		return vttLink	
-
-		pass
-
-	def createVttSubtitleFile(self,vttLink):
-
-		"""
-		This function fetches the captions and writes them into a file in VTT format
-		"""
-
-		requestObjectv = requests.get(vttLink)
-		#print(requestObjectv.text)
-
-		subsFileHandler = open(self.title + ".vtt","w")
-		subsFileHandler.write(requestObjectv.text)
-		subsFileHandler.close()
-
-		pass
-	
-	def convertVttToSrt(self):
-
-		"""
-		This function converts the VTT subtitle file into SRT format.
-		Credits - http://goo.gl/XRllyy for the conversion method.
-		"""
-
-		f =  open(self.title + ".vtt","r")
-		fh = open(self.title + ".srt","w")
-		print("Creating ~  '%s.srt' ..."%(self.title))
-		
-		count = 1
-
-		#Removing WEBVTT Header line.
-		for line in f.readlines():
-			if line[:6] == 'WEBVTT':
-				continue
-
-			#Substituting '.' with ',' in the time-stamps
-			line = re.sub(r'(:\d+)\.(\d+)', r'\1,\2', line)
-
-			#Printing the header number in each line. This is required for the SRT format.
-			if line == '\n':	
-				fh.write("\n" + str(count)+"\n")
-				count += 1
-			else:
-				fh.write(line.strip()+"\n")
-
-		f.close()
-		fh.close()
 
 	def getTitle(self):
 
@@ -303,3 +289,12 @@ class foxExtractor(object):
 				os.remove(self.title+".vtt")
 			except:
 				pass
+
+
+	def standardCheck(self,*variablesToCheck):
+
+		for variables in variablesToCheck:
+			if not variables:
+				print("Unable to fetch the subtitles.")
+				self.deleteUnnecessaryfiles()
+				exit()
