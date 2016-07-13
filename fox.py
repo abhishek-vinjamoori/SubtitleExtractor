@@ -71,9 +71,15 @@ class foxExtractor(object):
 		if self.debug:
 			print(CaptionList)
 
+
+		for link in CaptionList:
+			returnValue = self.downloadDfxpTranscript(link)
+			if returnValue:
+				break
+		
 		self.deleteUnnecessaryfiles()
 
-		return 0
+		return returnValue
 
 	def createSoupObject(self):
 		
@@ -260,6 +266,30 @@ class foxExtractor(object):
 		return name
 
 
+	def downloadDfxpTranscript(self,SubsLink):
+
+		"""
+		This function fetches the captions and writes them into a file in VTT format
+		"""
+		try:
+			subRequestObject = requests.get(SubsLink)
+			#print(subRequestObject.text)
+
+			if subRequestObject.status_code >=400:
+				#Deliberate error to exit.
+				s = int("deliberateError")
+
+			subsFileHandler = open(self.title + self.fileExtension[0],"w")
+			print("Creating ~  '%s%s' ..."%(self.title, self.fileExtension[0]))		
+			subsFileHandler.write(subRequestObject.text)
+			subsFileHandler.close()
+			return 1
+		
+		except:
+			return 0
+		
+		pass
+
 	def getTitle(self):
 
 		"""
@@ -286,7 +316,6 @@ class foxExtractor(object):
 		if not self.debug:
 			try:
 				os.remove(self.requestsFileName)
-				os.remove(self.title+".vtt")
 			except:
 				pass
 
