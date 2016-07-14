@@ -124,3 +124,27 @@ Note:Please check that you are able to stream the video without any geo-location
 5) Run the python file - ./SubtitleExtractor.py
 6) Paste the desired URL of the video (from Netflix website) for which Subtitles have to extracted and press "ENTER".
 4) Subtitles will be downloaded.
+
+
+[FOX]
+-----------------------Instructions for FOX ---------------
+Note:Please check that you are able to stream the video without any geo-location errors.
+
+
+1) Ensure that SubtitleExtractor.py executable. (Command for making it executable - chmod +x SubtitleExtractor.py)
+2) Run the python file - ./SubtitleExtractor.py
+3) Paste the desired URL (from FOX website) for which Subtitles have to extracted and press "ENTER".
+4) Subtitles will be downloaded.
+
+
+[CRACKLE]
+-----------------------Instructions for Crackle ---------------
+Note:
+1) Please check that you are able to stream the video without any geo-location errors.
+2) After clicking on a TV show ensure that the URL contains some integer ID in it. Or else, click again on the episode from the playlist below to obtain the desired URL.
+
+
+1) Ensure that SubtitleExtractor.py executable. (Command for making it executable - chmod +x SubtitleExtractor.py)
+2) Run the python file - ./SubtitleExtractor.py
+3) Paste the desired URL (from Crackle website) for which Subtitles have to extracted and press "ENTER".
+4) Subtitles will be downloaded.
