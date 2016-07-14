@@ -8,5 +8,7 @@ Supported Services -  <br/>
 4) BBC iPlayer <br/>
 5) CrunchyRoll <br/>
 6) Netflix <br/>
+6) FOX <br/>
+6) Crackle <br/>
 
 Follow the instructions in "setup.txt"
