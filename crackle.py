@@ -10,10 +10,12 @@ class crackleExtractor(object):
 	
 	def __init__(self,url):
 		print("Crackle processing")
-		self.loginRequired = False
-		self.urlName = url
+		self.loginRequired    = False
+		self.urlName          = url
 		self.requestsFileName = "iDoNotExistDefinitelyOnThisComputerFolder.html"
-		self.debug = True
+		self.debug            = True
+		self.MediaBase        = "https://web-api-us.crackle.com/Service.svc/details/media/"
+		self.mediaStream      = "/US?format=json" 
 
 		pass 
 
@@ -31,11 +33,18 @@ class crackleExtractor(object):
 		if self.debug:
 		 	print("Episode ID - ",episodeID)
 
+		
+
+		MediaUrl = self.getMediaURL(episodeID)
+		if self.debug:
+		  	print("Media URL ", MediaUrl)
+
+
 		# self.getTitle()
 		# if self.debug:
 		# 	print("Title - ",self.title)
 
-		# self.getSubtitleURL(availablePIDs)
+		# self.getSubtitleURL(MediaUrl)
 		# if self.debug:
 		#  	print("Subtitle URL - ",self.SubtitleUrl)
 
@@ -85,20 +94,17 @@ class crackleExtractor(object):
 		
 		pass
 
-	def getPIDurl(self,episodeID):
+	def getMediaURL(self,episodeID):
 
 		"""
 		This function makes the URL which contains the required PID
 		"""
-
-		parser = SafeConfigParser()
-		parser.read('config.ini')
-		programmeUrl = parser.get('BBC', 'programmeurl')
+		MediaUrl      = self.MediaBase
 		
-		programmeUrl += episodeID
-		programmeUrl += ".xml"
+		MediaUrl     += episodeID
+		MediaUrl     += self.mediaStream
 		
-		return programmeUrl
+		return MediaUrl
 		
 		pass
 
