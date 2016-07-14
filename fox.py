@@ -13,7 +13,7 @@ class foxExtractor(object):
 		print("Detected FOX NOW\nProcessing....\n")
 		self.loginRequired    = False
 		self.urlName          = url
-		self.debug            = True
+		self.debug            = False
 		self.requestsFileName = "iDoNotExistDefinitelyOnThisComputerFolder.html"
 		self.showId           = ""
 		self.showName         = ""
