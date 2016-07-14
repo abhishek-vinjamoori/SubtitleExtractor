@@ -3,6 +3,7 @@ import re
 import requests
 from bs4 import BeautifulSoup
 from configparser import SafeConfigParser
+import json
 
 class crackleExtractor(object):
 	
@@ -44,11 +45,12 @@ class crackleExtractor(object):
 		# if self.debug:
 		# 	print("Title - ",self.title)
 
-		# self.getSubtitleURL(MediaUrl)
-		# if self.debug:
-		#  	print("Subtitle URL - ",self.SubtitleUrl)
+		self.title = "CrackleCaptions"
+		self.SubtitleUrl = self.getSubtitleURL(MediaUrl)
+		if self.debug:
+		  	print("Subtitle URL - ",self.SubtitleUrl)
 
-		# returnValue = self.downloadXMLTranscript()
+		returnValue = self.downloadXMLTranscript()
 
 		# # #srtText = self.convertXMLToSrt(str(self.requestObjectv.text))
 		# # #srtText = self._parseXml(str(self.requestObjectv.text))
@@ -109,61 +111,30 @@ class crackleExtractor(object):
 		pass
 
 
-	def getSubtitleURL(self,availablePIDs):
+	def getSubtitleURL(self,MediaUrl):
 
 		"""
-		This function fetches the subtitl URL based on the PIDs
-		"""
-
-		self.SubtitleUrl = ""
-		parser = SafeConfigParser()
-		parser.read('config.ini')
-
-		for pid in availablePIDs:
-			
-			MediaUrl = parser.get('BBC', 'mediastream')			
-			MediaUrl += pid
-			
-			if self.debug:
-				print(MediaUrl)
-
-			try:
-				requestObject = requests.get(MediaUrl)
-				soup = BeautifulSoup(requestObject.text,"lxml",from_encoding="utf8")
-				temp = soup.find("media",attrs={"kind":"captions"})
-				self.SubtitleUrl = temp.connection['href']
-				break
-
-			except:
-				pass
-		
-		pass
-		
-		
-
-	def getPID(self, Link):
+		The json content looks like this -	
+	
+		{"ClosedCaptionFiles":[{"Locale":"en-US","Path":"http:\/\/web-us-az.crackle.com\/1\/n\/wl\/t68wb_en-US_150506152834.xml","Default":false}]}
 
 		"""
-		This function returns the PID of the episode.
-		"""
-		requestObject = requests.get(Link)
 
-		# fileHandler = open("requests.txt", "w")
-		# fileHandler.write(requestObject.text)
-		# fileHandler.close() 
-		pidList = []
-		self.soup = BeautifulSoup(requestObject.text,"lxml",from_encoding="utf8")
+		#If it is a movie, we use this methodology -
 		try:
-			versionList = self.soup.programme.versions.findAll("version")
+			IndexingParameters = ["ClosedCaptionFiles",0,"Path"]
+
+			subRequestObject = requests.get(MediaUrl)
+			
+			parsedJsonObject = json.loads(str(subRequestObject.text))
+			SubsURL = parsedJsonObject[IndexingParameters[0]][IndexingParameters[1]][IndexingParameters[2]]
+			
+			return SubsURL
+
 		except:
-			print("Unable to get requested page.")
-
-		for versions in versionList:
-			pidList.append(versions.pid.string)
-
-		return pidList
-
+			pass
 		pass
+		
 
 	def downloadXMLTranscript(self):
 
