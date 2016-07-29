@@ -13,7 +13,7 @@ class foxExtractor(object):
 		print("Detected FOX NOW\nProcessing....\n")
 		self.loginRequired    = False
 		self.urlName          = url
-		self.debug            = False
+		self.debug            = True
 		self.requestsFileName = "iDoNotExistDefinitelyOnThisComputerFolder.html"
 		self.showId           = ""
 		self.showName         = ""
@@ -73,7 +73,7 @@ class foxExtractor(object):
 
 
 		for link in CaptionList:
-			returnValue = self.downloadDfxpTranscript(link)
+			returnValue = self.downloadTranscript(link)
 			if returnValue:
 				break
 		
@@ -266,13 +266,14 @@ class foxExtractor(object):
 		return name
 
 
-	def downloadDfxpTranscript(self,SubsLink):
+	def downloadTranscript(self,SubsLink):
 
 		"""
 		This function fetches the captions and writes them into a file in VTT format
 		"""
 		try:
 			subRequestObject = requests.get(SubsLink)
+			subRequestObject.encoding = 'utf-8'
 			#print(subRequestObject.text)
 
 			if subRequestObject.status_code >=400:
