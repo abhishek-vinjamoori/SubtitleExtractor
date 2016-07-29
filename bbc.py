@@ -12,7 +12,7 @@ class bbcExtractor(object):
 		print("BBC processing")
 		self.loginRequired = False
 		self.urlName = url
-		self.requestsFileName = "iDoNotExistDefinitelyOnThisComputerFolders.html"
+		self.requestsFileName = "iDoNotExistDefinitelyOnThisComputerFolder.html"
 		self.debug = True
 
 		pass 
