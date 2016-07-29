@@ -170,7 +170,7 @@ class bbcExtractor(object):
 
 		try:
 			self.requestObjectv = requests.get(self.SubtitleUrl)
-			
+			self.requestObjectv.encoding = 'utf-8'
 			print("Creating ~  '%s.xml' ..."%(self.title))
 			subsFileHandler = open(self.title + ".xml","w")
 			
