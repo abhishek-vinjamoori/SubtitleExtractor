@@ -54,10 +54,26 @@ CRACKLE -
 
 http://www.crackle.com/comedians-in-cars-getting-coffee/2498898
 
-https://web-api-us.crackle.com/Service.svc/details/media/2490623/IN?format=json
+https://web-api-us.crackle.com/Service.svc/details/media/2490623/US?format=json
 http://web-us-az.crackle.com//1//u//em//d7jyb_en-US_160627145100.xml
 
 2487955
+http://www.crackle.com/playlist/2125877/2498644
+http://www.crackle.com/kung-fu-hustle/2484099
+http://www.crackle.com/stomp-the-yard/2488444
+
+http://www.crackle.com/227-(tv-series)
+http://www.crackle.com/227-(tv-series)/2483323
+http://www.crackle.com/blood/2480884
+http://www.crackle.com/blood/2480881
+http://www.crackle.com/resident-evil-apocalypse/2486879
+http://www.crackle.com/franklin-and-bash
+http://www.crackle.com/franklin-and-bash/2498587
+http://www.crackle.com/mystery-men/2496321
+http://www.crackle.com/donnie-brasco/2485404
+http://www.crackle.com/rumble-fish/2498087
+http://www.crackle.com/the-devils-own/2410842
+
 
 
 NETFLIX -
@@ -69,8 +85,36 @@ https://www.netflix.com/watch/80010857?trackId=14170289&tctx=0%2C1%2Cd8007175-ff
 https://www.netflix.com/watch/70305608?trackId=14170289&tctx=0%2C3%2C865213de-e6ab-4625-908d-fbe3208922b7-98508822
 https://www.netflix.com/watch/70232180?trackId=14183529&tctx=0%2C0%2C65d2bb08-d637-4ab2-a14d-f286e2b03f55-101368441
 https://www.netflix.com/watch/80023090?trackId=14183445&tctx=0%2C8%2Ccb701b83-a62a-4d17-b73c-1ac2b1a5f37a-101411458
+https://www.netflix.com/watch/80025745?trackId=14170082&tctx=1%2C3%2Ccce94f51-e6d3-4a45-85ac-60908c1e29cc-68705397
+https://www.netflix.com/watch/80002316?trackId=14170104&tctx=0%2C4%2Cb2554d68-2bd3-450a-91e5-fcd21aa25316-68522741
+https://www.netflix.com/watch/70109683?trackId=14183489&tctx=0%2C0%2C6475b6bd-8eb6-4eb4-a768-3f514eb6f000-68810502
+https://www.netflix.com/watch/80004399?trackId=14183709&tctx=0%2C2%2Cce208499-dc92-4f37-9b57-8f4ee464b552-69427065
+https://www.netflix.com/watch/70242802?trackId=14183176&tctx=6%2C16%2Cc0d8b6a8-23a7-4ddc-9cb1-0ae7f94b2874-69457499
+https://www.netflix.com/watch/80039517?trackId=14183173&tctx=8%2C3%2C5766539a-d0fd-481d-8ec3-7df18532d3b6-69241783
+https://www.netflix.com/watch/70143760?trackId=14183190&tctx=17%2C18%2C5766539a-d0fd-481d-8ec3-7df18532d3b6-69241783
 
 
+
+CRUCNHYROLL -
+
+
+http://www.crunchyroll.com/wagamama-high-spec/episode-12-exciting-surprise-712365
+
+http://www.crunchyroll.com/eyeshield-21/episode-126-the-oath-to-become-an-ace-510648
+
+http://www.crunchyroll.com/eyeshield-21/episode-133-the-kingdoms-ballista-510664
+
+http://www.crunchyroll.com/naruto-shippuden/episode-464-ninshu-the-ninja-creed-696237
+
+http://www.crunchyroll.com/school-days/episode-12-school-days-526030
+
+http://www.crunchyroll.com/poyopoyo/episode-6-when-with-a-sphere-do-as-the-sphere-does-589398
+
+http://www.crunchyroll.com/sket-dance/episode-42-momokas-sudden-road-to-stage-actress-589608
+
+http://www.crunchyroll.com/shiratori-reiko/episode-1-the-world-famous-shiratori-reiko-comes-calling-693401
+
+http://www.crunchyroll.com/naruto-shippuden/episode-466-the-tumultuous-journey-696241
 
 
 FOX NOW -
@@ -126,3 +170,120 @@ Minority Report
 1AYE10
 
 http://www.fox.com/watch/688407619776/7684647168
+
+http://www.fox.com/watch/692180035973/7765713408
+
+http://www.fox.com/watch/707325507508/7683679488
+
+http://www.fox.com/watch/660599363942/7684159488
+
+
+
+
+
+
+
+COMEDY CENTRAL
+
+http://www.cc.com/video-clips/f1p5mr/time-traveling-bong-raging-in-ancient-greece
+http://media-resolver.mtvnservices.com/caption/convert?mgid=mgid:file:gsp:comedystor:/com/time_traveling_bong/episode_03/ttb_01_003_HL1_greece.dfxp.xml&accountName=comedycentral.com
+
+
+
+http://www.cc.com/full-episodes/7hxjsn/time-traveling-bong-chapter-1--the-beginning---uncensored-season-1-ep-101
+http://media-resolver.mtvnservices.com/caption/convert?mgid=mgid:file:gsp:comedystor:/com/tve/time_traveling_bong/Season01/0001/ttb_01_001_act1.dfxp.xml&accountName=comedycentral.com
+
+
+
+
+
+
+
+
+BBC ~
+
+
+http://www.bbc.co.uk/iplayer/episode/p03rkqcv/shakespeare-lives-the-works
+http://www.bbc.co.uk/programmes/p03rkqcv.xml
+p03rtyb0
+http://open.live.bbc.co.uk/mediaselector/5/select/version/2.0/mediaset/pc/vpid/p03rtyb0/
+http://www.bbc.co.uk/iplayer/subtitles/ng/modav/bUnknown-5e3d3916-02f4-4022-950c-0f1227a760bd_p03rtyb0_1465896615460.xml
+
+
+
+
+http://www.bbc.co.uk/iplayer/episode/b01nq6k2/new-tricks-series-9-10-part-of-a-whole
+http://www.bbc.co.uk/programmes/b01nq6k2.xml
+b01nq6jh
+http://open.live.bbc.co.uk/mediaselector/5/select/version/2.0/mediaset/pc/vpid/b01nq6jh/
+http://www.bbc.co.uk/iplayer/subtitles/ng/modav/bUnknown-fc599794-9d42-480d-9417-df86c21280cc_b01nq6jh_1466713355487.xml
+
+
+
+http://www.bbc.co.uk/iplayer/episode/b05s86by/the-disappearance-episode-3
+http://www.bbc.co.uk/programmes/b05s86by.xml
+b05s8583
+http://open.live.bbc.co.uk/mediaselector/5/select/version/2.0/mediaset/pc/vpid/b05s8583/
+http://www.bbc.co.uk/iplayer/subtitles/ng/modav/bUnknown-6e4fdb95-80d1-45f7-aeab-f81ea8233829_b05s8583_1464985729827.xml
+
+
+http://www.bbc.co.uk/iplayer/episode/p03qq41l/shakespeare-lives-ballet-opera-and-the-bard
+http://www.bbc.co.uk/programmes/p03qq41l.xml
+p03qq46j
+http://open.live.bbc.co.uk/mediaselector/5/select/version/2.0/mediaset/pc/vpid/p03qq46j/
+http://www.bbc.co.uk/iplayer/subtitles/ng/modav/bUnknown-b2ba71ea-546c-4fa3-9c11-ea92d9300c32_p03qq46j_1466429583869.xml
+
+
+http://www.bbc.co.uk/iplayer/episode/b07j554j/holby-city-series-18-38-another-day-in-paradise-part-one
+http://www.bbc.co.uk/programmes/b07j554j.xml
+b07j5508
+http://open.live.bbc.co.uk/mediaselector/5/select/version/2.0/mediaset/pc/vpid/b07j5508/
+http://www.bbc.co.uk/iplayer/subtitles/ng/modav/bUnknown-2c4dc0fd-e72b-4912-ae37-2831d14db776_b07j5508_1467131666253.xml
+
+
+
+http://www.bbc.co.uk/iplayer/episode/b00788p6/without-reservations
+http://www.bbc.co.uk/programmes/b00788p6.xml
+b000p68v
+http://open.live.bbc.co.uk/mediaselector/5/select/version/2.0/mediaset/pc/vpid/b000p68v/
+http://www.bbc.co.uk/iplayer/subtitles/ng/modav/bUnknown-32f6443e-e5a9-47e9-af6b-18db479951f4_b000p68v_1465849607965.xml
+
+
+
+http://www.bbc.co.uk/iplayer/episode/p015vhp1/the-last-days-of-anne-boleyn
+http://www.bbc.co.uk/programmes/p015vhp1.xml
+b01rfrlt
+http://open.live.bbc.co.uk/mediaselector/5/select/version/2.0/mediaset/pc/vpid/b01rfrlt/
+http://www.bbc.co.uk/iplayer/subtitles/ng/modav/bUnknown-1c1f619c-db17-4eec-a488-9e98f5e36801_b01rfrlt_1466382311925.xml
+
+
+
+http://www.bbc.co.uk/iplayer/episode/b06h38nb/who-do-you-think-you-are-series-12-9-mark-gatiss
+http://www.bbc.co.uk/programmes/b06h38nb.xml
+b06h38lw
+http://open.live.bbc.co.uk/mediaselector/5/select/version/2.0/mediaset/pc/vpid/b06h38lw/
+http://www.bbc.co.uk/iplayer/subtitles/ng/modav/bUnknown-7690ce84-66d7-41c0-b3a9-3fa823575caf_b06h38lw_1465923378007.xml
+
+
+
+http://www.bbc.co.uk/iplayer/episode/b07g7wb8/groundbreakers-nesca-robb
+http://www.bbc.co.uk/programmes/b07g7wb8.xml
+b07g7wb3
+http://open.live.bbc.co.uk/mediaselector/5/select/version/2.0/mediaset/pc/vpid/b07g7wb3/
+http://www.bbc.co.uk/iplayer/subtitles/ng/modav/bUnknown-8e50b6bf-00cc-43b5-8db5-d53c43804e9a_b07g7wb3_1464978608640.xml
+
+
+
+http://www.bbc.co.uk/iplayer/episode/b01n8hl9/timeshift-series-12-4-magnificent-machines-the-golden-age-of-the-british-sports-car
+http://www.bbc.co.uk/programmes/b01n8hl9.xml
+b01n8hhr
+http://open.live.bbc.co.uk/mediaselector/5/select/version/2.0/mediaset/pc/vpid/b01n8hhr/
+http://www.bbc.co.uk/iplayer/subtitles/ng/modav/bUnknown-0aab1061-a2c2-4423-929b-a13d134d69b9_b01n8hhr_1466304203508.xml
+
+
+
+http://www.bbc.co.uk/iplayer/episode/p03ymv61/the-insider-1-reggie-yates-in-a-texan-jail
+http://www.bbc.co.uk/programmes/p03ymv61.xml
+p03ynfw7
+http://open.live.bbc.co.uk/mediaselector/5/select/version/2.0/mediaset/pc/vpid/p03ynfw7/
+http://www.bbc.co.uk/iplayer/subtitles/ng/modav/bUnknown-6f498a97-020b-47d1-8a1c-6d4e5358bd33_p03ynfw7_1467197437731.xml
