@@ -37,7 +37,7 @@ class netflixExtractor(object):
 		# if self.debug:
 		# 	print(self.title)
 		if self.debug:
-			print(self.resourceList)
+			print("Resource List -\n",self.resourceList)
 
 		if not check:
 			self.deleteUnnecessaryfiles()
@@ -149,7 +149,7 @@ class netflixExtractor(object):
 		
 		SubtitlesURL = self.getSubtitleURL()
 		if self.debug:
-		 	print(SubtitlesURL)
+		 	print("Subtitle URL - ",SubtitlesURL)
 
 
 		self.standardCheck(SubtitlesURL)
@@ -264,7 +264,7 @@ class netflixExtractor(object):
 						Found = True
 						break
 			
-			if len(self.resourceList) >= 53:
+			if len(self.resourceList) >= 60:
 				print("Timed out. Trying anyway")
 				break
 				#return 0
@@ -285,7 +285,8 @@ class netflixExtractor(object):
 
 		filename = self.title + ".xml"
 		outputFile   = self.title + ".srt"
-
+		if self.debug:
+			print("Creating ~  '%s.srt' ..."%(self.title))			
 		with codecs.open(filename, 'rb', "utf-8") as f:
 			text = f.read()
 
