@@ -4,6 +4,7 @@ import requests
 from bs4 import BeautifulSoup
 import urllib.request
 import urllib.parse
+from YouTube_XmlToSrt import toSrt
 
 class youtubeExtractor(object):
 	
@@ -16,7 +17,7 @@ class youtubeExtractor(object):
 		self.urlName = url
 		self.requestsFileName = "iDoNotExistDefinitelyOnThisComputerFolder.html"
 		self.languageDict = {'sr': 'Serbian', 'th': 'Thai', 'gu': 'Gujarati', 'vi': 'Vietnamese', 'ps': 'Pashto', 'ha': 'Hausa', 'bg': 'Bulgarian', 'la': 'Latin', 'pl': 'Polish', 'ja': 'Japanese', 'km': 'Khmer', 'xh': 'Xhosa', 'ka': 'Georgian', 'gd': 'Scottish+Gaelic', 'hmn': 'Hmong', 'ceb': 'Cebuano', 'bn': 'Bengali', 'el': 'Greek', 'sq': 'Albanian', 'si': 'Sinhala', 'yi': 'Yiddish', 'cy': 'Welsh', 'ig': 'Igbo', 'uz': 'Uzbek', 'lb': 'Luxembourgish', 'su': 'Sundanese', 'hr': 'Croatian', 'ru': 'Russian', 'et': 'Estonian', 'ht': 'Haitian+Creole', 'no': 'Norwegian', 'hi': 'Hindi', 'tg': 'Tajik', 'mi': 'Maori', 'ga': 'Irish', 'ar': 'Arabic', 'haw': 'Hawaiian', 'bs': 'Bosnian', 'id': 'Indonesian', 'so': 'Somali', 'yo': 'Yoruba', 'st': 'Southern+Sotho', 'jv': 'Javanese', 'hu': 'Hungarian', 'pa': 'Punjabi', 'mt': 'Maltese', 'am': 'Amharic', 'fil': 'Filipino', 'uk': 'Ukrainian', 'fy': 'Western+Frisian', 'ky': 'Kyrgyz', 'my': 'Burmese', 'nl': 'Dutch', 'mk': 'Macedonian', 'da': 'Danish', 'sv': 'Swedish', 'ta': 'Tamil', 'co': 'Corsican', 'af': 'Afrikaans', 'lo': 'Lao', 'lv': 'Latvian', 'hy': 'Armenian', 'iw': 'Hebrew', 'eu': 'Basque', 'kn': 'Kannada', 'mr': 'Marathi', 'sw': 'Swahili', 'ny': 'Nyanja', 'az': 'Azerbaijani', 'es': 'Spanish', 'te': 'Telugu', 'zh': 'Chinese', 'it': 'Italian', 'be': 'Belarusian', 'sl': 'Slovenian', 'cs': 'Czech', 'lt': 'Lithuanian', 'ur': 'Urdu', 'ko': 'Korean', 'de': 'German', 'sd': 'Sindhi', 'fa': 'Persian', 'ms': 'Malay', 'sm': 'Samoan', 'fi': 'Finnish', 'kk': 'Kazakh', 'pt': 'Portuguese', 'ro': 'Romanian', 'tr': 'Turkish', 'en': 'English', 'gl': 'Galician', 'fr': 'French', 'zu': 'Zulu', 'ne': 'Nepali', 'mn': 'Mongolian', 'eo': 'Esperanto', 'sk': 'Slovak', 'ca': 'Catalan', 'ml': 'Malayalam', 'sn': 'Shona', 'ku': 'Kurdish', 'mg': 'Malagasy', 'is': 'Icelandic'}
-		self.debug = True
+		self.debug = False
 		pass
 
 	def getSubtitles(self):
@@ -28,24 +29,36 @@ class youtubeExtractor(object):
 		self.createSoupObject()
 		
 		self.getTitle()
-		print(self.title)
+		print("Title - ",self.title)
 		
+
 		rawLink = self.getRawSubtitleLink()
+		if self.debug:
+			print("Raw Link -",rawLink)
+		self.standardCheck(rawLink)
+
 		decodedLink = self.decodeLink(rawLink)
 		if self.debug:
-			print(decodedLink)
-		
+			print("Decoded Link -",decodedLink)
+		self.standardCheck(decodedLink)
+
 		stringToAppend = self.checkAvailableLanguages()
+		self.standardCheck(stringToAppend)
+
 		FinalUrl = self.getFinalUrl(decodedLink,stringToAppend)
 		
 		if self.debug:
-			print(FinalUrl)
+			print("Final URL -",FinalUrl)
+		self.standardCheck(FinalUrl)
 
-		returnValue = self.downloadXMLTranscript(FinalUrl)
+		medianCheck = self.downloadXMLTranscript(FinalUrl)
 
-		#srtText = self.convertXMLToSrt(str(self.requestObjectv.text))
-		#srtText = self._parseXml(str(self.requestObjectv.text))
-		#print(srtText)
+		if medianCheck:
+			returnValue = self.convertXMLToSrt()
+		
+		else:
+			returnValue = 0
+
 		self.deleteUnnecessaryfiles()
 
 		return returnValue
@@ -199,7 +212,8 @@ class youtubeExtractor(object):
 			self.requestObjectv = requests.get(FinalUrl)
 			self.requestObjectv.encoding = 'utf-8'
 			self.title  = self.title.replace("/","")
-			print("Creating ~  '%s.xml' ..."%(self.title))
+			if self.debug:
+				print("Creating ~  '%s.xml' ..."%(self.title))
 			subsFileHandler = open(self.title + ".xml","w")
 			
 			#It probably could be auto-generated subtitles. Lets try even that here.
@@ -213,66 +227,32 @@ class youtubeExtractor(object):
 			subsFileHandler.close()
 
 			return 1
-#r'<?text start="(\d+\.\d+)" dur="(\d+\.\d+)">(.*)</text>?'
-#r'<?text start="(\d+\.?\d*)" dur="(\d+\.?\d*)">(.*)</text>?'
+
 		except:
 			return 0
 		pass
-	
-	def convertXMLToSrt(self,xml_string):
-		pass
-		#TODO
-	# def _parseXml(self,cc):
-	# 	""" INPUT: XML file with captions
-	# 	OUTPUT: parsed object like:
-	# 	[{'texlines': [u"So, I'm going to rewrite this", 'in a more concise form as'],
-	# 	'time': {'hours':'1', 'min':'2','sec':44,'msec':232} }]
-	# 	"""
-	# 	#htmlpar = HTMLParser.HTMLParser()
-	# 	cc = cc.split("</text>") # ['<text start="2997.929">So, it will\nhas time', '<text start="3000.929">blah', ..]
-	# 	captions = []
-	# 	for line in cc:
-	# 		if re.search('text', line):
-	# 			time = re.search(r'start="(\d+)(?:\.(\d+)){0,1}', line).groups() # ('2997','929')
-	# 			time = ( int(time[0]), int(0 if not time[1] else time[1]) )
-	# 			    #convert seconds and millisec to int
-	# 			text = re.search(r'">(.*)', line, re.DOTALL).group(1) # extract text i.e. 'So, it will\nhas time'
-	# 			textlines = text.split('\n')
-	# 			print(textlines)
-	# 			    #unscape chars like &amp; or &#39;
-	# 			ntime = {'hours':time[0]/3600,"min":time[0]%3600/60,"sec":time[0]%3600%60,"msec":time[1]}
-	# 			captions.append({'time':ntime,'textlines':textlines})
-	# 	return captions
 
-    # def _generateSrt(self,captions):
-    #     """ INPUT: array with captions, i.e.
-    #             [{'texlines': [u"So, I'm going to rewrite this", 'in a more concise form as'],
-    #             'time': {'hours':'1', 'min':'2','sec':44,'msec':232} }]
-    #         OUTPUT: srtformated string
-    #     """
-    #     caption_number = 0
-    #     srt_output = []
-    #     for caption in captions:
-    #         caption_number += 1
-    #         #CAPTION NUMBER
-    #         srt_output.append(str(caption_number))
-    #         #TIME
-    #         time_from = ( caption['time']['hours'], caption['time']['min'], caption['time']['sec'], caption['time']['msec'] ) 
-    #         if len(captions)>caption_number:
-    #             #display caption until next one
-    #             next_caption_time = captions[caption_number]['time']
-    #             time_to = ( next_caption_time['hours'], next_caption_time['min'], next_caption_time['sec'], next_caption_time['msec'] )
-    #         else:
-    #             #display caption for 2 seconds
-    #             time_to = (time_from[0],time_from[1]+2,time_from[2],time_from[3]) 
-    #         srt_output.append( (":").join([str(i) for i in time_from[0:-1]])+","+str(time_from[-1])+" --> "+(":").join([str(i) for i in time_to[0:-1]])+","+str(time_to[-1]))
-    #         #CAPTIONS
-    #         for caption_line in caption['textlines']:
-    #             srt_output.append(caption_line)
-    #         #Add two empty lines to serarate every caption showed
-    #         srt_output.append("")
-    #         srt_output.append("")
-    #     return srt_output
+	def convertXMLToSrt(self):
+
+		try:
+			subsFileHandler = open(self.title + ".xml","r")
+			xmlString       = subsFileHandler.read()
+			subsFileHandler.close()
+
+			srtText         = toSrt(xmlString)
+
+			subsFileHandler = open(self.title + ".srt","w")
+			print("Creating ~  '%s.srt' ..."%(self.title))
+			subsFileHandler.write(srtText)
+			subsFileHandler.close()
+
+			return 1
+		
+		except:
+			print("Couldn't convert to SRT")
+			return 0
+
+		pass
 
 	def getTitle(self):
 
@@ -292,10 +272,18 @@ class youtubeExtractor(object):
 
 		pass
 
+	def standardCheck(self,variableToCheck):
+
+		if not variableToCheck:
+			print("Unable to fetch the subtitles. Ensure that the video contains subtitles")
+			self.deleteUnnecessaryfiles()
+			exit()
+
 	def deleteUnnecessaryfiles(self):
 
 		if not self.debug:
 			try:
 				os.remove(self.requestsFileName)
+				os.remove(self.title + ".xml")
 			except:
 				pass
