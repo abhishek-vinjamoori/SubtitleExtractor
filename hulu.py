@@ -13,7 +13,7 @@ class huluExtractor(object):
 		print("Detected Hulu\nProcessing....\n")
 		self.loginRequired = False
 		self.urlName = url
-		self.debug = False
+		self.debug = True
 		self.requestsFileName = "iDoNotExistDefinitelyOnThisComputerFolder.html"
 		pass
 		
@@ -27,6 +27,8 @@ class huluExtractor(object):
 		self.createSoupObject()
 		
 		self.getTitle()
+		if self.debug:
+			print("Title -",self.title)
 
 		self.contentID = self.getContentID1() #Method-1
 		
@@ -44,7 +46,7 @@ class huluExtractor(object):
 			return 0
 
 		if self.debug:
-			print(self.contentID)
+			print("Content ID -",self.contentID)
 
 		smiLink = self.getSmiSubtitlesLink()
 
@@ -54,11 +56,11 @@ class huluExtractor(object):
 			return 0
 
 		if self.debug:
-			print(smiLink)
+			print("SMI LINK - ",smiLink)
 		
 		vttLink = self.transformToVtt(smiLink)
 		if self.debug:
-			print(vttLink)
+			print("VTT LINK - ",vttLink)
 		
 		self.createVttSubtitleFile(vttLink)
 		self.convertVttToSrt()
