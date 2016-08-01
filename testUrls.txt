@@ -7,9 +7,20 @@
 
 
 
-		self.urlName = "https://www.youtube.com/watch?v=eS7m85d96Mc"
-		self.urlName = "https://www.youtube.com/watch?v=X6p5AZp7r_Q"
-		self.urlName = "https://www.youtube.com/watch?v=P9LHzVEPodg"
+		self.urlName = ""
+		self.urlName = ""
+		self.urlName = ""
+
+https://www.youtube.com/watch?v=eS7m85d96Mc
+https://www.youtube.com/watch?v=X6p5AZp7r_Q
+https://www.youtube.com/watch?v=isjz-MUAF6g
+https://www.youtube.com/watch?v=P9LHzVEPodg
+https://www.youtube.com/watch?v=3UEz3WHWWzE
+https://www.youtube.com/watch?v=-3fjoe5Njpc
+https://www.youtube.com/watch?v=Fg1plLhNcQ0
+https://www.youtube.com/watch?v=60ItHLz5WEA
+https://www.youtube.com/watch?v=gO6cFMRqXqU
+https://www.youtube.com/watch?v=ce1FoMJtKwc
 
 
 HULU -
