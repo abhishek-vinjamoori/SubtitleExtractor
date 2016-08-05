@@ -8,7 +8,7 @@ import zlib
 from hashlib import sha1
 from math import ceil,floor,sqrt
 import struct
-
+from CrunchyRoll_XmlToSrt import toSrt
 
 #SUBTITLES DECRYPTING HAS BEEN TAKEN FROM youtube-dl repository on GitHub. 
 
@@ -141,7 +141,13 @@ class crunchyrollExtractor(object):
 		
 		decryptedData = self.decryptSubtitleData()
 		
-		returnValue = self.writeToFile(decryptedData)
+		medianCheck = self.writeToFile(decryptedData)
+		
+		if medianCheck:
+			returnValue = self.convertXMLToSrt()
+		
+		else:
+			returnValue = 0
 
 		self.deleteUnnecessaryfiles()
 
@@ -294,6 +300,30 @@ class crunchyrollExtractor(object):
 		
 		return 1
 
+
+	def convertXMLToSrt(self):
+
+		try:
+			subsFileHandler = open(self.title + ".xml","r")
+			xmlString       = subsFileHandler.read()
+			subsFileHandler.close()
+
+			srtText         = toSrt(xmlString)
+
+			subsFileHandler = open(self.title + ".srt","w")
+			print("Creating ~  '%s.srt' ..."%(self.title))
+			subsFileHandler.write(srtText)
+			subsFileHandler.close()
+
+			return 1
+		
+		except:
+			print("Couldn't convert to SRT")
+			return 0
+
+		pass
+
+
 	def decryptSubtitleData(self):
 		
 		self.encryptedData = self.bytes_to_intlist(base64.b64decode(self.encryptedData.encode('utf-8')))
@@ -348,6 +378,7 @@ class crunchyrollExtractor(object):
 		if not self.debug:
 			try:
 				os.remove(self.requestsFileName)
+				os.remove(self.title + ".xml")
 			except:
 				pass
 
