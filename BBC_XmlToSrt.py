@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup
 
 def toSrt(xml_string):
 	srt = ''
-	xml_string        = xml_string.replace("<br/>\n","")
+	xml_string        = xml_string.replace("<br/>","\n")
 	texts             = BeautifulSoup(xml_string)
 	listOfTranscripts = texts.findAll("p")
 
@@ -20,13 +20,14 @@ def toSrt(xml_string):
 		
 		start = formatTime(start)
 		end = formatTime(end)
+		caption = captions.text
 
-		if captions.string:
-			caption = captions.string
-		else:
-			caption = ""
-		# caption = caption.replace('&#39;', "'")
-		# caption = caption.replace('&quot;', '"')
+		# if captions.string:
+		# 	caption = captions.string
+		# else:
+		# 	caption = ""
+		# # caption = caption.replace('&#39;', "'")
+		# # caption = caption.replace('&quot;', '"')
 		
 		srt += str(captionNumber) + '\n'
 		srt += start + ' --> ' + end + '\n'
