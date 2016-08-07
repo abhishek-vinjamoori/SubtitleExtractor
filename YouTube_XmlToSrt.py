@@ -8,7 +8,6 @@ def toSrt(xml_string):
 	texts = BeautifulSoup(xml_string)
 	listOfTranscripts = texts.findAll("text")
 
-	# TODO parse xml instead of regex
 	
 	captionNumber = 1
 	for captions in listOfTranscripts:
