@@ -3,6 +3,7 @@ import re
 import requests
 from bs4 import BeautifulSoup
 from configparser import SafeConfigParser
+from BBC_XmlToSrt import toSrt
 
 class bbcExtractor(object):
 	
@@ -47,14 +48,18 @@ class bbcExtractor(object):
 		if self.debug:
 		 	print("Subtitle URL - ",self.SubtitleUrl)
 
-		returnValue = self.downloadXMLTranscript()
+		medianCheck = self.downloadXMLTranscript()
 
-		# #srtText = self.convertXMLToSrt(str(self.requestObjectv.text))
-		# #srtText = self._parseXml(str(self.requestObjectv.text))
-		# #print(srtText)
+		if medianCheck:
+			returnValue = self.convertXMLToSrt()
+		
+		else:
+			returnValue = 0
+
 		self.deleteUnnecessaryfiles()
 
 		return returnValue
+
 
 	def createSoupObject(self):
 		
@@ -154,6 +159,7 @@ class bbcExtractor(object):
 			versionList = self.soup.programme.versions.findAll("version")
 		except:
 			print("Unable to get requested page.")
+			return []
 
 		for versions in versionList:
 			pidList.append(versions.pid.string)
@@ -179,7 +185,7 @@ class bbcExtractor(object):
 				return 0
 
 			self.requestObjectv = BeautifulSoup(self.requestObjectv.text)
-			subsFileHandler.write(str(self.requestObjectv.prettify()))
+			subsFileHandler.write(str(self.requestObjectv))
 			subsFileHandler.close()
 
 			return 1
@@ -188,60 +194,28 @@ class bbcExtractor(object):
 			return 0
 		pass
 
-	# def convertXMLToSrt(self,xml_string):
-	# 	pass
-	# 	#TODO
-	# # def _parseXml(self,cc):
-	# # 	""" INPUT: XML file with captions
-	# # 	OUTPUT: parsed object like:
-	# # 	[{'texlines': [u"So, I'm going to rewrite this", 'in a more concise form as'],
-	# # 	'time': {'hours':'1', 'min':'2','sec':44,'msec':232} }]
-	# # 	"""
-	# # 	#htmlpar = HTMLParser.HTMLParser()
-	# # 	cc = cc.split("</text>") # ['<text start="2997.929">So, it will\nhas time', '<text start="3000.929">blah', ..]
-	# # 	captions = []
-	# # 	for line in cc:
-	# # 		if re.search('text', line):
-	# # 			time = re.search(r'start="(\d+)(?:\.(\d+)){0,1}', line).groups() # ('2997','929')
-	# # 			time = ( int(time[0]), int(0 if not time[1] else time[1]) )
-	# # 			    #convert seconds and millisec to int
-	# # 			text = re.search(r'">(.*)', line, re.DOTALL).group(1) # extract text i.e. 'So, it will\nhas time'
-	# # 			textlines = text.split('\n')
-	# # 			print(textlines)
-	# # 			    #unscape chars like &amp; or &#39;
-	# # 			ntime = {'hours':time[0]/3600,"min":time[0]%3600/60,"sec":time[0]%3600%60,"msec":time[1]}
-	# # 			captions.append({'time':ntime,'textlines':textlines})
-	# # 	return captions
+	def convertXMLToSrt(self):
 
-	# # def _generateSrt(self,captions):
-	# #     """ INPUT: array with captions, i.e.
-	# #             [{'texlines': [u"So, I'm going to rewrite this", 'in a more concise form as'],
-	# #             'time': {'hours':'1', 'min':'2','sec':44,'msec':232} }]
-	# #         OUTPUT: srtformated string
-	# #     """
-	# #     caption_number = 0
-	# #     srt_output = []
-	# #     for caption in captions:
-	# #         caption_number += 1
-	# #         #CAPTION NUMBER
-	# #         srt_output.append(str(caption_number))
-	# #         #TIME
-	# #         time_from = ( caption['time']['hours'], caption['time']['min'], caption['time']['sec'], caption['time']['msec'] ) 
-	# #         if len(captions)>caption_number:
-	# #             #display caption until next one
-	# #             next_caption_time = captions[caption_number]['time']
-	# #             time_to = ( next_caption_time['hours'], next_caption_time['min'], next_caption_time['sec'], next_caption_time['msec'] )
-	# #         else:
-	# #             #display caption for 2 seconds
-	# #             time_to = (time_from[0],time_from[1]+2,time_from[2],time_from[3]) 
-	# #         srt_output.append( (":").join([str(i) for i in time_from[0:-1]])+","+str(time_from[-1])+" --> "+(":").join([str(i) for i in time_to[0:-1]])+","+str(time_to[-1]))
-	# #         #CAPTIONS
-	# #         for caption_line in caption['textlines']:
-	# #             srt_output.append(caption_line)
-	# #         #Add two empty lines to serarate every caption showed
-	# #         srt_output.append("")
-	# #         srt_output.append("")
-	# #     return srt_output
+		try:
+			subsFileHandler = open(self.title + ".xml","r")
+			xmlString       = subsFileHandler.read()
+			subsFileHandler.close()
+
+			srtText         = toSrt(xmlString)
+
+			subsFileHandler = open(self.title + ".srt","w")
+			print("Creating ~  '%s.srt' ..."%(self.title))
+			subsFileHandler.write(srtText)
+			subsFileHandler.close()
+
+			return 1
+		
+		except:
+			print("Couldn't convert to SRT")
+			return 0
+
+		pass
+
 
 	def getTitle(self):
 
