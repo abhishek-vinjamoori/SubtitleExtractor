@@ -17,7 +17,7 @@ class amazonExtractor(object):
 		print("Detected Amazon\nProcessing....\n")
 		self.loginRequired = False
 		self.urlName = url
-		self.debug = True
+		self.debug = False
 		self.requestsFileName = "iDoNotExistDefinitelyOnThisComputerFolder.html"
 		self.videoType = ""
 
@@ -51,7 +51,6 @@ class amazonExtractor(object):
 		"""
 
 		self.createSoupObject()
-		
 		self.getcustomerID()
 		self.getToken()
 		self.getTitle()
@@ -129,11 +128,12 @@ class amazonExtractor(object):
 		
 		#This is to tackle the Request Throttle error which occurs on Amazon frequently.
 		numberOfTrials = 20
-		errorNames = ["Service","Error","Robot"]
+		errorNames = ["Error","Robot"]
 
 		successful = False
 
 		while numberOfTrials:
+			
 			requestObject = requests.get(self.urlName)
 			# fileHandler = open("requests.txt", "w")
 			# fileHandler.write(requestObject.text)
@@ -144,21 +144,28 @@ class amazonExtractor(object):
 			#print(self.soupObject.original_encoding)
 			titleString = str(self.soupObject.title.string)
 			
+			if self.debug:
+				print("Status Code",requestObject.status_code)
+
+			fh = open(self.requestsFileName, "w")
+			fh.write(str(self.soupObject))
+			fh.close()
+			
 			fail = 0
-			for errors in errorNames:
-				if errors in titleString:
-					print("Request Throttle Error\n Trying Again....")
-					numberOfTrials -= 1 
-					fail = 1
-					break
 
-
-			if fail:
+			if requestObject.status_code >=400:
+				print("Request Throttle Error\n Trying Again....")
+				numberOfTrials -= 1 
+				fail = 1
 				continue
-			else:
-				print("Request successful")
-				successful = True
-				numberOfTrials = 0
+
+			# if fail:
+			# 	continue
+			
+		
+			print("Request successful")
+			successful = True
+			numberOfTrials = 0
 
 			fh = open(self.requestsFileName, "w")
 			fh.write(str(self.soupObject))
@@ -368,6 +375,7 @@ class amazonExtractor(object):
 			if not self.title:
 				s = int("deliberateError")
 
+		#except
 		except:
 			self.title = "Amazonsubtitles"
 
