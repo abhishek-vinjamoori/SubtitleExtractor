@@ -7,7 +7,7 @@ import urllib.parse
 import json
 from configparser import SafeConfigParser
 from selenium import webdriver
-
+from Amazon_XmlToSrt import toSrt
 
 class amazonExtractor(object):
 	
@@ -55,6 +55,7 @@ class amazonExtractor(object):
 		self.getcustomerID()
 		self.getToken()
 		self.getTitle()
+
 		if self.debug:
 			print(self.title)
 
@@ -69,8 +70,10 @@ class amazonExtractor(object):
 				print(self.parametersDict['asin'])
 
 			returnValue = self.standardFunctionCalls()
+			if returnValue != 1:
+				self.videoType = "tv"
 
-		else:
+		if self.videoType != "movie":
 
 			self.getAsinID2()
 			if self.debug:
@@ -126,7 +129,9 @@ class amazonExtractor(object):
 		
 		#This is to tackle the Request Throttle error which occurs on Amazon frequently.
 		numberOfTrials = 20
-		errorNames = ["Service","Error"]
+		errorNames = ["Service","Error","Robot"]
+
+		successful = False
 
 		while numberOfTrials:
 			requestObject = requests.get(self.urlName)
@@ -138,13 +143,23 @@ class amazonExtractor(object):
 			#soupObject1 = BeautifulSoup(requestObject.text,"lxml")
 			#print(self.soupObject.original_encoding)
 			titleString = str(self.soupObject.title.string)
-			if errorNames[0] in titleString and errorNames[1] in titleString:
-				print("Request Throttle Error\n Trying Again....")
-				numberOfTrials -= 1 
+			
+			fail = 0
+			for errors in errorNames:
+				if errors in titleString:
+					print("Request Throttle Error\n Trying Again....")
+					numberOfTrials -= 1 
+					fail = 1
+					break
+
+
+			if fail:
 				continue
 			else:
 				print("Request successful")
+				successful = True
 				numberOfTrials = 0
+
 			fh = open(self.requestsFileName, "w")
 			fh.write(str(self.soupObject))
 			fh.close()		
@@ -297,7 +312,8 @@ class amazonExtractor(object):
 		try:
 			subRequestObject = requests.get(SubsLink)
 			#print(subRequestObject.text)
-
+			subRequestObject.encoding = 'utf-8'
+			
 			subsFileHandler = open(self.title + ".dfxp","w")
 			print("Creating ~  '%s.dfxp' ..."%(self.title))			
 			subsFileHandler.write(subRequestObject.text)
@@ -308,6 +324,30 @@ class amazonExtractor(object):
 			return 0
 		
 		pass
+	
+
+	def convertDfxpToSrt(self):
+
+		try:
+			subsFileHandler = open(self.title + ".dfxp","r")
+			xmlString       = subsFileHandler.read()
+			subsFileHandler.close()
+
+			srtText         = toSrt(xmlString)
+
+			subsFileHandler = open(self.title + ".srt","w")
+			print("Creating ~  '%s.srt' ..."%(self.title))
+			subsFileHandler.write(srtText)
+			subsFileHandler.close()
+
+			return 1
+		
+		except:
+			print("Couldn't convert to SRT")
+			return 0
+
+		pass
+
 	
 
 	def getTitle(self):
@@ -323,6 +363,7 @@ class amazonExtractor(object):
 		try:
 			s = self.soupObject.find("meta",attrs={"name":"twitter:title"})
 			self.title = str(s['content'])
+			self.title = self.title.replace("/","")
 			self.title = self.title.strip()
 			if not self.title:
 				s = int("deliberateError")
@@ -357,10 +398,14 @@ class amazonExtractor(object):
 			self.deleteUnnecessaryfiles()
 			return 0
 
-		
-		returnValue = self.downloadDfxpTranscript(SubtitlesURL)
+		medianCheck = self.downloadDfxpTranscript(SubtitlesURL)		
 
-		#self.convertDfxpToSrt()
+		if medianCheck:
+			returnValue = self.convertDfxpToSrt()
+		
+		else:
+			returnValue = 0
+
 
 		self.deleteUnnecessaryfiles()
 
