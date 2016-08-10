@@ -9,12 +9,21 @@ def toSrt(xml_string):
 	texts             = BeautifulSoup(xml_string)
 	listOfTranscripts = texts.findAll("p")
 
-	# TODO parse xml instead of regex
-	
+	colorDict = {}
+
+	a=w.findAll("style")
+	for i in a:
+		colorDict[i['id']]=i['tts:color']
+
 	captionNumber = 1
 	for captions in listOfTranscripts:
 		
-
+		v = captions.findAll("span")
+		for i in v:
+			newtag = texts.new_tag("font",color=i.span['tts:color'])
+			newtag.string = i.string
+			i.replace_with(newtag)
+			
 		start = captions['begin']
 		end   = captions['end']
 		
