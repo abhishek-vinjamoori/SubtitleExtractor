@@ -32,8 +32,22 @@ def toSrt(xml_string):
 		captionContent = captions.contents
 
 		caption = ""
+		
+		personalStyle = False
+		#The default font for this caption must be changed from the color dictionary
+		if captions.has_attr('style'):
+			personalStyle = True
+
+		if personalStyle:
+			colorName = colorDict[captions['style']]
+			tagName = '<font color="%s">' % (colorName)
+			caption += tagName
+
 		for content in captionContent:
 			caption += str(content)
+
+		if personalStyle:
+			caption += '</font>'
 
 		srt += str(captionNumber) + '\n'
 		srt += start + ' --> ' + end + '\n'
