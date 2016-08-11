@@ -11,7 +11,7 @@ def toSrt(xml_string):
 
 	colorDict = {}
 
-	a=w.findAll("style")
+	a = texts.findAll("style")
 	for i in a:
 		colorDict[i['id']]=i['tts:color']
 
@@ -20,16 +20,20 @@ def toSrt(xml_string):
 		
 		v = captions.findAll("span")
 		for i in v:
-			newtag = texts.new_tag("font",color=i.span['tts:color'])
+			newtag = texts.new_tag("font",color=i['tts:color'])
 			newtag.string = i.string
 			i.replace_with(newtag)
-			
+
 		start = captions['begin']
 		end   = captions['end']
 		
 		start = formatTime(start)
 		end = formatTime(end)
-		caption = captions.text
+		captionContent = captions.contents
+
+		caption = ""
+		for content in captionContent:
+			caption += str(content)
 
 		# if captions.string:
 		# 	caption = captions.string
