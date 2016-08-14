@@ -295,8 +295,12 @@ class huluExtractor(object):
 
 		#print(self.soupObject.title.string)
 		try:
-			s=self.soupObject.find("meta",attrs={"name":"twitter:title"})
-			self.title = str(s['value'])
+			s = self.soupObject.find("meta",attrs={"name":"twitter:title"})
+			
+			try:
+				self.title = str(s['value'])
+			except:
+				self.title = str(s['content'])
 			self.title = self.title.strip()
 			if not self.title:
 				s = int("deliberateError")
