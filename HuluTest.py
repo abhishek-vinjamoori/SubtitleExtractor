@@ -1,4 +1,4 @@
-testList = [
+HuluTestList = [
 ["http://www.hulu.com/watch/245881",40001134, "http://assets.huluim.com/captions/134/40001134_US_en_en.smi", 
 "http://assets.huluim.com/captions_webvtt/134/40001134_US_en_en.vtt"]
 ,
