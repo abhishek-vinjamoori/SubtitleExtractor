@@ -13,11 +13,13 @@ class netflixExtractor(object):
 	
 	"""docstring for netflixExtractor"""
 	
-	def __init__(self,url):
+	def __init__(self,url,testMode):
+		
 		print("Detected Netflix\nProcessing....\n")
 		self.loginRequired = False
 		self.urlName = url
 		self.debug = True
+		self.testMode = testMode
 		self.requestsFileName = "iDoNotExistDefinitelyOnThisComputerFolder.html"
 
 		#Parameters requireed for Obtaining the URL

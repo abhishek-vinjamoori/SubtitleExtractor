@@ -4,13 +4,13 @@ import requests
 from bs4 import BeautifulSoup
 import json
 
-class foxExtractor(object):
+class comedycentralExtractor(object):
 	
-	"""docstring for foxExtractor"""
+	"""docstring for comedycentralExtractor"""
 	
 	def __init__(self,url,testMode):
 
-		print("Detected FOX NOW\nProcessing....\n")
+		print("Detected Comedy Central\nProcessing....\n")
 		self.loginRequired    = False
 		self.urlName          = url
 		self.debug            = True
@@ -33,54 +33,54 @@ class foxExtractor(object):
 
 		self.createSoupObject()
 		
-		self.getTitle()
-		if self.debug:
-			print(self.title)
+		# self.getTitle()
+		# if self.debug:
+		# 	print(self.title)
 
-		self.contentID = self.getContentID1(self.urlName) #Method-1
+		# self.contentID = self.getContentID1(self.urlName) #Method-1
 		
-		try:
-		 	self.contentID = int(self.contentID)
-		except:
-		 	print("Trying an alternative method to fetch Content ID")
-		 	self.contentID = self.getContentID2()  #Method-2
+		# try:
+		#  	self.contentID = int(self.contentID)
+		# except:
+		#  	print("Trying an alternative method to fetch Content ID")
+		#  	self.contentID = self.getContentID2()  #Method-2
 
-		try:
-		 	self.contentID = int(self.contentID)
-		except:
-		 	print("Unable to fetch the contentID.")
-		 	self.deleteUnnecessaryfiles()
-		 	return 0
+		# try:
+		#  	self.contentID = int(self.contentID)
+		# except:
+		#  	print("Unable to fetch the contentID.")
+		#  	self.deleteUnnecessaryfiles()
+		#  	return 0
 
-		if self.debug:
-		 	print(self.contentID)
+		# if self.debug:
+		#  	print(self.contentID)
 
-		jsonString = self.getShowJson()
-		if self.debug:
-			print(jsonString)
-		self.standardCheck(jsonString)
+		# jsonString = self.getShowJson()
+		# if self.debug:
+		# 	print(jsonString)
+		# self.standardCheck(jsonString)
 
-		self.getShowDetails(jsonString)
-		if self.debug:
-			print(self.showId)
-			print(self.showName)
-			print(self.videoGuid)
+		# self.getShowDetails(jsonString)
+		# if self.debug:
+		# 	print(self.showId)
+		# 	print(self.showName)
+		# 	print(self.videoGuid)
 
-		self.standardCheck(self.showId, self.showName, self.videoGuid)
+		# self.standardCheck(self.showId, self.showName, self.videoGuid)
 
-		CaptionList = self.getSubtitleUrl()
-		if self.debug:
-			print(CaptionList)
+		# CaptionList = self.getSubtitleUrl()
+		# if self.debug:
+		# 	print(CaptionList)
 
 
-		for link in CaptionList:
-			returnValue = self.downloadTranscript(link)
-			if returnValue:
-				break
+		# for link in CaptionList:
+		# 	returnValue = self.downloadDfxpTranscript(link)
+		# 	if returnValue:
+		# 		break
 		
-		self.deleteUnnecessaryfiles()
+		# self.deleteUnnecessaryfiles()
 
-		return returnValue
+		return 0
 
 	def createSoupObject(self):
 		
@@ -267,14 +267,13 @@ class foxExtractor(object):
 		return name
 
 
-	def downloadTranscript(self,SubsLink):
+	def downloadDfxpTranscript(self,SubsLink):
 
 		"""
 		This function fetches the captions and writes them into a file in VTT format
 		"""
 		try:
 			subRequestObject = requests.get(SubsLink)
-			subRequestObject.encoding = 'utf-8'
 			#print(subRequestObject.text)
 
 			if subRequestObject.status_code >=400:

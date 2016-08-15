@@ -10,7 +10,7 @@ class youtubeExtractor(object):
 	
 	"""docstring for YouTubeExtractor"""
 	
-	def __init__(self,url):
+	def __init__(self,url,testMode):
 
 		print("Detected YouTube\nProcessing....\n")
 		self.loginRequired = False
@@ -18,6 +18,7 @@ class youtubeExtractor(object):
 		self.requestsFileName = "iDoNotExistDefinitelyOnThisComputerFolder.html"
 		self.languageDict = {'sr': 'Serbian', 'th': 'Thai', 'gu': 'Gujarati', 'vi': 'Vietnamese', 'ps': 'Pashto', 'ha': 'Hausa', 'bg': 'Bulgarian', 'la': 'Latin', 'pl': 'Polish', 'ja': 'Japanese', 'km': 'Khmer', 'xh': 'Xhosa', 'ka': 'Georgian', 'gd': 'Scottish+Gaelic', 'hmn': 'Hmong', 'ceb': 'Cebuano', 'bn': 'Bengali', 'el': 'Greek', 'sq': 'Albanian', 'si': 'Sinhala', 'yi': 'Yiddish', 'cy': 'Welsh', 'ig': 'Igbo', 'uz': 'Uzbek', 'lb': 'Luxembourgish', 'su': 'Sundanese', 'hr': 'Croatian', 'ru': 'Russian', 'et': 'Estonian', 'ht': 'Haitian+Creole', 'no': 'Norwegian', 'hi': 'Hindi', 'tg': 'Tajik', 'mi': 'Maori', 'ga': 'Irish', 'ar': 'Arabic', 'haw': 'Hawaiian', 'bs': 'Bosnian', 'id': 'Indonesian', 'so': 'Somali', 'yo': 'Yoruba', 'st': 'Southern+Sotho', 'jv': 'Javanese', 'hu': 'Hungarian', 'pa': 'Punjabi', 'mt': 'Maltese', 'am': 'Amharic', 'fil': 'Filipino', 'uk': 'Ukrainian', 'fy': 'Western+Frisian', 'ky': 'Kyrgyz', 'my': 'Burmese', 'nl': 'Dutch', 'mk': 'Macedonian', 'da': 'Danish', 'sv': 'Swedish', 'ta': 'Tamil', 'co': 'Corsican', 'af': 'Afrikaans', 'lo': 'Lao', 'lv': 'Latvian', 'hy': 'Armenian', 'iw': 'Hebrew', 'eu': 'Basque', 'kn': 'Kannada', 'mr': 'Marathi', 'sw': 'Swahili', 'ny': 'Nyanja', 'az': 'Azerbaijani', 'es': 'Spanish', 'te': 'Telugu', 'zh': 'Chinese', 'it': 'Italian', 'be': 'Belarusian', 'sl': 'Slovenian', 'cs': 'Czech', 'lt': 'Lithuanian', 'ur': 'Urdu', 'ko': 'Korean', 'de': 'German', 'sd': 'Sindhi', 'fa': 'Persian', 'ms': 'Malay', 'sm': 'Samoan', 'fi': 'Finnish', 'kk': 'Kazakh', 'pt': 'Portuguese', 'ro': 'Romanian', 'tr': 'Turkish', 'en': 'English', 'gl': 'Galician', 'fr': 'French', 'zu': 'Zulu', 'ne': 'Nepali', 'mn': 'Mongolian', 'eo': 'Esperanto', 'sk': 'Slovak', 'ca': 'Catalan', 'ml': 'Malayalam', 'sn': 'Shona', 'ku': 'Kurdish', 'mg': 'Malagasy', 'is': 'Icelandic'}
 		self.debug = False
+		self.testMode = testMode
 		pass
 
 	def getSubtitles(self):

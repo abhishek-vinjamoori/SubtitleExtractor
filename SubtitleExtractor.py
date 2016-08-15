@@ -10,7 +10,7 @@ from bbc import bbcExtractor
 from crunchyroll import crunchyrollExtractor
 from fox import foxExtractor
 from crackle import crackleExtractor
-#import hbo
+from comedycentral import comedycentralExtractor
 #import vudu
 #import epix
 #import syfy
@@ -25,19 +25,20 @@ class Subtitle(object):
 	"""This is the main class which holds all the information for the main module"""
 	
 	def __init__(self):
+		
 		self.urlName = ""
 		self.serviceType = ""
 		self.supportedServices = {"hulu":huluExtractor,"netflix":netflixExtractor,"youtube":youtubeExtractor,
 		"amazon":amazonExtractor,"bbc":bbcExtractor,"crunchyroll":crunchyrollExtractor,"fox":foxExtractor, 
-		"crackle":crackleExtractor}
-		#"hbo","vudu","epix","syfy","sky","shomi","fox"]
+		"crackle":crackleExtractor, "comedyCentral":comedycentralExtractor}
+		#"hbo","vudu","epix","syfy","sky","shomi"]
 
 		#Dictionary of all the supported services with the respective class name as the value.
-		self.debug = True
+		self.testMode = False
 		
-	def getServiceName(self):
+	def getServiceName(self,url):
 		
-		self.urlName = input("Paste the link here : ")
+		self.urlName = url
 
 		for names in self.supportedServices:
 			if names in self.urlName: 					#Parsing URL input
@@ -47,7 +48,7 @@ class Subtitle(object):
 
 	def serviceProcess(self):
 		if self.serviceType:
-			self.serviceClass = self.supportedServices[self.serviceType](self.urlName)  #Creating instance of the sub-class
+			self.serviceClass = self.supportedServices[self.serviceType](self.urlName,self.testMode)  #Creating instance of the sub-class
 			try:
 				# if self.serviceClass.loginRequired is True:
 				# 	print("Login is required. Your details are safe and secure\n")
@@ -79,11 +80,14 @@ def main():
 
 	try:
 		Extractor = Subtitle()
-		Extractor.getServiceName() #Parse the URL and find out which Internet service it is
+		url = input("Paste the link here : ") #Parse the URL and find out which Internet service it is
+		Extractor.getServiceName(url)
+		
 		if Extractor.serviceType:
 			print(Extractor.serviceType)
 
 		finalStatus = Extractor.serviceProcess() #Proces the corresponding sub-module 
+		
 		if finalStatus:
 			print("Subtitles downloaded successfully !")
 		else:

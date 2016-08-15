@@ -2,18 +2,19 @@ import os
 import re
 import requests
 from bs4 import BeautifulSoup
-
+from random import randint
 
 class huluExtractor(object):
 	
 	"""docstring for huluExtractor"""
 	
-	def __init__(self,url):
+	def __init__(self,url,testMode):
 
 		print("Detected Hulu\nProcessing....\n")
 		self.loginRequired = False
 		self.urlName = url
 		self.debug = True
+		self.testMode = testMode
 		self.requestsFileName = "iDoNotExistDefinitelyOnThisComputerFolder.html"
 		pass
 		
@@ -151,7 +152,7 @@ class huluExtractor(object):
 		pass
 
 
-	def getSmiSubtitlesLink(self):
+	def getSmiSubtitlesLink(self, optionChoice=randint(1,2)):
 		
 		"""
 		This function returns the SMI subtitle link based on the contentID.
@@ -185,7 +186,8 @@ class huluExtractor(object):
 			for languages in range(len(listOfLanguages)):
 				print("<%d> - %s"%(languages+1,listOfLanguages[languages].name))
 
-			optionChoice = input()
+			if not self.testMode:
+				optionChoice = input()
 			try:
 				optionChoice = int(optionChoice)
 			except:

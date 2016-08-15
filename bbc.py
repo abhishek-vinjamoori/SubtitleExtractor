@@ -9,12 +9,13 @@ class bbcExtractor(object):
 	
 	"""docstring for bbcExtractor"""
 	
-	def __init__(self,url):
+	def __init__(self,url,testMode):
 		print("BBC processing")
 		self.loginRequired = False
 		self.urlName = url
 		self.requestsFileName = "iDoNotExistDefinitelyOnThisComputerFolder.html"
 		self.debug = True
+		self.testMode = testMode
 
 		pass 
 

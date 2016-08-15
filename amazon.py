@@ -13,11 +13,13 @@ class amazonExtractor(object):
 	
 	"""docstring for amazonExtractor"""
 	
-	def __init__(self,url):
+	def __init__(self,url,testMode):
+		
 		print("Detected Amazon\nProcessing....\n")
 		self.loginRequired = False
 		self.urlName = url
-		self.debug = False
+		self.debug = True
+		self.testMode = testMode
 		self.requestsFileName = "iDoNotExistDefinitelyOnThisComputerFolder.html"
 		self.videoType = ""
 

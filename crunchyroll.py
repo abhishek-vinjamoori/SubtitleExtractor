@@ -102,12 +102,13 @@ class crunchyrollExtractor(object):
 	
 	"""docstring for crunchyrollExtractor"""
 	
-	def __init__(self,url):
+	def __init__(self,url,testMode):
 
 		print("Detected crunchyroll\nProcessing....\n")
 		self.loginRequired = False
 		self.urlName = url
 		self.debug = True
+		self.testMode = testMode
 		self.requestsFileName = "iDoNotExistDefinitelyOnThisComputerFolder.html"
 		self.subtitleSource = "http://www.crunchyroll.com/xml/?req=RpcApiSubtitle_GetXml&subtitle_script_id="
 		pass

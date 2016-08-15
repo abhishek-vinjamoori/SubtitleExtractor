@@ -9,12 +9,13 @@ class crackleExtractor(object):
 	
 	"""docstring for CrackleExtractor"""
 	
-	def __init__(self,url):
+	def __init__(self,url,testMode):
 		print("Crackle processing")
 		self.loginRequired    = False
 		self.urlName          = url
 		self.requestsFileName = "iDoNotExistDefinitelyOnThisComputerFolder.html"
 		self.debug            = True
+		self.testMode         = testMode
 		self.MediaBase        = "https://web-api-us.crackle.com/Service.svc/details/media/"
 		self.mediaStream      = "/US?format=json" 
 
