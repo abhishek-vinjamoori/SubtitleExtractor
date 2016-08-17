@@ -13,7 +13,10 @@ def toSrt(xml_string):
 
 	colorInfo = texts.findAll("style")
 	for i in colorInfo:
-		colorDict[i['id']]=i['tts:color']
+		try:
+			colorDict[i['id']]=i['tts:color']
+		except:
+			pass
 
 	captionNumber = 1
 	for captions in listOfTranscripts:
@@ -59,10 +62,13 @@ def toSrt(xml_string):
 
 def formatTime(time):
 	
-
-	pieces    = time.split(".")
-	pieces[1] = (pieces[1]+"0"*3)[0:3]
-	formatted = "%s,%s" % (pieces[0],pieces[1])
+	try:
+		pieces    = time.split(".")
+		pieces[1] = (pieces[1]+"0"*3)[0:3]
+		formatted = "%s,%s" % (pieces[0],pieces[1])
+	except:
+		pieces = ("0"*3)[0:3]
+		formatted = "%s,%s" %(time,pieces)
 
 	return formatted
 
