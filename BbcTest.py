@@ -1,13 +1,8 @@
 BbcTestList = [
 ["http://www.bbc.co.uk/iplayer/episode/p03rkqcv/shakespeare-lives-the-works" ] ,
-["http://www.bbc.co.uk/iplayer/episode/b01nq6k2/new-tricks-series-9-10-part-of-a-whole" ] ,
 ["http://www.bbc.co.uk/iplayer/episode/b05s86by/the-disappearance-episode-3" ] ,
 ["http://www.bbc.co.uk/iplayer/episode/p03qq41l/shakespeare-lives-ballet-opera-and-the-bard" ] ,
 ["http://www.bbc.co.uk/iplayer/episode/b07j554j/holby-city-series-18-38-another-day-in-paradise-part-one" ] ,
-["http://www.bbc.co.uk/iplayer/episode/b00788p6/without-reservations" ] ,
-["http://www.bbc.co.uk/iplayer/episode/p015vhp1/the-last-days-of-anne-boleyn" ] ,
-["http://www.bbc.co.uk/iplayer/episode/b06h38nb/who-do-you-think-you-are-series-12-9-mark-gatiss" ] ,
-["http://www.bbc.co.uk/iplayer/episode/b07g7wb8/groundbreakers-nesca-robb" ] ,
 ["http://www.bbc.co.uk/iplayer/episode/b01n8hl9/" ] ,
 ["http://www.bbc.co.uk/iplayer/episode/p03ymv61/the-insider-1-reggie-yates-in-a-texan-jail" ] ,
 ["http://www.bbc.co.uk/iplayer/episode/p043lxs0/making-a-slave-1-trapped" ] ,
@@ -16,4 +11,5 @@ BbcTestList = [
 ["http://www.bbc.co.uk/iplayer/episode/b07p0q0g/red-rock-episode-23" ] ,
 ["http://www.bbc.co.uk/iplayer/episode/b07nswft/the-mystery-of-van-goghs-ear" ] ,
 ["http://www.bbc.co.uk/iplayer/episode/p0429dh0/olympic-diving-final-mens-synchronised-3m-springboard-wednesday" ] ,
+["http://www.bbc.co.uk/iplayer/episode/b07nsxkk/horizon-20152016-13-inside-cern"],
 ]
