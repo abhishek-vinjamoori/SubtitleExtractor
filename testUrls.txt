@@ -120,7 +120,24 @@ https://www.youtube.com/watch?v=6R-qLPf6ZSs
 
 {"Afrikaans" : "af","Albanian" : "sq","Amharic" : "am","Arabic" : "ar","Armenian" : "hy","Azerbaijani" : "az","Basque" : "eu","Belarusian" : "be","Bengali" : "bn","Bosnian" : "bs","Bulgarian" : "bg","Burmese" : "my","Catalan" : "ca","Cebuano" : "ceb","Chinese+%28Simplified%29" : "zh-Hans","Chinese+%28Traditional%29" : "zh-Hant","Corsican" : "co","Croatian" : "hr","Czech" : "cs","Danish" : "da","Dutch" : "nl","English" : "en","Esperanto" : "eo","Estonian" : "et","Filipino" : "fil","Finnish" : "fi","French" : "fr","Galician" : "gl","Georgian" : "ka","German" : "de","Greek" : "el","Gujarati" : "gu","Haitian+Creole" : "ht","Hausa" : "ha","Hawaiian" : "haw","Hebrew" : "iw","Hindi" : "hi","Hmong" : "hmn","Hungarian" : "hu","Icelandic" : "is","Igbo" : "ig","Indonesian" : "id","Irish" : "ga","Italian" : "it","Japanese" : "ja","Javanese" : "jv","Kannada" : "kn","Kazakh" : "kk","Khmer" : "km","Korean" : "ko","Kurdish" : "ku","Kyrgyz" : "ky","Lao" : "lo","Latin" : "la","Latvian" : "lv","Lithuanian" : "lt","Luxembourgish" : "lb","Macedonian" : "mk","Malagasy" : "mg","Malay" : "ms","Malayalam" : "ml","Maltese" : "mt","Maori" : "mi","Marathi" : "mr","Mongolian" : "mn","Nepali" : "ne","Norwegian" : "no","Nyanja" : "ny","Pashto" : "ps","Persian" : "fa","Polish" : "pl","Portuguese" : "pt","Punjabi" : "pa","Romanian" : "ro","Russian" : "ru","Samoan" : "sm","Scottish+Gaelic" : "gd","Serbian" : "sr","Shona" : "sn","Sindhi" : "sd","Sinhala" : "si","Slovak" : "sk","Slovenian" : "sl","Somali" : "so","Southern+Sotho" : "st","Spanish" : "es","Sundanese" : "su","Swahili" : "sw","Swedish" : "sv","Tajik" : "tg","Tamil" : "ta","Telugu" : "te","Thai" : "th","Turkish" : "tr","Ukrainian" : "uk","Urdu" : "ur","Uzbek" : "uz","Vietnamese" : "vi","Welsh" : "cy","Western+Frisian" : "fy","Xhosa" : "xh","Yiddish" : "yi","Yoruba" : "yo",Zulu" : "zu}		
 
+AMAZON -
 
+https://www.amazon.com/dp/B019DSWVYC/?autoplay=1
+https://www.amazon.com/dp/B01A3A5PGU/?autoplay=1
+https://www.amazon.com/dp/B0041L0Z1S/?autoplay=1
+https://www.amazon.com/dp/B0041L0Z1S/?autoplay=1
+https://www.amazon.com/dp/B01IS2QTY2/?autoplay=1
+https://www.amazon.com/dp/B017UGX5M6?autoplay=1&t=24
+https://www.amazon.com/dp/B017UFQ58S?autoplay=1&t=7
+https://www.amazon.com/dp/B00I11BACC?autoplay=1&t=1
+https://www.amazon.com/dp/B00DM167X8/?autoplay=1
+https://www.amazon.com/dp/B00MC6CXIW/?autoplay=1
+https://www.amazon.com/dp/B01B2926Q8/?autoplay=1
+https://www.amazon.com/dp/B01FRG0PPG/?autoplay=1
+
+https://www.amazon.com/gp/product/B0172TUQH8/ref=pd_cbs_318_1
+https://www.amazon.com/gp/product/B009BJATYS/ref=pd_cbs_318_4
+https://www.amazon.com/The-New-World/dp/B00RSGIVVO/ref=sr_1_1?s=instant-video&ie=UTF8&qid=1471504045&sr=1-1&keywords=the+man+in+the+high+castle
 
 https://www.amazon.com/gp/product/B00TU9UFTS/ref=s9_nwrsa_gw_g318_i4_r?ie=UTF8&fpl=fresh&pf_rd_m=ATVPDKIKX0DER&pf_rd_s=desktop-1&pf_rd_r=PASQTWD8JRAB7Y9Y7MFK&pf_rd_t=36701&pf_rd_p=a5c1d758-e7c8-4532-be6f-cda40b84b455&pf_rd_i=desktop
 
