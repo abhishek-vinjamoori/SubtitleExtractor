@@ -5,7 +5,7 @@ import getpass
 from netflix import netflixExtractor
 from hulu import huluExtractor
 from youtube import youtubeExtractor
-from amazon import amazonExtractor
+from newamazon import amazonExtractor
 from bbc import bbcExtractor
 from crunchyroll import crunchyrollExtractor
 from fox import foxExtractor
