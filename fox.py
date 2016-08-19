@@ -58,15 +58,19 @@ class foxExtractor(object):
 		jsonString = self.getShowJson()
 		if self.debug:
 			print(jsonString)
-		self.standardCheck(jsonString)
+
+		if not self.standardCheck(jsonString):
+			return 0
 
 		self.getShowDetails(jsonString)
+
 		if self.debug:
 			print(self.showId)
 			print(self.showName)
 			print(self.videoGuid)
 
-		self.standardCheck(self.showId, self.showName, self.videoGuid)
+		if not self.standardCheck(self.showId, self.showName, self.videoGuid):
+			return 0
 
 		CaptionList = self.getSubtitleUrl()
 		if self.debug:
@@ -328,4 +332,6 @@ class foxExtractor(object):
 			if not variables:
 				print("Unable to fetch the subtitles.")
 				self.deleteUnnecessaryfiles()
-				exit()
+				return 0
+
+		return 1
