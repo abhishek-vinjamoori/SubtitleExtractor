@@ -7,7 +7,7 @@ from selenium import webdriver
 import time
 import codecs
 import math
-import to_srt
+import Netflix_XmlToSrt
 
 class netflixExtractor(object):
 	
