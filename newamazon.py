@@ -28,7 +28,7 @@ class amazonExtractor(object):
 			"PreURL"                            : "https://atv-ps.amazon.com/cdp/catalog/GetPlaybackResources?",
 			"asin"                              : "" ,
 			"consumptionType"                   : "Streaming" ,
-			"desiredResources"                  : "SubtitleUrls" ,
+			"desiredResources"                  : "AudioVideoUrls,CatalogMetadata,SubtitlePresets,SubtitleUrls" ,
 			"deviceID"                          : "b63345bc3fccf7275dcad0cf7f683a8f" ,
 			"deviceTypeID"                      : "AOAGZA014O5RE" ,
 			"firmware"                          : "1" ,
@@ -257,8 +257,10 @@ class amazonExtractor(object):
 
 		try:
 			#https://www.amazon.com/dp/B0157MP078/?autoplay=1
+			#https://www.amazon.com/dp/B017UGX5M6?autoplay=1&t=24
 			a,b,idContainer = self.urlName.partition("dp/")
-			asinID,x,y      = idContainer.partition("/")  
+			asinID,x,y      = idContainer.partition("/")
+			asinID,x,y      = asinID.partition("?")  
 			self.asinList   = asinID
 			
 			#There maybe multiple ASIN's present which are separated by comma. So we just take one of it.
@@ -304,11 +306,16 @@ class amazonExtractor(object):
 		#If it is a movie, we use this methodology -
 		try:
 			IndexingParameters = ["subtitleUrls",0,"url"]
-
+			TitleParamters     = ["catalogMetadata", "catalog", "title","episodeNumber"]
 			subRequestObject = requests.get(self.subtitleURLContainer)
 			
 			parsedJsonObject = json.loads(str(subRequestObject.text))
 			SubsURL = parsedJsonObject[IndexingParameters[0]][IndexingParameters[1]][IndexingParameters[2]]
+			if self.title == "Amazonsubtitles":
+				try:
+					self.title = parsedJsonObject[TitleParamters[0]][TitleParamters[1]][TitleParamters[2]] + "_" + str(parsedJsonObject[TitleParamters[0]][TitleParamters[1]][TitleParamters[3]])
+				except:
+					pass
 			
 			return SubsURL
 
