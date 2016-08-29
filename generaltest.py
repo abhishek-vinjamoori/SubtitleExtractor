@@ -4,11 +4,12 @@ import sys
 from SubtitleExtractor import Subtitle
 from HuluTest import HuluTestList
 from BbcTest import BbcTestList
-
+from FoxTest import FoxTestList
+from AmazonTest import AmazonTestList
 
 def main():
 
-	testList = HuluTestList
+	testList = AmazonTestList
 	Extractor = Subtitle()
 
 	counter = 0
