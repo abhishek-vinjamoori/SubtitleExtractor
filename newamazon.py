@@ -118,7 +118,7 @@ class amazonExtractor(object):
 		# 	return 0
 
 		
-		# returnValue = self.downloadDfxpTranscript(SubtitlesURL)
+		# returnValue = common.downloadDfxpTranscript(SubtitlesURL)
 
 		# #self.convertDfxpToSrt()
 
@@ -323,51 +323,6 @@ class amazonExtractor(object):
 			pass
 		pass
 
-	def downloadDfxpTranscript(self,SubsLink):
-
-		"""
-		This function fetches the captions and writes them into a file in VTT format
-		"""
-		try:
-			subRequestObject = requests.get(SubsLink)
-			#print(subRequestObject.text)
-			subRequestObject.encoding = 'utf-8'
-			
-			subsFileHandler = open(self.title + ".dfxp","w")
-			print("Creating ~  '%s.dfxp' ..."%(self.title))			
-			subsFileHandler.write(subRequestObject.text)
-			subsFileHandler.close()
-			return 1
-		
-		except:
-			return 0
-		
-		pass
-	
-
-	def convertDfxpToSrt(self):
-
-		try:
-			subsFileHandler = open(self.title + ".dfxp","r")
-			xmlString       = subsFileHandler.read()
-			subsFileHandler.close()
-
-			srtText         = toSrt(xmlString)
-
-			subsFileHandler = open(self.title + ".srt","w")
-			print("Creating ~  '%s.srt' ..."%(self.title))
-			subsFileHandler.write(srtText)
-			subsFileHandler.close()
-
-			return 1
-		
-		except:
-			print("Couldn't convert to SRT")
-			return 0
-
-		pass
-
-	
 
 	def getTitle(self):
 
@@ -418,7 +373,7 @@ class amazonExtractor(object):
 			self.deleteUnnecessaryfiles()
 			return 0
 
-		medianCheck = self.downloadDfxpTranscript(SubtitlesURL)		
+		medianCheck = common.downloadDfxpTranscript(SubtitlesURL)		
 
 		if medianCheck:
 			returnValue = self.convertDfxpToSrt()

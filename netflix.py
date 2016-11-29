@@ -8,6 +8,7 @@ import time
 import codecs
 import math
 import Netflix_XmlToSrt
+import common
 
 class netflixExtractor(object):
 	
@@ -31,7 +32,7 @@ class netflixExtractor(object):
 		The main function which uses helper functions to get the subtitles
 		"""
 
-		#self.createSoupObject()
+		#common.createSoupObject()
 		
 		check = self.loginNetflix()
 		self.title = "NetflixCaptions"
@@ -47,26 +48,6 @@ class netflixExtractor(object):
 
 		returnValue = self.standardFunctionCalls()
 		return returnValue
-
-	def createSoupObject(self,source):
-		
-		# requestObject = requests.get(self.urlName)
-
-		# fileHandler = open("requests.txt", "w")
-		# fileHandler.write(requestObject.text)
-		# fileHandler.close() 
-		
-		self.soupObject = BeautifulSoup(source,"lxml")
-		#soupObject1 = BeautifulSoup(requestObject.text,"lxml")
-		#print(self.soupObject.original_encoding)
-
-		fh = open(self.requestsFileName, "w")
-		fh.write(str(self.soupObject))
-		fh.close()		
-
-		pass
-
-
 
 	def getSubtitleURL(self):
 
@@ -156,7 +137,7 @@ class netflixExtractor(object):
 
 		self.standardCheck(SubtitlesURL)
 		
-		returnValue = self.downloadDfxpTranscript(SubtitlesURL)
+		returnValue = common.downloadDfxpTranscript(SubtitlesURL)
 
 		self.standardCheck(returnValue)
 
@@ -241,7 +222,7 @@ class netflixExtractor(object):
 		netflixDriver.get(self.urlName)
 		pageSource = netflixDriver.page_source
 		
-		self.createSoupObject(pageSource)
+		common.createSoupObject(pageSource)
 
 		returnStatus = self.getResources(netflixDriver)
 		

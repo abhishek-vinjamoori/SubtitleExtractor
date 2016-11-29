@@ -3,6 +3,7 @@ import re
 import requests
 from bs4 import BeautifulSoup
 import json
+import common
 
 class comedycentralExtractor(object):
 	
@@ -31,7 +32,7 @@ class comedycentralExtractor(object):
 		The main function which uses helper functions to get the subtitles
 		"""
 
-		self.createSoupObject()
+		common.createSoupObject()
 		
 		# self.getTitle()
 		# if self.debug:
@@ -74,32 +75,13 @@ class comedycentralExtractor(object):
 
 
 		# for link in CaptionList:
-		# 	returnValue = self.downloadDfxpTranscript(link)
+		# 	returnValue = common.downloadDfxpTranscript(link)
 		# 	if returnValue:
 		# 		break
 		
 		# self.deleteUnnecessaryfiles()
 
 		return 0
-
-	def createSoupObject(self):
-		
-		requestObject = requests.get(self.urlName)
-
-		# fileHandler = open("requests.txt", "w")
-		# fileHandler.write(requestObject.text)
-		# fileHandler.close() 
-		
-		self.soupObject = BeautifulSoup(requestObject.text,from_encoding="utf8")
-		#soupObject1 = BeautifulSoup(requestObject.text,"lxml")
-		#print(self.soupObject.original_encoding)
-
-		fh = open(self.requestsFileName, "w")
-		fh.write(str(self.soupObject))
-		fh.close()		
-
-		pass
-
 
 	def getContentID1(self,url):
 		
@@ -265,52 +247,6 @@ class comedycentralExtractor(object):
 		"""
 		name = name.replace(" ","")
 		return name
-
-
-	def downloadDfxpTranscript(self,SubsLink):
-
-		"""
-		This function fetches the captions and writes them into a file in VTT format
-		"""
-		try:
-			subRequestObject = requests.get(SubsLink)
-			#print(subRequestObject.text)
-
-			if subRequestObject.status_code >=400:
-				#Deliberate error to exit.
-				s = int("deliberateError")
-
-			subsFileHandler = open(self.title + self.fileExtension[0],"w")
-			print("Creating ~  '%s%s' ..."%(self.title, self.fileExtension[0]))		
-			subsFileHandler.write(subRequestObject.text)
-			subsFileHandler.close()
-			return 1
-		
-		except:
-			return 0
-		
-		pass
-
-	def getTitle(self):
-
-		"""
-		This function returns the title of the video. This is also used for naming the file.
-
-		<title>Watch New Girl Online: Episode 21, Season 5 on FOX</title>   --> Extracting the value from here
-		
-		"""
-
-		#print(self.soupObject.title.string)
-		try:
-
-			self.title = self.soupObject.title.string.strip()
-			if not self.title:
-				s = int("deliberateError")
-
-		except:
-			self.title = "DownloadedFOXNowSubtitles"
-
-		pass
 
 	def deleteUnnecessaryfiles(self):
 

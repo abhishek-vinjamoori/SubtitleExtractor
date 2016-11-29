@@ -3,6 +3,7 @@ import re
 import requests
 from bs4 import BeautifulSoup
 import json
+import common
 
 class foxExtractor(object):
 	
@@ -31,9 +32,9 @@ class foxExtractor(object):
 		The main function which uses helper functions to get the subtitles
 		"""
 
-		self.createSoupObject()
+		common.createSoupObject()
 		
-		self.getTitle()
+		common.getTitleHTMLTags()
 		if self.debug:
 			print(self.title)
 
@@ -85,25 +86,6 @@ class foxExtractor(object):
 		self.deleteUnnecessaryfiles()
 
 		return returnValue
-
-	def createSoupObject(self):
-		
-		requestObject = requests.get(self.urlName)
-
-		# fileHandler = open("requests.txt", "w")
-		# fileHandler.write(requestObject.text)
-		# fileHandler.close() 
-		
-		self.soupObject = BeautifulSoup(requestObject.text,from_encoding="utf8")
-		#soupObject1 = BeautifulSoup(requestObject.text,"lxml")
-		#print(self.soupObject.original_encoding)
-
-		fh = open(self.requestsFileName, "w")
-		fh.write(str(self.soupObject))
-		fh.close()		
-
-		pass
-
 
 	def getContentID1(self,url):
 		
@@ -294,27 +276,6 @@ class foxExtractor(object):
 		except:
 			return 0
 		
-		pass
-
-	def getTitle(self):
-
-		"""
-		This function returns the title of the video. This is also used for naming the file.
-
-		<title>Watch New Girl Online: Episode 21, Season 5 on FOX</title>   --> Extracting the value from here
-		
-		"""
-
-		#print(self.soupObject.title.string)
-		try:
-
-			self.title = self.soupObject.title.string.strip()
-			if not self.title:
-				s = int("deliberateError")
-
-		except:
-			self.title = "DownloadedFOXNowSubtitles"
-
 		pass
 
 	def deleteUnnecessaryfiles(self):
