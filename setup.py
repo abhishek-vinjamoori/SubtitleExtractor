@@ -5,7 +5,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import Select
 from selenium.common.exceptions import NoSuchElementException
-from configparser import SafeConfigParser
+from configparser import ConfigParser
 import os,sys
 from bs4 import BeautifulSoup
 import json
@@ -15,7 +15,7 @@ filename = "temporaryFile.html"
 def amazonUpdate():
 
 	#Initialising the parser
-	userParser = SafeConfigParser()
+	userParser = ConfigParser()
 	userParser.read('userconfig.ini')
 	userParser.optionxform = str
 	parsingDictionary = {"service":"AMAZON"}
@@ -25,7 +25,7 @@ def amazonUpdate():
 	username = userParser.get(parsingDictionary['service'], 'username')
 	password = userParser.get(parsingDictionary['service'], 'password')
 
-	parser = SafeConfigParser()
+	parser = ConfigParser()
 	parser.read('config.ini')
 	parser.optionxform = str
 	customerUrl = parser.get(parsingDictionary['service'], 'customerurl')
