@@ -3,6 +3,7 @@ import re
 import requests
 from bs4 import BeautifulSoup
 from random import randint
+import common
 
 class huluExtractor(object):
 	
@@ -25,7 +26,7 @@ class huluExtractor(object):
 		The main function which uses helper functions to get the subtitles
 		"""
 
-		self.createSoupObject()
+		common.createSoupObject()
 		
 		self.getTitle()
 		if self.debug:
@@ -69,25 +70,6 @@ class huluExtractor(object):
 		self.deleteUnnecessaryfiles()
 
 		return 1
-
-	def createSoupObject(self):
-		
-		requestObject = requests.get(self.urlName)
-
-		# fileHandler = open("requests.txt", "w")
-		# fileHandler.write(requestObject.text)
-		# fileHandler.close() 
-		
-		self.soupObject = BeautifulSoup(requestObject.text,from_encoding="utf8")
-		#soupObject1 = BeautifulSoup(requestObject.text,"lxml")
-		#print(self.soupObject.original_encoding)
-
-		fh = open(self.requestsFileName, "w")
-		fh.write(str(self.soupObject))
-		fh.close()		
-
-		pass
-
 
 	def getContentID1(self):
 		

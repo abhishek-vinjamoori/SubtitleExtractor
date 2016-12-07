@@ -4,6 +4,7 @@ import requests
 from bs4 import BeautifulSoup
 from configparser import SafeConfigParser
 from BBC_XmlToSrt import toSrt
+import common
 
 class bbcExtractor(object):
 	
@@ -26,7 +27,7 @@ class bbcExtractor(object):
 		The main function which uses helper functions to get the subtitles
 		"""
 
-		self.createSoupObject()
+		common.createSoupObject()
 		
 
 		episodeID = self.getEpisodeID()
@@ -60,25 +61,6 @@ class bbcExtractor(object):
 		self.deleteUnnecessaryfiles()
 
 		return returnValue
-
-
-	def createSoupObject(self):
-		
-		requestObject = requests.get(self.urlName)
-
-		# fileHandler = open("requests.txt", "w")
-		# fileHandler.write(requestObject.text)
-		# fileHandler.close() 
-		
-		self.soupObject = BeautifulSoup(requestObject.text,from_encoding="utf8")
-		#soupObject1 = BeautifulSoup(requestObject.text,"lxml")
-		#print(self.soupObject.original_encoding)
-
-		fh = open(self.requestsFileName, "w")
-		fh.write(str(self.soupObject))
-		fh.close()		
-
-		pass
 
 	def getEpisodeID(self):
 		
@@ -168,55 +150,6 @@ class bbcExtractor(object):
 		return pidList
 
 		pass
-
-	def downloadXMLTranscript(self):
-
-		"""
-		This function fetches the captions and writes them into a file in XML
-		"""
-
-		try:
-			self.requestObjectv = requests.get(self.SubtitleUrl)
-			self.requestObjectv.encoding = 'utf-8'
-			print("Creating ~  '%s.xml' ..."%(self.title))
-			subsFileHandler = open(self.title + ".xml","w")
-			
-
-			if not self.requestObjectv.text:
-				return 0
-
-			self.requestObjectv = BeautifulSoup(self.requestObjectv.text)
-			subsFileHandler.write(str(self.requestObjectv))
-			subsFileHandler.close()
-
-			return 1
-
-		except:
-			return 0
-		pass
-
-	def convertXMLToSrt(self):
-
-		try:
-			subsFileHandler = open(self.title + ".xml","r")
-			xmlString       = subsFileHandler.read()
-			subsFileHandler.close()
-
-			srtText         = toSrt(xmlString)
-
-			subsFileHandler = open(self.title + ".srt","w")
-			print("Creating ~  '%s.srt' ..."%(self.title))
-			subsFileHandler.write(srtText)
-			subsFileHandler.close()
-
-			return 1
-		
-		except:
-			print("Couldn't convert to SRT")
-			return 0
-
-		pass
-
 
 	def getTitle(self):
 

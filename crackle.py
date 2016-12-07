@@ -4,6 +4,7 @@ import requests
 from bs4 import BeautifulSoup
 from configparser import SafeConfigParser
 import json
+import common
 
 class crackleExtractor(object):
 	
@@ -28,7 +29,7 @@ class crackleExtractor(object):
 		The main function which uses helper functions to get the subtitles
 		"""
 
-		self.createSoupObject()
+		common.createSoupObject()
 		
 
 		episodeID = self.getEpisodeID()
@@ -59,24 +60,6 @@ class crackleExtractor(object):
 		# self.deleteUnnecessaryfiles()
 
 		return 0
-
-	def createSoupObject(self):
-		
-		requestObject = requests.get(self.urlName)
-
-		# fileHandler = open("requests.txt", "w")
-		# fileHandler.write(requestObject.text)
-		# fileHandler.close() 
-		
-		self.soupObject = BeautifulSoup(requestObject.text,from_encoding="utf8")
-		#soupObject1 = BeautifulSoup(requestObject.text,"lxml")
-		#print(self.soupObject.original_encoding)
-
-		fh = open(self.requestsFileName, "w")
-		fh.write(str(self.soupObject))
-		fh.close()		
-
-		pass
 
 	def getEpisodeID(self):
 		
@@ -136,32 +119,6 @@ class crackleExtractor(object):
 			pass
 		pass
 		
-
-	def downloadXMLTranscript(self):
-
-		"""
-		This function fetches the captions and writes them into a file in XML
-		"""
-
-		try:
-			self.requestObjectv = requests.get(self.SubtitleUrl)
-			
-			print("Creating ~  '%s.xml' ..."%(self.title))
-			subsFileHandler = open(self.title + ".xml","w")
-			
-
-			if not self.requestObjectv.text:
-				return 0
-
-			self.requestObjectv = BeautifulSoup(self.requestObjectv.text)
-			subsFileHandler.write(str(self.requestObjectv.prettify()))
-			subsFileHandler.close()
-
-			return 1
-
-		except:
-			return 0
-		pass
 
 	# def convertXMLToSrt(self,xml_string):
 	# 	pass

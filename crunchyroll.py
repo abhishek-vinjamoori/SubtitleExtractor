@@ -4,6 +4,7 @@ import requests
 from bs4 import BeautifulSoup
 import base64
 import zlib
+import common
 
 from hashlib import sha1
 from math import ceil,floor,sqrt
@@ -120,9 +121,9 @@ class crunchyrollExtractor(object):
 		The main function which uses helper functions to get the subtitles
 		"""
 
-		self.createSoupObject()
+		common.createSoupObject()
 		
-		self.getTitle()
+		common.getTitleHTMLTags()
 		if self.debug:
 			print(self.title)
 
@@ -153,25 +154,6 @@ class crunchyrollExtractor(object):
 		self.deleteUnnecessaryfiles()
 
 		return returnValue
-
-	def createSoupObject(self):
-		
-		requestObject = requests.get(self.urlName)
-
-		# fileHandler = open("requests.txt", "w")
-		# fileHandler.write(requestObject.text)
-		# fileHandler.close() 
-		
-		self.soupObject = BeautifulSoup(requestObject.text,from_encoding="utf8")
-		#soupObject1 = BeautifulSoup(requestObject.text,"lxml")
-		#print(self.soupObject.original_encoding)
-
-		fh = open(self.requestsFileName, "w")
-		fh.write(str(self.soupObject))
-		fh.close()		
-
-		pass
-
 
 	def getSsid(self):
 		
@@ -354,25 +336,6 @@ class crunchyrollExtractor(object):
 
 		decrypted_data = self.intlist_to_bytes(self.aes_cbc_decrypt(key))
 		return zlib.decompress(decrypted_data)
-
-
-	def getTitle(self):
-
-		"""
-		This function returns the title of the video. This is also used for naming the file.
-
-		<title>Crunchyroll - Watch Naruto Shippuden: Season 17 Episode 464 - Ninshu: The Ninja Creed</title>
-		
-		"""
-
-		
-		try:
-			self.title = self.soupObject.title.string.strip()
-
-		except:
-			self.title = "CrunchyRollSubtitles"
-
-		pass
 
 	def deleteUnnecessaryfiles(self):
 
