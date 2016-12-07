@@ -24,7 +24,7 @@ Note - For Amazon,Netflix subtitle downloads - "Stable release of Google Chrome 
 
 For Amazon, Netflix -
 Make sure you already have Google Chrome installed.
-Then download and extract the contents of - http://chromedriver.storage.googleapis.com/index.html?path=2.22/
+Then download and extract the contents of - http://chromedriver.storage.googleapis.com/index.html?path=2.25/
 You will get a file named "chromedriver"
 Then go to the directory where "chromedriver" is present and execute the following command -
 
