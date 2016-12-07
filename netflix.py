@@ -293,4 +293,4 @@ class netflixExtractor(object):
 			text = f.read()
 
 		with codecs.open(outputFile, 'wb', "utf-8") as f:
-			f.write(to_srt.to_srt(text))
+			f.write(Netflix_XmlToSrt.to_srt(text))
