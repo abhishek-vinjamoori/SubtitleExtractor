@@ -266,7 +266,7 @@ class netflixExtractor(object):
 						Found = True
 						break
 			
-			if len(self.resourceList) >= 60:
+			if len(self.resourceList) >= 60 or Counter>=100:
 				print("Timed out. Trying anyway")
 				break
 				#return 0
