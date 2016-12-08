@@ -19,7 +19,7 @@ class amazonExtractor(object):
         print("Detected Amazon\nProcessing....\n")
         self.loginRequired = False
         self.urlName = url
-        self.debug = True
+        self.debug = False
         self.testMode = testMode
         self.requestsFileName = "iDoNotExistDefinitelyOnThisComputerFolder.html"
         self.videoType = ""
@@ -101,25 +101,6 @@ class amazonExtractor(object):
                     pass
                 self.title = currentTitle
                 episodeNum += 1
-            # returnValue = 0
-        # self.getSubtitlesContainer()
-        # if self.debug:
-        # 	print(self.subtitleURLContainer)
-
-        # SubtitlesURL = self.getSubtitleURL()
-        # if self.debug:
-        #  	print(SubtitlesURL)
-
-        # if not SubtitlesURL:
-        # 	print("Unable to fetch the subtitles. No subtitles present.")
-        # 	self.deleteUnnecessaryfiles()
-        # 	return 0
-
-        # returnValue = self.downloadDfxpTranscript(SubtitlesURL)
-
-        # self.convertDfxpToSrt()
-
-        # self.deleteUnnecessaryfiles()
 
         return returnValue
 
@@ -433,13 +414,6 @@ class amazonExtractor(object):
                   'submitButton':   "//*[@id='signInSubmit']"
                   }
 
-        firefox_profile = webdriver.FirefoxProfile()
-        firefox_profile.set_preference('permissions.default.stylesheet', 2)
-        firefox_profile.set_preference('permissions.default.image', 2)
-        firefox_profile.set_preference(
-            'dom.ipc.plugins.enabled.libflashplayer.so', 'false')
-
-        # amazonDriver = webdriver.Firefox(firefox_profile=firefox_profile)
         amazonDriver = webdriver.Chrome()
         amazonDriver.userAgent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.9; rv:36.0) Gecko/20100101 Firefox/36.0 WebKit'
         amazonDriver.cookiesEnabled = True
