@@ -80,46 +80,14 @@ class amazonExtractor(object):
             if self.debug:
                 print(self.asinList)
 
-            # folderPath = "./"
-            # directoryName = folderPath + self.title
-            # try:
-            # 	os.mkdir(directoryName)
-            # except:
-            # 	print("Directory exists")
-            # 	pass
-
-            # self.title = directoryName + "/" + self.title
-            # episodeNum = 1
-            # for asins in self.asinList:
             self.parametersDict['asin'] = self.asinList
             currentTitle = self.title
 
-            # self.title += str(episodeNum)
             try:
                 returnValue = self.standardFunctionCalls()
             except:
                 pass
             self.title = currentTitle
-            # episodeNum+=1
-            # returnValue = 0
-        # self.getSubtitlesContainer()
-        # if self.debug:
-        # 	print(self.subtitleURLContainer)
-
-        # SubtitlesURL = self.getSubtitleURL()
-        # if self.debug:
-        #  	print(SubtitlesURL)
-
-        # if not SubtitlesURL:
-        # 	print("Unable to fetch the subtitles. No subtitles present.")
-        # 	self.deleteUnnecessaryfiles()
-        # 	return 0
-
-        # returnValue = self.downloadDfxpTranscript(SubtitlesURL)
-
-        # self.convertDfxpToSrt()
-
-        # self.deleteUnnecessaryfiles()
 
         return returnValue
 
@@ -421,63 +389,3 @@ class amazonExtractor(object):
 
         return returnValue
         pass
-
-    # def loginAmazon(self):
-
-    # Initialising the parser
-    # 	userParser = SafeConfigParser()
-    # 	userParser.read('userconfig.ini')
-    # 	userParser.optionxform = str
-    # 	parsingDictionary = {"service":"AMAZON"}
-
-    # Required variables for filling in config file
-    # 	baseurl  = userParser.get(parsingDictionary['service'], 'url')
-    # 	username = userParser.get(parsingDictionary['service'], 'username')
-    # 	password = userParser.get(parsingDictionary['service'], 'password')
-
-    # 	parser = SafeConfigParser()
-    # 	parser.read('config.ini')
-    # 	parser.optionxform = str
-
-    # 	xpaths = { 'usernameBox' : "//*[@id='ap_email']",
-    # 	           'passwordBox' : "//*[@id='ap_password']",
-    # 	           'submitButton' :   "//*[@id='signInSubmit']"
-    # 	         }
-
-    # 	firefox_profile = webdriver.FirefoxProfile()
-    # 	firefox_profile.set_preference('permissions.default.stylesheet', 2)
-    # 	firefox_profile.set_preference('permissions.default.image', 2)
-    # firefox_profile.set_preference('dom.ipc.plugins.enabled.libflashplayer.so',
-    # 'false')
-
-    # amazonDriver = webdriver.Firefox(firefox_profile=firefox_profile)
-    # 	amazonDriver = webdriver.Chrome()
-    # 	amazonDriver.userAgent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.9; rv:36.0) Gecko/20100101 Firefox/36.0 WebKit'
-    # 	amazonDriver.cookiesEnabled = True
-    # 	amazonDriver.javascriptEnabled = True
-    # 	amazonDriver.get(baseurl)
-    # Clearing Username TextBox
-    # 	amazonDriver.find_element_by_xpath(xpaths['usernameBox']).clear()
-
-    # Typing in the username as obtained from config file
-    # 	amazonDriver.find_element_by_xpath(xpaths['usernameBox']).send_keys(username)
-
-    # Clearing password field
-    # 	amazonDriver.find_element_by_xpath(xpaths['passwordBox']).clear()
-
-    # Typing in the password
-    # 	amazonDriver.find_element_by_xpath(xpaths['passwordBox']).send_keys(password)
-
-    # Clicking on Submit button
-    # 	amazonDriver.find_element_by_xpath(xpaths['submitButton']).click()
-    # temp = input()
-    # 	amazonDriver.get(self.urlName)
-    # 	pageSource = amazonDriver.page_source
-    # 	self.soupObject = BeautifulSoup(pageSource,from_encoding="utf8")
-    # print(pageSource)
-    # 	fh = open(self.requestsFileName, "w")
-    # 	fh.write(str(self.soupObject))
-    # 	fh.close()
-
-    # 	pass
-    # 	amazonDriver.close()
