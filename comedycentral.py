@@ -89,7 +89,7 @@ class comedycentralExtractor(object):
         # fileHandler.close()
 
         self.soupObject = BeautifulSoup(
-            requestObject.text, from_encoding="utf8")
+            requestObject.text, "lxml", from_encoding="utf8")
         # soupObject1 = BeautifulSoup(requestObject.text,"lxml")
         # print(self.soupObject.original_encoding)
 

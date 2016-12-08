@@ -6,7 +6,7 @@ from bs4 import BeautifulSoup
 def toSrt(xml_string):
     srt = ''
     xml_string = xml_string.replace("<br/>", "\n")
-    texts = BeautifulSoup(xml_string)
+    texts = BeautifulSoup(xml_string, "lxml", from_encoding="utf8")
     listOfTranscripts = texts.findAll("p")
 
     colorDict = {}

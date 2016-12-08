@@ -6,7 +6,7 @@ def createSoupObject(url, fileName):
     # fileHandler.write(requestObject.text)
     # fileHandler.close()
 
-    soupObject = BeautifulSoup(requestObject.text, from_encoding="utf8")
+    soupObject = BeautifulSoup(requestObject.text, "lxml", from_encoding="utf8")
     # soupObject1 = BeautifulSoup(requestObject.text,"lxml")
     # print(self.soupObject.original_encoding)
 

@@ -57,7 +57,7 @@ class netflixExtractor(object):
         # fileHandler.write(requestObject.text)
         # fileHandler.close()
 
-        self.soupObject = BeautifulSoup(source, "lxml")
+        self.soupObject = BeautifulSoup(source, "lxml", from_encoding="utf8")
         # soupObject1 = BeautifulSoup(requestObject.text,"lxml")
         # print(self.soupObject.original_encoding)
 

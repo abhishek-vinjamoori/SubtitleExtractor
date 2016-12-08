@@ -140,7 +140,7 @@ class amazonExtractor(object):
             # fileHandler.close()
 
             self.soupObject = BeautifulSoup(
-                requestObject.text, from_encoding="utf8")
+                requestObject.text, "lxml", from_encoding="utf8")
             # soupObject1 = BeautifulSoup(requestObject.text,"lxml")
             # print(self.soupObject.original_encoding)
             titleString = str(self.soupObject.title.string)
@@ -464,7 +464,7 @@ class amazonExtractor(object):
         # temp = input()
         amazonDriver.get(self.urlName)
         pageSource = amazonDriver.page_source
-        self.soupObject = BeautifulSoup(pageSource, from_encoding="utf8")
+        self.soupObject = BeautifulSoup(pageSource, "lxml", from_encoding="utf8")
         # print(pageSource)
         fh = open(self.requestsFileName, "w")
         fh.write(str(self.soupObject))

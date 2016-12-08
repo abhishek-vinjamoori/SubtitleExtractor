@@ -161,7 +161,7 @@ class crunchyrollExtractor(object):
         # fileHandler.close()
 
         self.soupObject = BeautifulSoup(
-            requestObject.text, from_encoding="utf8")
+            requestObject.text, "lxml", from_encoding="utf8")
         # soupObject1 = BeautifulSoup(requestObject.text,"lxml")
         # print(self.soupObject.original_encoding)
 
@@ -265,7 +265,7 @@ class crunchyrollExtractor(object):
 
         # subsFileHandler = open(self.title + ".txt","w")
 
-        soupData = BeautifulSoup(requestObjectv.text, from_encoding="utf8")
+        soupData = BeautifulSoup(requestObjectv.text, "lxml", from_encoding="utf8")
         self.encryptedData = soupData.data.string
 
         # Required parameters for decrypting the subtitles

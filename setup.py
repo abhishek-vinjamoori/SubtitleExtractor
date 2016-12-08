@@ -67,7 +67,7 @@ def amazonUpdate():
     amazonDriver.find_element_by_xpath(xpaths['submitButton']).click()
     amazonDriver.get(customerUrl)
     pageSource = amazonDriver.page_source
-    pageSource = BeautifulSoup(pageSource).pre.text
+    pageSource = BeautifulSoup(pageSource, "lxml", from_encoding="utf8").pre.text
     # print(pageSource)
 
     # Removing escaped characters like \n \t and literal double quotes
@@ -82,7 +82,7 @@ def amazonUpdate():
         parser.set(parsingDictionary['service'], 'customerid', customerID)
         amazonDriver.get(tokenUrl)
         pageSource = amazonDriver.page_source
-        token = BeautifulSoup(pageSource).pre.text
+        token = BeautifulSoup(pageSource, "lxml", from_encoding="utf8").pre.text
         tokenId = token.replace("onWebToken_fccab172c7f94fe78ff8dc7d985dd3e4", "").replace(
             '(', "").replace(")", "").replace(';', "")
         token = json.loads(tokenId)

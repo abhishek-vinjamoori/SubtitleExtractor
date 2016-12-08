@@ -64,7 +64,7 @@ class crackleExtractor(object):
         # fileHandler.close()
 
         self.soupObject = BeautifulSoup(
-            requestObject.text, from_encoding="utf8")
+            requestObject.text, "lxml", from_encoding="utf8")
         # soupObject1 = BeautifulSoup(requestObject.text,"lxml")
         # print(self.soupObject.original_encoding)
 
@@ -143,7 +143,7 @@ class crackleExtractor(object):
             if not self.requestObjectv.text:
                 return 0
 
-            self.requestObjectv = BeautifulSoup(self.requestObjectv.text)
+            self.requestObjectv = BeautifulSoup(self.requestObjectv.text, "lxml", from_encoding="utf8")
             subsFileHandler.write(str(self.requestObjectv.prettify()))
             subsFileHandler.close()
 

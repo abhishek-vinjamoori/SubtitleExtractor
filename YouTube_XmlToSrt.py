@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup
 
 def toSrt(xml_string):
     srt = ''
-    texts = BeautifulSoup(xml_string)
+    texts = BeautifulSoup(xml_string, "lxml", from_encoding="utf8")
     listOfTranscripts = texts.findAll("text")
 
     captionNumber = 1

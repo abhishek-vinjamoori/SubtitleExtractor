@@ -176,7 +176,7 @@ class bbcExtractor(object):
             if not self.requestObjectv.text:
                 return 0
 
-            self.requestObjectv = BeautifulSoup(self.requestObjectv.text)
+            self.requestObjectv = BeautifulSoup(self.requestObjectv.text, "lxml", from_encoding="utf8")
             subsFileHandler.write(str(self.requestObjectv))
             subsFileHandler.close()
 

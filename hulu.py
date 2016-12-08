@@ -78,7 +78,7 @@ class huluExtractor(object):
         # fileHandler.close()
 
         self.soupObject = BeautifulSoup(
-            requestObject.text, from_encoding="utf8")
+            requestObject.text, "lxml", from_encoding="utf8")
         # soupObject1 = BeautifulSoup(requestObject.text,"lxml")
         # print(self.soupObject.original_encoding)
 
@@ -165,7 +165,7 @@ class huluExtractor(object):
         xmlRequest = requests.get(xmlLink)
         if self.debug:
             print(xmlRequest.text)
-        smiSoup = BeautifulSoup(xmlRequest.text)
+        smiSoup = BeautifulSoup(xmlRequest.text, "lxml", from_encoding="utf8")
 
         li = smiSoup.find("transcripts")
         listOfLanguages = li.findChildren()
