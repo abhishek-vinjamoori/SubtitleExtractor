@@ -12,3 +12,6 @@ Supported Services -  <br/>
 8) Crackle <br/>
 
 Follow the instructions in "setup.txt"
+
+Test Links are provided in the file - "testUrls.txt".
+Some services require valid authentication and/or permissible geographic locations(VPN).
