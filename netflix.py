@@ -129,7 +129,18 @@ class netflixExtractor(object):
                 s = int("deliberateError")
 
         except:
-            self.title = "Netflixsubtitles"
+            
+            try:
+                #<meta property="og:title" content="Watch House of Cards Online | Netflix"/>
+                s = self.soupObject.find("meta", attrs={"property": "og:title"})
+                self.title = str(s['content'])
+                self.title = self.title[6:]     #slicing "Watch "
+                self.title = self.title[:-17]   #slicing " Online | Netflix"
+                if not self.title:
+                s = int("deliberateError")
+                
+            except:
+                self.title = "Netflixsubtitles"
 
         pass
 
