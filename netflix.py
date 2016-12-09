@@ -137,7 +137,7 @@ class netflixExtractor(object):
                 self.title = self.title[6:]     #slicing "Watch "
                 self.title = self.title[:-17]   #slicing " Online | Netflix"
                 if not self.title:
-                s = int("deliberateError")
+                    s = int("deliberateError")
                 
             except:
                 self.title = "Netflixsubtitles"
