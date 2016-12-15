@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup
 import urllib.request
 import urllib.parse
 import json
-from configparser import SafeConfigParser
+from configparser import ConfigParser
 from selenium import webdriver
 from Amazon_XmlToSrt import toSrt
 
@@ -143,14 +143,14 @@ class amazonExtractor(object):
 
     def getcustomerID(self):
 
-        parser = SafeConfigParser()
+        parser = ConfigParser()
         parser.read('config.ini')
         self.parametersDict['customerID'] = parser.get('AMAZON', 'customerid')
         pass
 
     def getToken(self):
 
-        parser = SafeConfigParser()
+        parser = ConfigParser()
         parser.read('config.ini')
         self.parametersDict['token'] = parser.get('AMAZON', 'token')
         pass

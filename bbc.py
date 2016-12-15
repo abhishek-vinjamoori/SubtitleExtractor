@@ -2,7 +2,7 @@ import os
 import re
 import requests
 from bs4 import BeautifulSoup
-from configparser import SafeConfigParser
+from configparser import ConfigParser
 from BBC_XmlToSrt import toSrt
 
 
@@ -96,7 +96,7 @@ class bbcExtractor(object):
         This function makes the URL which contains the required PID
         """
 
-        parser = SafeConfigParser()
+        parser = ConfigParser()
         parser.read('config.ini')
         programmeUrl = parser.get('BBC', 'programmeurl')
 
@@ -113,7 +113,7 @@ class bbcExtractor(object):
         """
 
         self.SubtitleUrl = ""
-        parser = SafeConfigParser()
+        parser = ConfigParser()
         parser.read('config.ini')
 
         for pid in availablePIDs:
