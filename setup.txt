@@ -22,7 +22,11 @@ Disclaimer- Use it at your own risk.
 Note - For Amazon,Netflix subtitle downloads - "Stable release of Google Chrome is required."
 
 
-For Amazon, Netflix -
+For Amazon, Netflix
+
+Install PhantomJS from NPM using this command `sudo npm install -g phantomjs` or install it from the website phantomjs.org/download.html
+
+(To don't run it headless) -
 Make sure you already have Google Chrome installed.
 Then download and extract the contents of - http://chromedriver.storage.googleapis.com/index.html?path=2.25/
 You will get a file named "chromedriver"
@@ -31,7 +35,7 @@ Then go to the directory where "chromedriver" is present and execute the followi
 sudo mv -t /usr/local/bin/ chromedriver
 (Move the chromedriver file into /usr/local/bin)
 
-
+and replace the NetflixDriver and AmazonDriver with this lines `netflixDriver = webdriver.Chrome()` and `amazonDriver= webdriver.Chrome()`
 
 
 
