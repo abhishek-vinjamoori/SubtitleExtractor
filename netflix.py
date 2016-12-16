@@ -3,7 +3,7 @@ import re
 import requests
 from bs4 import BeautifulSoup
 import json
-from configparser import SafeConfigParser
+from configparser import ConfigParser
 from selenium import webdriver
 import time
 import codecs
@@ -171,7 +171,7 @@ class netflixExtractor(object):
     def loginNetflix(self):
 
         # Initialising the parser
-        userParser = SafeConfigParser()
+        userParser = ConfigParser()
         userParser.read('userconfig.ini')
         userParser.optionxform = str
         parsingDictionary = {"service": "NETFLIX"}
@@ -181,7 +181,7 @@ class netflixExtractor(object):
         username = userParser.get(parsingDictionary['service'], 'username')
         password = userParser.get(parsingDictionary['service'], 'password')
 
-        parser = SafeConfigParser()
+        parser = ConfigParser()
         parser.read('config.ini')
         parser.optionxform = str
 

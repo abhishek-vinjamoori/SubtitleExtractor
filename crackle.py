@@ -2,7 +2,7 @@ import os
 import re
 import requests
 from bs4 import BeautifulSoup
-from configparser import SafeConfigParser
+from configparser import ConfigParser
 import json
 
 
