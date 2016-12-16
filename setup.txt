@@ -26,6 +26,8 @@ For Amazon, Netflix
 
 Install PhantomJS from NPM using this command `sudo npm install -g phantomjs` or install it from the website phantomjs.org/download.html
 
+RECOMMENDED TO DOWNLOAD FROM THE SITE!
+
 (To don't run it headless) -
 Make sure you already have Google Chrome installed.
 Then download and extract the contents of - http://chromedriver.storage.googleapis.com/index.html?path=2.25/
