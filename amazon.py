@@ -414,7 +414,7 @@ class amazonExtractor(object):
                   'submitButton':   "//*[@id='signInSubmit']"
                   }
 
-        amazonDriver = webdriver.Chrome()
+        amazonDriver = webdriver.PhantomJS()
         amazonDriver.userAgent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.9; rv:36.0) Gecko/20100101 Firefox/36.0 WebKit'
         amazonDriver.cookiesEnabled = True
         amazonDriver.javascriptEnabled = True
