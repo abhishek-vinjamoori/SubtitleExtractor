@@ -348,8 +348,10 @@ class amazonExtractor(object):
             s = self.soupObject.find("meta", attrs={"name": "twitter:title"})
             self.title = str(s['content'])
             self.title = self.title.replace("/", "")
-            self.title = self.title[6:]     #slicing "Watch "
-            self.title = self.title[:-16]   #slicing "  - Amazon Video"
+            temp_title = self.title.split()
+            if temp_title[0]=='Watch' or temp[0] == "watch":
+                self.title = ' '.join(self.title.split()[1:])
+            self.title = self.title.replace("- Amazon Video","")
             self.title = self.title.strip()
             if not self.title:
                 s = int("deliberateError")
@@ -361,8 +363,10 @@ class amazonExtractor(object):
             s = self.soupObject.find("meta", attrs={"property": "og:title"})
             self.title = str(s['content'])
             self.title = self.title.replace("/", "")
-            self.title = self.title[6:]     #slicing "Watch "
-            self.title = self.title[:-16]   #slicing "  - Amazon Video"
+            temp_title = self.title.split()
+            if temp_title[0]=='Watch' or temp[0] == "watch":
+                self.title = ' '.join(self.title.split()[1:])
+            self.title = self.title.replace("- Amazon Video","")
             self.title = self.title.strip()
             if not self.title:
                 s = int("deliberateError")
