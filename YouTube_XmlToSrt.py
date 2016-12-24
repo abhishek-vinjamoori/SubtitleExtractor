@@ -1,4 +1,3 @@
-import re
 import sys
 from bs4 import BeautifulSoup
 
@@ -19,19 +18,10 @@ def toSrt(xml_string):
 
         end = start + duration
 
-        # startSec, startMicro = str(start).split('.')
-        # endSec, endMicro = str(end).split('.')
-
-        # startTime = formatTime(start)
-        # endTime   = formatTime(end)
         start = "%02i:%02i:%02i,%03i" % (
             start / (60 * 60), start / 60 % 60, start % 60, start % 1 * 1000)
         end = "%02i:%02i:%02i,%03i" % (
             end / (60 * 60), end / 60 % 60, end % 60, end % 1 * 1000)
-
-        # start = "%02d:%02d:%02d,%" % (startTime[0], startTime[1], startTime[2], startTime[3])
-        # end   = "%02d:%02d:%02d,%s" % (endTime[0], endTime[1], endTime[2],
-        # endTime[3])
 
         caption = captions.string
         caption = caption.replace('&#39;', "'")

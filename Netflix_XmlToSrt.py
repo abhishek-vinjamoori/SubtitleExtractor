@@ -42,7 +42,6 @@ def to_srt(text):
     br_re = re.compile(u'(<br\s*\/?>)+')
     fmt_t = True
     for s in sub_lines:
-        content = []
         alt_content = re.search(alt_content_re, s)
         while (alt_content):  # background text may have additional styling.
             # background may also contain several `<span> </span>` groups

@@ -17,7 +17,9 @@ class huluExtractor(object):
         self.debug = True
         self.testMode = testMode
         self.requestsFileName = "iDoNotExistDefinitelyOnThisComputerFolder.html"
-        pass
+        self.contentID = None
+        self.soupObject = None
+        self.title = None
 
     def getSubtitles(self):
         """
@@ -73,20 +75,12 @@ class huluExtractor(object):
 
         requestObject = requests.get(self.urlName)
 
-        # fileHandler = open("requests.txt", "w")
-        # fileHandler.write(requestObject.text)
-        # fileHandler.close()
-
         self.soupObject = BeautifulSoup(
             requestObject.text, "lxml", from_encoding="utf8")
-        # soupObject1 = BeautifulSoup(requestObject.text,"lxml")
-        # print(self.soupObject.original_encoding)
 
         fh = open(self.requestsFileName, "w")
         fh.write(str(self.soupObject))
         fh.close()
-
-        pass
 
     def getContentID1(self):
         """This is one of the methodologies to get the content ID. If this fails the alternative method will be called
@@ -104,7 +98,6 @@ class huluExtractor(object):
             if "content_id" in listedSoup[counter]:
                 contentCounter = counter + 2
                 break
-        # print(listedSoup[contentCounter])
         contentId = ""
 
         for i in listedSoup[contentCounter]:
@@ -213,8 +206,6 @@ class huluExtractor(object):
 
         return smiLink
 
-        pass
-
     def transformToVtt(self, smiLink):
         """
         This function takes an smiLink and returns the corressponding subtitles in VTT format(a link)
@@ -227,19 +218,14 @@ class huluExtractor(object):
         smi      --> vtt
 
         """
-        # print(smiLink)
-        vttLink = ""
         replaceDict = {"captions": "captions_webvtt", "smi": "vtt"}
 
         for keys in replaceDict:
             smiLink = smiLink.replace(keys, replaceDict[keys])
 
         vttLink = smiLink
-        # print(vttLink)
 
         return vttLink
-
-        pass
 
     def createVttSubtitleFile(self, vttLink):
         """
@@ -247,13 +233,10 @@ class huluExtractor(object):
         """
 
         requestObjectv = requests.get(vttLink)
-        # print(requestObjectv.text)
 
         subsFileHandler = open(self.title + ".vtt", "w")
         subsFileHandler.write(requestObjectv.text)
         subsFileHandler.close()
-
-        pass
 
     def convertVttToSrt(self):
         """
@@ -293,8 +276,6 @@ class huluExtractor(object):
         <meta name="twitter:title" value="Interstellar"/>   --> Extracting the value from here
 
         """
-
-        # print(self.soupObject.title.string)
         try:
             s = self.soupObject.find("meta", attrs={"name": "twitter:title"})
 
@@ -308,8 +289,6 @@ class huluExtractor(object):
 
         except:
             self.title = "DownloadedSubtitles"
-
-        pass
 
     def deleteUnnecessaryfiles(self):
 

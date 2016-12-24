@@ -1,5 +1,4 @@
 import os
-import re
 import requests
 from bs4 import BeautifulSoup
 from configparser import ConfigParser
@@ -17,8 +16,11 @@ class bbcExtractor(object):
         self.requestsFileName = "iDoNotExistDefinitelyOnThisComputerFolder.html"
         self.debug = True
         self.testMode = testMode
-
-        pass
+        self.soupObject = None
+        self.SubtitleUrl = None
+        self.soup = None
+        self.requestObjectv = None
+        self.title = None
 
     def getSubtitles(self):
         """
@@ -63,20 +65,12 @@ class bbcExtractor(object):
 
         requestObject = requests.get(self.urlName)
 
-        # fileHandler = open("requests.txt", "w")
-        # fileHandler.write(requestObject.text)
-        # fileHandler.close()
-
         self.soupObject = BeautifulSoup(
             requestObject.text, from_encoding="utf8")
-        # soupObject1 = BeautifulSoup(requestObject.text,"lxml")
-        # print(self.soupObject.original_encoding)
 
         fh = open(self.requestsFileName, "w")
         fh.write(str(self.soupObject))
         fh.close()
-
-        pass
 
     def getEpisodeID(self):
         """
@@ -88,8 +82,6 @@ class bbcExtractor(object):
             searchStringList[0])
         episodeID, Slash, Junk = IDContainer.partition("/")
         return episodeID
-
-        pass
 
     def getPIDurl(self, episodeID):
         """
@@ -104,8 +96,6 @@ class bbcExtractor(object):
         programmeUrl += ".xml"
 
         return programmeUrl
-
-        pass
 
     def getSubtitleURL(self, availablePIDs):
         """
@@ -135,17 +125,12 @@ class bbcExtractor(object):
             except:
                 pass
 
-        pass
-
     def getPID(self, Link):
         """
         This function returns the PID of the episode.
         """
         requestObject = requests.get(Link)
 
-        # fileHandler = open("requests.txt", "w")
-        # fileHandler.write(requestObject.text)
-        # fileHandler.close()
         pidList = []
         self.soup = BeautifulSoup(
             requestObject.text, "lxml", from_encoding="utf8")
@@ -159,8 +144,6 @@ class bbcExtractor(object):
             pidList.append(versions.pid.string)
 
         return pidList
-
-        pass
 
     def downloadXMLTranscript(self):
         """
@@ -184,7 +167,6 @@ class bbcExtractor(object):
 
         except:
             return 0
-        pass
 
     def convertXMLToSrt(self):
 
@@ -196,7 +178,7 @@ class bbcExtractor(object):
             srtText = toSrt(xmlString)
 
             subsFileHandler = open(self.title + ".srt", "w")
-            print("Creating ~  '%s.srt' ..." % (self.title))
+            print("Creating ~  '%s.srt' ..." % self.title)
             subsFileHandler.write(srtText)
             subsFileHandler.close()
 
@@ -205,8 +187,6 @@ class bbcExtractor(object):
         except:
             print("Couldn't convert to SRT")
             return 0
-
-        pass
 
     def getTitle(self):
         """
@@ -229,9 +209,6 @@ class bbcExtractor(object):
 
         except:
             self.title = "BBC_subtitles"
-            pass
-
-        pass
 
     def deleteUnnecessaryfiles(self):
 

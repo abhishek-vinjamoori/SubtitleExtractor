@@ -1,13 +1,10 @@
 import os
-import re
 import requests
 from bs4 import BeautifulSoup
-import json
 from configparser import ConfigParser
 from selenium import webdriver
 import time
 import codecs
-import math
 import Netflix_XmlToSrt
 
 
@@ -23,22 +20,15 @@ class netflixExtractor(object):
         self.debug = True
         self.testMode = testMode
         self.requestsFileName = "iDoNotExistDefinitelyOnThisComputerFolder.html"
-
-        # Parameters requireed for Obtaining the URL
-        pass
+        self.title = None
 
     def getSubtitles(self):
         """
         The main function which uses helper functions to get the subtitles
         """
 
-        # self.createSoupObject()
-
         check = self.loginNetflix()
         self.title = "NetflixCaptions"
-        # self.getTitle()
-        # if self.debug:
-        # 	print(self.title)
         if self.debug:
             print("Resource List -\n", self.resourceList)
 
@@ -51,21 +41,11 @@ class netflixExtractor(object):
 
     def createSoupObject(self, source):
 
-        # requestObject = requests.get(self.urlName)
-
-        # fileHandler = open("requests.txt", "w")
-        # fileHandler.write(requestObject.text)
-        # fileHandler.close()
-
         self.soupObject = BeautifulSoup(source, "lxml", from_encoding="utf8")
-        # soupObject1 = BeautifulSoup(requestObject.text,"lxml")
-        # print(self.soupObject.original_encoding)
 
         fh = open(self.requestsFileName, "w")
         fh.write(str(self.soupObject))
         fh.close()
-
-        pass
 
     def getSubtitleURL(self):
         """
@@ -91,15 +71,12 @@ class netflixExtractor(object):
                 "Failed to fetch subtitles resource. Please ensure that subtitles are switched on by default for your account")
             pass
 
-        pass
-
     def downloadDfxpTranscript(self, SubsLink):
         """
         This function fetches the captions and writes them into a file in VTT format
         """
         try:
             subRequestObject = requests.get(SubsLink)
-            # print(subRequestObject.text)
 
             subsFileHandler = open(self.title + ".xml", "w")
             print("Creating ~  '%s.xml' ..." % (self.title))
@@ -110,8 +87,6 @@ class netflixExtractor(object):
         except:
             return 0
 
-        pass
-
     def getTitle(self):
         """
         This function returns the title of the video. This is also used for naming the file.
@@ -119,8 +94,6 @@ class netflixExtractor(object):
         <meta name="twitter:title" content="Interstellar"/>   --> Extracting the value from here
 
         """
-
-        # print(self.soupObject.title.string)
         try:
             s = self.soupObject.find("meta", attrs={"name": "twitter:title"})
             self.title = str(s['content'])
@@ -130,8 +103,6 @@ class netflixExtractor(object):
 
         except:
             self.title = "Netflixsubtitles"
-
-        pass
 
     def deleteUnnecessaryfiles(self):
 
@@ -159,7 +130,6 @@ class netflixExtractor(object):
         self.deleteUnnecessaryfiles()
 
         return returnValue
-        pass
 
     def standardCheck(self, variableToCheck):
 
@@ -190,15 +160,9 @@ class netflixExtractor(object):
                  'submitButton':   "login-button"
                  }
 
-        # firefox_profile = webdriver.FirefoxProfile()
-        # firefox_profile.set_preference('permissions.default.stylesheet', 2)
-        # firefox_profile.set_preference('permissions.default.image', 2)
-        # firefox_profile.set_preference('dom.ipc.plugins.enabled.libflashplayer.so',
-        # 'false')
-
-        # netflixDriver = webdriver.Firefox(firefox_profile=firefox_profile)
         netflixDriver = webdriver.Chrome()
-        netflixDriver.userAgent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.9; rv:36.0) Gecko/20100101 Firefox/36.0 WebKit'
+        netflixDriver.userAgent = \
+            'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.9; rv:36.0) Gecko/20100101 Firefox/36.0 WebKit'
         netflixDriver.cookiesEnabled = True
         netflixDriver.javascriptEnabled = True
         netflixDriver.get(baseurl)
@@ -234,8 +198,6 @@ class netflixExtractor(object):
         # Clicking on Submit button
         netflixDriver.find_element_by_class_name(paths['submitButton']).click()
 
-        # temp = input()
-
         netflixDriver.get(self.urlName)
         pageSource = netflixDriver.page_source
 
@@ -268,7 +230,6 @@ class netflixExtractor(object):
             if len(self.resourceList) >= 60 or Counter >= 100:
                 print("Timed out. Trying anyway")
                 break
-                # return 0
 
             Counter += 1
 
@@ -277,15 +238,13 @@ class netflixExtractor(object):
 
     def convertXMLToSrt(self):
         """
-
         Taken from - https://github.com/isaacbernat/netflix-to-srt
-
         """
 
         filename = self.title + ".xml"
         outputFile = self.title + ".srt"
         if self.debug:
-            print("Creating ~  '%s.srt' ..." % (self.title))
+            print("Creating ~  '%s.srt' ..." % self.title)
         with codecs.open(filename, 'rb', "utf-8") as f:
             text = f.read()
 

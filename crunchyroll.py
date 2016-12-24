@@ -1,5 +1,4 @@
 import os
-import re
 import requests
 from bs4 import BeautifulSoup
 import base64
@@ -111,7 +110,11 @@ class crunchyrollExtractor(object):
         self.testMode = testMode
         self.requestsFileName = "iDoNotExistDefinitelyOnThisComputerFolder.html"
         self.subtitleSource = "http://www.crunchyroll.com/xml/?req=RpcApiSubtitle_GetXml&subtitle_script_id="
-        pass
+        self.ssidList = None
+        self.soupObject = None
+        self.encryptedData = None
+        self.subtitleId = None
+        self.subtitleIV = None
 
     def getSubtitles(self):
         """
@@ -156,20 +159,12 @@ class crunchyrollExtractor(object):
 
         requestObject = requests.get(self.urlName)
 
-        # fileHandler = open("requests.txt", "w")
-        # fileHandler.write(requestObject.text)
-        # fileHandler.close()
-
         self.soupObject = BeautifulSoup(
             requestObject.text, "lxml", from_encoding="utf8")
-        # soupObject1 = BeautifulSoup(requestObject.text,"lxml")
-        # print(self.soupObject.original_encoding)
 
         fh = open(self.requestsFileName, "w")
         fh.write(str(self.soupObject))
         fh.close()
-
-        pass
 
     def getSsid(self):
         """This is one of the methodologies to get the subtitles ID.
@@ -194,12 +189,10 @@ class crunchyrollExtractor(object):
         For the above HTML we should have this -
 
         [['206027', 'English (US)'], ['206015', 'العربية'], ['206733', 'Italiano'], ['206033', 'Deutsch']]
-
-
         """
 
+        ssid = []
         try:
-            ssid = []
             container = self.soupObject.find(
                 "span", attrs={"class": "showmedia-subtitle-text"})
             links = container.findAll("a")
@@ -244,7 +237,6 @@ class crunchyrollExtractor(object):
         try:
             xmlLink = self.subtitleSource + \
                 str(self.ssidList[optionChoice - 1][0])
-
         except:
             print(
                 "You have entered an invalid option. The first available option will be downloaded.")
@@ -253,17 +245,12 @@ class crunchyrollExtractor(object):
         xmlLink = self.subtitleSource + str(self.ssidList[optionChoice - 1][0])
         return xmlLink
 
-        pass
-
     def createEncryptedSubtitleFile(self, Link):
         """
         This function fetches the encrypted captions and writes them into a file.
         """
 
         requestObjectv = requests.get(Link)
-        # print(requestObjectv.text)
-
-        # subsFileHandler = open(self.title + ".txt","w")
 
         soupData = BeautifulSoup(requestObjectv.text, "lxml", from_encoding="utf8")
         self.encryptedData = soupData.data.string
@@ -275,7 +262,6 @@ class crunchyrollExtractor(object):
         if self.debug:
             print(self.subtitleId)
             print(self.subtitleIV)
-        pass
 
     def writeToFile(self, data):
         """
@@ -362,8 +348,6 @@ class crunchyrollExtractor(object):
 
         except:
             self.title = "CrunchyRollSubtitles"
-
-        pass
 
     def deleteUnnecessaryfiles(self):
 
@@ -491,11 +475,11 @@ def rotate(data):
 
 def aes_decrypt(data, expanded_key):
     """
-Decrypt one block with aes
+    Decrypt one block with aes
 
-@param {int[]} data          16-Byte cipher
-@param {int[]} expanded_key  176/208/240-Byte expanded key
-@returns {int[]}             16-Byte state
+    @param {int[]} data          16-Byte cipher
+    @param {int[]} expanded_key  176/208/240-Byte expanded key
+    @returns {int[]}             16-Byte state
     """
 
     rounds = len(expanded_key) // BLOCK_SIZE_BYTES - 1
@@ -513,7 +497,7 @@ Decrypt one block with aes
 
 
 def rijndael_mul(a, b):
-    if(a == 0 or b == 0):
+    if a == 0 or b == 0:
         return 0
     return RIJNDAEL_EXP_TABLE[(RIJNDAEL_LOG_TABLE[a] + RIJNDAEL_LOG_TABLE[b]) % 0xFF]
 
@@ -563,6 +547,6 @@ def inc(data):
         if data[i] == 255:
             data[i] = 0
         else:
-            data[i] = data[i] + 1
+            data[i] += + 1
             break
     return data
