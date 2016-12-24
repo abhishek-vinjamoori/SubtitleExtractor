@@ -2,12 +2,7 @@
 
 
 from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import Select
-from selenium.common.exceptions import NoSuchElementException
 from configparser import ConfigParser
-import os
-import sys
 from bs4 import BeautifulSoup
 import json
 
@@ -68,7 +63,6 @@ def amazonUpdate():
     amazonDriver.get(customerUrl)
     pageSource = amazonDriver.page_source
     pageSource = BeautifulSoup(pageSource, "lxml", from_encoding="utf8").pre.text
-    # print(pageSource)
 
     # Removing escaped characters like \n \t and literal double quotes
     pageSource = pageSource.replace(
@@ -78,7 +72,6 @@ def amazonUpdate():
     try:
         parsedSource = json.loads(pageSource)
         customerID = parsedSource[obtainFrom[0]][obtainFrom[1]]
-        # print(customerID)
         parser.set(parsingDictionary['service'], 'customerid', customerID)
         amazonDriver.get(tokenUrl)
         pageSource = amazonDriver.page_source
@@ -94,7 +87,7 @@ def amazonUpdate():
 
     except ZeroDivisionError:
         print("An error ocurred. Please report the issue.")
-        pass
+
     amazonDriver.close()
 
 
@@ -105,11 +98,5 @@ def main():
     for services in updateServices:
         updateServices[services]()
 
-    # try:
-    # 	os.remove(filename)
-    # except:
-    # 	pass
-
-    pass
 if __name__ == "__main__":
     main()

@@ -1,5 +1,4 @@
 import os
-import re
 import requests
 from bs4 import BeautifulSoup
 import json
@@ -20,6 +19,8 @@ class foxExtractor(object):
         self.showId = ""
         self.showName = ""
         self.videoGuid = ""
+        self.contentID = None
+        self.title = None
 
         self.subtitleServer = "http://static-media.fox.com/cc/"
         self.fileExtension = [".srt", ".dfxp"]
@@ -75,6 +76,7 @@ class foxExtractor(object):
         if self.debug:
             print(CaptionList)
 
+        returnValue = None
         for link in CaptionList:
             returnValue = self.downloadTranscript(link)
             if returnValue:
@@ -88,20 +90,12 @@ class foxExtractor(object):
 
         requestObject = requests.get(self.urlName)
 
-        # fileHandler = open("requests.txt", "w")
-        # fileHandler.write(requestObject.text)
-        # fileHandler.close()
-
         self.soupObject = BeautifulSoup(
             requestObject.text, "lxml", from_encoding="utf8")
-        # soupObject1 = BeautifulSoup(requestObject.text,"lxml")
-        # print(self.soupObject.original_encoding)
 
         fh = open(self.requestsFileName, "w")
         fh.write(str(self.soupObject))
         fh.close()
-
-        pass
 
     def getContentID1(self, url):
         """This is one of the methodologies to get the content ID. If this fails the alternative method will be called
@@ -111,7 +105,6 @@ class foxExtractor(object):
         http://www.fox.com/watch/684171331973/7684520448
 
         We need to split and return "684171331973"
-
         """
 
         contentId = ''
@@ -146,8 +139,6 @@ class foxExtractor(object):
 
         return contentId
 
-        pass
-
     def getShowJson(self):
         """
         The required script content  looks like this-
@@ -179,15 +170,12 @@ class foxExtractor(object):
 
         return jsonString
 
-        pass
-
     def getShowDetails(self, jsonString):
         """
         The json content looks like this -
 
         {"foxProfileContinueWatching":{"showid":"empire","showname":"Empire"},..............
          "foxAdobePassProvider": {......,"videoGUID":"2AYB18"}}
-
         """
 
         try:
@@ -209,8 +197,6 @@ class foxExtractor(object):
             print("Unable to parse Json. Please report.")
             pass
 
-        pass
-
     def getSubtitleUrl(self):
         """
         Sample Subtitle Link -
@@ -231,9 +217,8 @@ class foxExtractor(object):
 
         """
         SubsUrl = self.subtitleServer
-        SecondarySubsUrl = ''
 
-        self.showName = self.processShowName(self.showName)
+        self.showName = self.showName.replace(" ", "")
 
         SubsUrl += str(self.showId)
         SubsUrl += "/"
@@ -252,15 +237,6 @@ class foxExtractor(object):
 
         return [SubsUrl, SecondarySubsUrl]
 
-    def processShowName(self, name):
-        """
-
-        Removes white spaces
-
-        """
-        name = name.replace(" ", "")
-        return name
-
     def downloadTranscript(self, SubsLink):
         """
         This function fetches the captions and writes them into a file in VTT format
@@ -268,7 +244,6 @@ class foxExtractor(object):
         try:
             subRequestObject = requests.get(SubsLink)
             subRequestObject.encoding = 'utf-8'
-            # print(subRequestObject.text)
 
             if subRequestObject.status_code >= 400:
                 # Deliberate error to exit.
@@ -283,8 +258,6 @@ class foxExtractor(object):
 
         except:
             return 0
-
-        pass
 
     def getTitle(self):
         """
@@ -303,8 +276,6 @@ class foxExtractor(object):
 
         except:
             self.title = "DownloadedFOXNowSubtitles"
-
-        pass
 
     def deleteUnnecessaryfiles(self):
 

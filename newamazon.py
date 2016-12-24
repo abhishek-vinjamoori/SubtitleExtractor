@@ -2,11 +2,8 @@ import os
 import re
 import requests
 from bs4 import BeautifulSoup
-import urllib.request
-import urllib.parse
 import json
 from configparser import ConfigParser
-from selenium import webdriver
 from Amazon_XmlToSrt import toSrt
 
 
@@ -23,8 +20,10 @@ class amazonExtractor(object):
         self.testMode = testMode
         self.requestsFileName = "iDoNotExistDefinitelyOnThisComputerFolder.html"
         self.videoType = ""
+        self.title = None
+        self.subtitleURLContainer = ""
 
-        # Parameters requireed for Obtaining the URL
+        # Parameters required for Obtaining the URL
         self.parametersDict = {
             "PreURL": "https://atv-ps.amazon.com/cdp/catalog/GetPlaybackResources?",
                 "asin": "",
@@ -45,7 +44,6 @@ class amazonExtractor(object):
                 "deviceBitrateAdaptationsOverride": "CVBR,CBR",
                 "titleDecorationScheme": "primary-content"
         }
-        pass
 
     def getSubtitles(self):
         """
@@ -56,6 +54,8 @@ class amazonExtractor(object):
         self.getcustomerID()
         self.getToken()
         self.getTitle()
+
+        returnValue = None
 
         if self.debug:
             print(self.title)
@@ -96,22 +96,13 @@ class amazonExtractor(object):
         # This is to tackle the Request Throttle error which occurs on Amazon
         # frequently.
         numberOfTrials = 20
-        errorNames = ["Error", "Robot"]
-
-        successful = False
 
         while numberOfTrials:
 
             requestObject = requests.get(self.urlName)
-            # fileHandler = open("requests.txt", "w")
-            # fileHandler.write(requestObject.text)
-            # fileHandler.close()
 
             self.soupObject = BeautifulSoup(
                 requestObject.text, "lxml", from_encoding="utf8")
-            # soupObject1 = BeautifulSoup(requestObject.text,"lxml")
-            # print(self.soupObject.original_encoding)
-            titleString = str(self.soupObject.title.string)
 
             if self.debug:
                 print("Status Code", requestObject.status_code)
@@ -120,46 +111,33 @@ class amazonExtractor(object):
             fh.write(str(self.soupObject))
             fh.close()
 
-            fail = 0
-
             if requestObject.status_code >= 400:
                 print("Request Throttle Error\n Trying Again....")
                 numberOfTrials -= 1
-                fail = 1
                 continue
 
-            # if fail:
-            # 	continue
-
             print("Request successful")
-            successful = True
             numberOfTrials = 0
 
             fh = open(self.requestsFileName, "w")
             fh.write(str(self.soupObject))
             fh.close()
 
-        pass
-
     def getcustomerID(self):
 
         parser = ConfigParser()
         parser.read('config.ini')
         self.parametersDict['customerID'] = parser.get('AMAZON', 'customerid')
-        pass
 
     def getToken(self):
 
         parser = ConfigParser()
         parser.read('config.ini')
         self.parametersDict['token'] = parser.get('AMAZON', 'token')
-        pass
 
     def getVideoType(self):
         """
-
         <script data-a-state='{"key":"dv-dp-state"}' type="a-state">{"pageType":"tv","pageAsin":null}</script>
-
         """
         parsingParams = {"tagname": "script", "tagAttrs": [
             "type", "a-state"], "jsonparam": "pagetype"}
@@ -175,7 +153,6 @@ class amazonExtractor(object):
                     break
                 except:
                     continue
-            # print(s)
 
         except:
             pass
@@ -184,8 +161,6 @@ class amazonExtractor(object):
 
         if self.videoType == "":
             self.videoType = "movie"
-
-        pass
 
     def getAsinID1(self):
         """
@@ -202,7 +177,6 @@ class amazonExtractor(object):
             asinObject = self.soupObject.find(
                 "input", attrs={"name": re.compile("^asin$", re.I)})
             self.parametersDict['asin'] = str(asinObject['value'])
-            # print(s)
 
         except:
             pass
@@ -218,25 +192,11 @@ class amazonExtractor(object):
 
         """
 
-        # self.loginAmazon()
-
         try:
-            # https://www.amazon.com/dp/B0157MP078/?autoplay=1
-            # https://www.amazon.com/dp/B017UGX5M6?autoplay=1&t=24
             a, b, idContainer = self.urlName.partition("dp/")
             asinID, x, y = idContainer.partition("/")
             asinID, x, y = asinID.partition("?")
             self.asinList = asinID
-
-            # There maybe multiple ASIN's present which are separated by comma.
-            # So we just take one of it.
-
-            # for i in range(len(self.asinList)):
-            # 	tempList = self.asinList[i].split(",")
-            # 	for ids in tempList:
-            # 		if ids != "":
-            # 			self.asinList[i] = ids
-            # 			break
 
         except:
             pass
@@ -244,9 +204,7 @@ class amazonExtractor(object):
     def getSubtitlesContainer(self):
         """
         This function returns the final URL which contains the link to the Subtitles file.
-
         """
-        self.subtitleURLContainer = ""
 
         self.subtitleURLContainer += self.parametersDict['PreURL']
 
@@ -256,14 +214,12 @@ class amazonExtractor(object):
                 self.subtitleURLContainer += parameters
                 self.subtitleURLContainer += "="
                 self.subtitleURLContainer += self.parametersDict[parameters]
-        pass
 
     def getSubtitleURL(self):
         """
         The json content looks like this -
 
         {"returnedTitleRendition":{""},"subtitleUrls":[{"url":"linkforsubtitle.dfxp"}]}
-
         """
 
         # If it is a movie, we use this methodology -
@@ -287,7 +243,6 @@ class amazonExtractor(object):
 
         except:
             pass
-        pass
 
     def downloadDfxpTranscript(self, SubsLink):
         """
@@ -295,19 +250,16 @@ class amazonExtractor(object):
         """
         try:
             subRequestObject = requests.get(SubsLink)
-            # print(subRequestObject.text)
             subRequestObject.encoding = 'utf-8'
 
             subsFileHandler = open(self.title + ".dfxp", "w")
-            print("Creating ~  '%s.dfxp' ..." % (self.title))
+            print("Creating ~  '%s.dfxp' ..." % self.title)
             subsFileHandler.write(subRequestObject.text)
             subsFileHandler.close()
             return 1
 
         except:
             return 0
-
-        pass
 
     def convertDfxpToSrt(self):
 
@@ -319,7 +271,7 @@ class amazonExtractor(object):
             srtText = toSrt(xmlString)
 
             subsFileHandler = open(self.title + ".srt", "w")
-            print("Creating ~  '%s.srt' ..." % (self.title))
+            print("Creating ~  '%s.srt' ..." % self.title)
             subsFileHandler.write(srtText)
             subsFileHandler.close()
 
@@ -329,8 +281,6 @@ class amazonExtractor(object):
             print("Couldn't convert to SRT")
             return 0
 
-        pass
-
     def getTitle(self):
         """
         This function returns the title of the video. This is also used for naming the file.
@@ -339,7 +289,6 @@ class amazonExtractor(object):
 
         """
 
-        # print(self.soupObject.title.string)
         try:
             s = self.soupObject.find("meta", attrs={"name": "twitter:title"})
             self.title = str(s['content'])
@@ -348,7 +297,6 @@ class amazonExtractor(object):
             if not self.title:
                 s = int("deliberateError")
 
-        # except
         except:
             self.title = "Amazonsubtitles"
 
@@ -388,4 +336,3 @@ class amazonExtractor(object):
         self.deleteUnnecessaryfiles()
 
         return returnValue
-        pass

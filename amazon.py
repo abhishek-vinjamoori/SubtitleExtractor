@@ -2,8 +2,6 @@ import os
 import re
 import requests
 from bs4 import BeautifulSoup
-import urllib.request
-import urllib.parse
 import json
 from configparser import ConfigParser
 from selenium import webdriver
@@ -23,8 +21,11 @@ class amazonExtractor(object):
         self.testMode = testMode
         self.requestsFileName = "iDoNotExistDefinitelyOnThisComputerFolder.html"
         self.videoType = ""
+        self.title = None
+        self.soupObject = None
+        self.subtitleURLContainer = ""
 
-        # Parameters requireed for Obtaining the URL
+        # Parameters required for obtaining the URL
         self.parametersDict = {
             "PreURL": "https://atv-ps.amazon.com/cdp/catalog/GetPlaybackResources?",
                 "asin": "",
@@ -45,7 +46,6 @@ class amazonExtractor(object):
                 "deviceBitrateAdaptationsOverride": "CVBR,CBR",
                 "titleDecorationScheme": "primary-content"
         }
-        pass
 
     def getSubtitles(self):
         """
@@ -56,6 +56,9 @@ class amazonExtractor(object):
         self.getcustomerID()
         self.getToken()
         self.getTitle()
+
+        # Initialize returnValue in case it's not initialized in following statements
+        returnValue = 0
 
         if self.debug:
             print(self.title)
@@ -109,22 +112,13 @@ class amazonExtractor(object):
         # This is to tackle the Request Throttle error which occurs on Amazon
         # frequently.
         numberOfTrials = 20
-        errorNames = ["Error", "Robot"]
-
-        successful = False
 
         while numberOfTrials:
 
             requestObject = requests.get(self.urlName)
-            # fileHandler = open("requests.txt", "w")
-            # fileHandler.write(requestObject.text)
-            # fileHandler.close()
 
             self.soupObject = BeautifulSoup(
                 requestObject.text, "lxml", from_encoding="utf8")
-            # soupObject1 = BeautifulSoup(requestObject.text,"lxml")
-            # print(self.soupObject.original_encoding)
-            titleString = str(self.soupObject.title.string)
 
             if self.debug:
                 print("Status Code", requestObject.status_code)
@@ -133,46 +127,32 @@ class amazonExtractor(object):
             fh.write(str(self.soupObject))
             fh.close()
 
-            fail = 0
-
             if requestObject.status_code >= 400:
                 print("Request Throttle Error\n Trying Again....")
                 numberOfTrials -= 1
-                fail = 1
                 continue
 
-            # if fail:
-            # 	continue
-
             print("Request successful")
-            successful = True
             numberOfTrials = 0
 
             fh = open(self.requestsFileName, "w")
             fh.write(str(self.soupObject))
             fh.close()
 
-        pass
-
     def getcustomerID(self):
-
         parser = ConfigParser()
         parser.read('config.ini')
         self.parametersDict['customerID'] = parser.get('AMAZON', 'customerid')
-        pass
 
     def getToken(self):
 
         parser = ConfigParser()
         parser.read('config.ini')
         self.parametersDict['token'] = parser.get('AMAZON', 'token')
-        pass
 
     def getVideoType(self):
         """
-
         <script data-a-state='{"key":"dv-dp-state"}' type="a-state">{"pageType":"tv","pageAsin":null}</script>
-
         """
         parsingParams = {"tagname": "script", "tagAttrs": [
             "type", "a-state"], "jsonparam": "pagetype"}
@@ -188,8 +168,6 @@ class amazonExtractor(object):
                     break
                 except:
                     continue
-            # print(s)
-
         except:
             pass
 
@@ -197,8 +175,6 @@ class amazonExtractor(object):
 
         if self.videoType == "":
             self.videoType = "movie"
-
-        pass
 
     def getAsinID1(self):
         """
@@ -208,15 +184,12 @@ class amazonExtractor(object):
 
         <input name="asin" type="hidden" value="B000I9WVAK"/>
         The value contains the asin.
-
         """
 
         try:
             asinObject = self.soupObject.find(
                 "input", attrs={"name": re.compile("^asin$", re.I)})
             self.parametersDict['asin'] = str(asinObject['value'])
-            # print(s)
-
         except:
             pass
 
@@ -246,7 +219,6 @@ class amazonExtractor(object):
                     if ids != "":
                         self.asinList[i] = ids
                         break
-
         except:
             pass
 
@@ -255,7 +227,6 @@ class amazonExtractor(object):
         This function returns the final URL which contains the link to the Subtitles file.
 
         """
-        self.subtitleURLContainer = ""
 
         self.subtitleURLContainer += self.parametersDict['PreURL']
 
@@ -265,7 +236,6 @@ class amazonExtractor(object):
                 self.subtitleURLContainer += parameters
                 self.subtitleURLContainer += "="
                 self.subtitleURLContainer += self.parametersDict[parameters]
-        pass
 
     def getSubtitleURL(self):
         """
@@ -289,7 +259,6 @@ class amazonExtractor(object):
 
         except:
             pass
-        pass
 
     def downloadDfxpTranscript(self, SubsLink):
         """
@@ -297,19 +266,16 @@ class amazonExtractor(object):
         """
         try:
             subRequestObject = requests.get(SubsLink)
-            # print(subRequestObject.text)
             subRequestObject.encoding = 'utf-8'
 
             subsFileHandler = open(self.title + ".dfxp", "w")
-            print("Creating ~  '%s.dfxp' ..." % (self.title))
+            print("Creating ~  '%s.dfxp' ..." % self.title)
             subsFileHandler.write(subRequestObject.text)
             subsFileHandler.close()
             return 1
 
         except:
             return 0
-
-        pass
 
     def convertDfxpToSrt(self):
 
@@ -321,17 +287,14 @@ class amazonExtractor(object):
             srtText = toSrt(xmlString)
 
             subsFileHandler = open(self.title + ".srt", "w")
-            print("Creating ~  '%s.srt' ..." % (self.title))
+            print("Creating ~  '%s.srt' ..." % self.title)
             subsFileHandler.write(srtText)
             subsFileHandler.close()
 
             return 1
-
         except:
             print("Couldn't convert to SRT")
             return 0
-
-        pass
 
     def getTitle(self):
         """
@@ -341,7 +304,6 @@ class amazonExtractor(object):
 
         """
 
-        # print(self.soupObject.title.string)
         try:
             s = self.soupObject.find("meta", attrs={"name": "twitter:title"})
             self.title = str(s['content'])
@@ -349,12 +311,8 @@ class amazonExtractor(object):
             self.title = self.title.strip()
             if not self.title:
                 s = int("deliberateError")
-
-        # except
         except:
             self.title = "Amazonsubtitles"
-
-        pass
 
     def deleteUnnecessaryfiles(self):
 
@@ -390,7 +348,6 @@ class amazonExtractor(object):
         self.deleteUnnecessaryfiles()
 
         return returnValue
-        pass
 
     def loginAmazon(self):
 
@@ -415,7 +372,8 @@ class amazonExtractor(object):
                   }
 
         amazonDriver = webdriver.Chrome()
-        amazonDriver.userAgent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.9; rv:36.0) Gecko/20100101 Firefox/36.0 WebKit'
+        amazonDriver.userAgent = \
+            'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.9; rv:36.0) Gecko/20100101 Firefox/36.0 WebKit'
         amazonDriver.cookiesEnabled = True
         amazonDriver.javascriptEnabled = True
         amazonDriver.get(baseurl)
@@ -435,14 +393,11 @@ class amazonExtractor(object):
 
         # Clicking on Submit button
         amazonDriver.find_element_by_xpath(xpaths['submitButton']).click()
-        # temp = input()
         amazonDriver.get(self.urlName)
         pageSource = amazonDriver.page_source
         self.soupObject = BeautifulSoup(pageSource, "lxml", from_encoding="utf8")
-        # print(pageSource)
         fh = open(self.requestsFileName, "w")
         fh.write(str(self.soupObject))
         fh.close()
 
-        pass
         amazonDriver.close()

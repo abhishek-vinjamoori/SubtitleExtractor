@@ -1,10 +1,6 @@
 #! /usr/bin/env python3
 
-import sys
 from SubtitleExtractor import Subtitle
-from HuluTest import HuluTestList
-from BbcTest import BbcTestList
-from FoxTest import FoxTestList
 from AmazonTest import AmazonTestList
 
 
@@ -21,7 +17,6 @@ def main():
         url = entities[0]
         Extractor.getServiceName(url)
         Extractor.testMode = True
-        # if len(entities) == 5:
         returnValue = Extractor.serviceProcess()
 
         if returnValue:

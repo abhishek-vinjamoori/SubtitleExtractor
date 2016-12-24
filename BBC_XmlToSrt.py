@@ -1,4 +1,3 @@
-import re
 import sys
 from bs4 import BeautifulSoup
 
@@ -44,7 +43,7 @@ def toSrt(xml_string):
 
         if personalStyle:
             colorName = colorDict[captions['style']]
-            tagName = '<font color="%s">' % (colorName)
+            tagName = '<font color="%s">' % colorName
             caption += tagName
 
         for content in captionContent:

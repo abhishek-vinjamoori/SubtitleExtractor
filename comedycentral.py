@@ -1,5 +1,4 @@
 import os
-import re
 import requests
 from bs4 import BeautifulSoup
 import json
@@ -20,10 +19,11 @@ class comedycentralExtractor(object):
         self.showId = ""
         self.showName = ""
         self.videoGuid = ""
+        self.title = ""
+        self.soupObject = None
 
         self.subtitleServer = "http://static-media.fox.com/cc/"
         self.fileExtension = [".srt", ".dfxp"]
-        pass
 
     def getSubtitles(self):
         """
@@ -32,72 +32,18 @@ class comedycentralExtractor(object):
 
         self.createSoupObject()
 
-        # self.getTitle()
-        # if self.debug:
-        # 	print(self.title)
-
-        # self.contentID = self.getContentID1(self.urlName) #Method-1
-
-        # try:
-        #  	self.contentID = int(self.contentID)
-        # except:
-        #  	print("Trying an alternative method to fetch Content ID")
-        # self.contentID = self.getContentID2()  #Method-2
-
-        # try:
-        #  	self.contentID = int(self.contentID)
-        # except:
-        #  	print("Unable to fetch the contentID.")
-        #  	self.deleteUnnecessaryfiles()
-        #  	return 0
-
-        # if self.debug:
-        #  	print(self.contentID)
-
-        # jsonString = self.getShowJson()
-        # if self.debug:
-        # 	print(jsonString)
-        # self.standardCheck(jsonString)
-
-        # self.getShowDetails(jsonString)
-        # if self.debug:
-        # 	print(self.showId)
-        # 	print(self.showName)
-        # 	print(self.videoGuid)
-
-        # self.standardCheck(self.showId, self.showName, self.videoGuid)
-
-        # CaptionList = self.getSubtitleUrl()
-        # if self.debug:
-        # 	print(CaptionList)
-
-        # for link in CaptionList:
-        # 	returnValue = self.downloadDfxpTranscript(link)
-        # 	if returnValue:
-        # 		break
-
-        # self.deleteUnnecessaryfiles()
-
         return 0
 
     def createSoupObject(self):
 
         requestObject = requests.get(self.urlName)
 
-        # fileHandler = open("requests.txt", "w")
-        # fileHandler.write(requestObject.text)
-        # fileHandler.close()
-
         self.soupObject = BeautifulSoup(
             requestObject.text, "lxml", from_encoding="utf8")
-        # soupObject1 = BeautifulSoup(requestObject.text,"lxml")
-        # print(self.soupObject.original_encoding)
 
         fh = open(self.requestsFileName, "w")
         fh.write(str(self.soupObject))
         fh.close()
-
-        pass
 
     def getContentID1(self, url):
         """This is one of the methodologies to get the content ID. If this fails the alternative method will be called
@@ -142,8 +88,6 @@ class comedycentralExtractor(object):
 
         return contentId
 
-        pass
-
     def getShowJson(self):
         """
         The required script content  looks like this-
@@ -175,8 +119,6 @@ class comedycentralExtractor(object):
 
         return jsonString
 
-        pass
-
     def getShowDetails(self, jsonString):
         """
         The json content looks like this -
@@ -203,9 +145,6 @@ class comedycentralExtractor(object):
 
         except:
             print("Unable to parse Json. Please report.")
-            pass
-
-        pass
 
     def getSubtitleUrl(self):
         """
@@ -227,9 +166,8 @@ class comedycentralExtractor(object):
 
         """
         SubsUrl = self.subtitleServer
-        SecondarySubsUrl = ''
 
-        self.showName = self.processShowName(self.showName)
+        self.showName = self.showName.replace(" ", "")
 
         SubsUrl += str(self.showId)
         SubsUrl += "/"
@@ -248,22 +186,12 @@ class comedycentralExtractor(object):
 
         return [SubsUrl, SecondarySubsUrl]
 
-    def processShowName(self, name):
-        """
-
-        Removes white spaces
-
-        """
-        name = name.replace(" ", "")
-        return name
-
     def downloadDfxpTranscript(self, SubsLink):
         """
         This function fetches the captions and writes them into a file in VTT format
         """
         try:
             subRequestObject = requests.get(SubsLink)
-            # print(subRequestObject.text)
 
             if subRequestObject.status_code >= 400:
                 # Deliberate error to exit.
@@ -279,8 +207,6 @@ class comedycentralExtractor(object):
         except:
             return 0
 
-        pass
-
     def getTitle(self):
         """
         This function returns the title of the video. This is also used for naming the file.
@@ -288,8 +214,6 @@ class comedycentralExtractor(object):
         <title>Watch New Girl Online: Episode 21, Season 5 on FOX</title>   --> Extracting the value from here
 
         """
-
-        # print(self.soupObject.title.string)
         try:
 
             self.title = self.soupObject.title.string.strip()
@@ -298,8 +222,6 @@ class comedycentralExtractor(object):
 
         except:
             self.title = "DownloadedFOXNowSubtitles"
-
-        pass
 
     def deleteUnnecessaryfiles(self):
 

@@ -11,7 +11,4 @@ AmazonTestList = [
     ["https://www.amazon.com/dp/B00MC6CXIW/?autoplay=1"],
     ["https://www.amazon.com/dp/B01B2926Q8/?autoplay=1"],
     ["https://www.amazon.com/dp/B01FRG0PPG/?autoplay=1"],
-    #["https://www.amazon.com/gp/product/B0172TUQH8/ref=pd_cbs_318_1"],
-    #["https://www.amazon.com/gp/product/B009BJATYS/ref=pd_cbs_318_4"],
-    #["https://www.amazon.com/The-New-World/dp/B00RSGIVVO/ref=sr_1_1?s=instant-video&ie=UTF8&qid=1471504045&sr=1-1&keywords=the+man+in+the+high+castle"],
 ]

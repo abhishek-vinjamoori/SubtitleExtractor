@@ -1,4 +1,3 @@
-import re
 import sys
 from bs4 import BeautifulSoup
 
@@ -8,8 +7,6 @@ def toSrt(xml_string):
     xml_string = xml_string.replace("<tt:br/>", "\n")
     texts = BeautifulSoup(xml_string, "lxml", from_encoding="utf8")
     listOfTranscripts = texts.findAll("tt:p")
-
-    # TODO parse xml instead of regex
 
     captionNumber = 1
     for captions in listOfTranscripts:

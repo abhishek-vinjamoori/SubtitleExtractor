@@ -1,4 +1,3 @@
-import re
 import sys
 from bs4 import BeautifulSoup
 
@@ -20,8 +19,6 @@ def toSrt(xml_string):
         end = formatTime(end)
 
         caption = captions['text']
-        # caption = caption.replace('&#39;', "'")
-        # caption = caption.replace('&quot;', '"')
 
         srt += str(captionNumber) + '\n'
         srt += start + ' --> ' + end + '\n'
