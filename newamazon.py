@@ -24,7 +24,7 @@ class amazonExtractor(object):
         self.requestsFileName = "iDoNotExistDefinitelyOnThisComputerFolder.html"
         self.videoType = ""
 
-        # Parameters requireed for Obtaining the URL
+        # Parameters requireed for Obtaining the URLittititi
         self.parametersDict = {
             "PreURL": "https://atv-ps.amazon.com/cdp/catalog/GetPlaybackResources?",
                 "asin": "",
@@ -360,16 +360,16 @@ class amazonExtractor(object):
         except:
             
             try:
-            s = self.soupObject.find("meta", attrs={"property": "og:title"})
-            self.title = str(s['content'])
-            self.title = self.title.replace("/", "")
-            temp_title = self.title.split()
-            if temp_title[0]=='Watch' or temp[0] == "watch":
-                self.title = ' '.join(self.title.split()[1:])
-            self.title = self.title.replace("- Amazon Video","")
-            self.title = self.title.strip()
-            if not self.title:
-                s = int("deliberateError")
+                s = self.soupObject.find("meta", attrs={"property": "og:title"})
+                self.title = str(s['content'])
+                self.title = self.title.replace("/", "")
+                temp_title = self.title.split()
+                if temp_title[0]=='Watch' or temp[0] == "watch":
+                    self.title = ' '.join(self.title.split()[1:])
+                self.title = self.title.replace("- Amazon Video","")
+                self.title = self.title.strip()
+                if not self.title:
+                    s = int("deliberateError")
                 
             except:
                 self.title = "Amazonsubtitles"
