@@ -32,7 +32,7 @@ class netflixExtractor(object):
         The main function which uses helper functions to get the subtitles
         """
 
-        # self.createSoupObject() 
+        # self.createSoupObject()
 
         check = self.loginNetflix()
         self.title = "NetflixCaptions"
@@ -144,7 +144,7 @@ class netflixExtractor(object):
                     self.title = ' '.join(self.title.split()[1:])
                 self.title = self.title.replace(" Online | Netflix","")
                 if not self.title:
-                    s = int("deliberateError")  #corrected indentation
+                    s = int("deliberateError")
                 
             except:
                 self.title = "Netflixsubtitles"
