@@ -24,7 +24,7 @@ class amazonExtractor(object):
         self.requestsFileName = "iDoNotExistDefinitelyOnThisComputerFolder.html"
         self.videoType = ""
 
-        # Parameters requireed for Obtaining the URLittititi
+        # Parameters requireed for Obtaining the URL
         self.parametersDict = {
             "PreURL": "https://atv-ps.amazon.com/cdp/catalog/GetPlaybackResources?",
                 "asin": "",
@@ -336,9 +336,7 @@ class amazonExtractor(object):
         This function returns the title of the video. This is also used for naming the file.
 
         <meta name="twitter:title" content=" Watch Defiance Season 1 Episode  - Amazon Video"/>   --> Extracting the value from here
-        
         OR
-        
         <meta property="og:title" content="Watch Defiance Season 1 Episode  - Amazon Video"/>  --> Extracting the value from here
 
         """
