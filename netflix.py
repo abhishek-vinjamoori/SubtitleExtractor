@@ -125,11 +125,29 @@ class netflixExtractor(object):
             s = self.soupObject.find("meta", attrs={"name": "twitter:title"})
             self.title = str(s['content'])
             self.title = self.title.strip()
+            temp_title = self.title.split()
+            if temp_title[0]=='Watch' or temp[0] == "watch":
+                self.title = ' '.join(self.title.split()[1:])
+            self.title = self.title.replace(" Online | Netflix","")
             if not self.title:
                 s = int("deliberateError")
 
         except:
-            self.title = "Netflixsubtitles"
+            
+            try:
+                #<meta property="og:title" content="Watch House of Cards Online | Netflix"/>
+                s = self.soupObject.find("meta", attrs={"property": "og:title"})
+                self.title = str(s['content'])
+                self.title = self.title.strip()
+                temp_title = self.title.split()
+                if temp_title[0]=='Watch' or temp[0] == "watch":
+                    self.title = ' '.join(self.title.split()[1:])
+                self.title = self.title.replace(" Online | Netflix","")
+                if not self.title:
+                    s = int("deliberateError")
+                
+            except:
+                self.title = "Netflixsubtitles"
 
         pass
 

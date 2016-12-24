@@ -335,7 +335,9 @@ class amazonExtractor(object):
         """
         This function returns the title of the video. This is also used for naming the file.
 
-        <meta name="twitter:title" content="Interstellar"/>   --> Extracting the value from here
+        <meta name="twitter:title" content=" Watch Defiance Season 1 Episode  - Amazon Video"/>   --> Extracting the value from here
+        OR
+        <meta property="og:title" content="Watch Defiance Season 1 Episode  - Amazon Video"/>  --> Extracting the value from here
 
         """
 
@@ -344,13 +346,31 @@ class amazonExtractor(object):
             s = self.soupObject.find("meta", attrs={"name": "twitter:title"})
             self.title = str(s['content'])
             self.title = self.title.replace("/", "")
+            temp_title = self.title.split()
+            if temp_title[0]=='Watch' or temp[0] == "watch":
+                self.title = ' '.join(self.title.split()[1:])
+            self.title = self.title.replace("- Amazon Video","")
             self.title = self.title.strip()
             if not self.title:
                 s = int("deliberateError")
 
         # except
         except:
-            self.title = "Amazonsubtitles"
+            
+            try:
+                s = self.soupObject.find("meta", attrs={"property": "og:title"})
+                self.title = str(s['content'])
+                self.title = self.title.replace("/", "")
+                temp_title = self.title.split()
+                if temp_title[0]=='Watch' or temp[0] == "watch":
+                    self.title = ' '.join(self.title.split()[1:])
+                self.title = self.title.replace("- Amazon Video","")
+                self.title = self.title.strip()
+                if not self.title:
+                    s = int("deliberateError")
+                
+            except:
+                self.title = "Amazonsubtitles"
 
         pass
 
